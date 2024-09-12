@@ -1,0 +1,73 @@
+// Copyright Stevens Studios Ltd.
+// Written By Thomas Stevens
+
+#pragma once
+
+#include "CoreMinimal.h"
+#include "GameFramework/Pawn.h"
+#include "Camera/CameraComponent.h"
+#include "GameFramework/SpringArmComponent.h"
+#include "RTS_Camera.generated.h"
+
+class UInputAction;
+class UInputMappingContext;
+struct FInputActionValue;
+
+UCLASS()
+class FYPTRAINING_API ARTS_Camera : public APawn
+{
+	GENERATED_BODY()
+
+public:
+	ARTS_Camera();
+
+protected:
+	virtual void BeginPlay() override;
+
+public:	
+	virtual void Tick(float DeltaTime) override;
+
+	//Input Bindings
+	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
+	void ZoomCamera(const FInputActionValue& Value);
+
+	void MoveCamera(const FInputActionValue& Value);
+
+	void RotateCamera(const FInputActionValue& Value);
+
+	//Input Values
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Enhanced Input")
+	UInputMappingContext* CameraControlsMappingContext;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Enhanced Input")
+	UInputAction* CameraZoom;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Enhanced Input")
+	UInputAction* CameraMove;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Enhanced Input")
+	UInputAction* CameraRotate;
+
+	//Components
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	USpringArmComponent* CameraArm;
+
+	UPROPERTY(EditAnywhere)
+	UCameraComponent* Camera;
+
+	/** Camera Zoom Properties */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera")
+	float MinZoomLength = 100.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera")
+	float MaxZoomLength = 1000.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera")
+	float DefaultArmLength = 500.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera")
+	float ZoomStep = 10.0f;
+
+	APlayerController* PC;
+};
