@@ -5,8 +5,10 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
-#include "Blueprint/UserWidget.h"
 #include "FYPTrainingGameMode.generated.h"
+
+class UUserWidget;
+class UPlayerHUD;
 
 UCLASS(minimalapi)
 class AFYPTrainingGameMode : public AGameModeBase
@@ -40,7 +42,7 @@ public:
 	TSubclassOf<UUserWidget> HUDref;
 
 	UPROPERTY(BlueprintReadOnly, Category = "HUD")
-	class UPlayerHUD* HUD;
+	UPlayerHUD* HUD;
 
 	APlayerController* PC;
 
