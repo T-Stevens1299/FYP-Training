@@ -50,6 +50,9 @@ void ASelectableObject::ToggleSelect_Implementation(bool ToggleOn)
 	UE_LOG(LogTemp, Warning, TEXT("Test"));
 }
 
+
+//Targeting Functions
+
 void ASelectableObject::MoveToTarget_Implementation(FVector TargetLocation, float AcceptanceRadius)
 {
 	if (!staticObject)
@@ -62,6 +65,61 @@ void ASelectableObject::MoveToTarget_Implementation(FVector TargetLocation, floa
 	}
 }
 
+void ASelectableObject::AttackTarget_Implementation(AActor* Target)
+{
+	CurrentTarget = Target;
+
+	if (CurrentTarget->GetClass() == this->GetClass())
+	{
+		selectHardpointToTarget();
+	}
+	else
+	{
+		moveToAttackTarget(CurrentTarget, WeaponsRange);
+	}
+}
+
+void ASelectableObject::AttackExistingTarget_Implementation()
+{
+	if (CurrentShipTarget)
+	{
+		CurrentTarget = CurrentShipTarget;
+		selectHardpointToTarget();
+	}
+	else
+	{
+		CurrentShipTarget = NULL;
+	}
+}
+
+void ASelectableObject::selectHardpointToTarget()
+{
+	ASelectableObject* targetRef;
+
+	targetRef = Cast<ASelectableObject>(CurrentTarget);
+
+	if (targetRef)
+	{
+		CurrentTarget = targetRef->Hardpoints.Last();		
+		moveToAttackTarget(CurrentTarget, WeaponsRange);
+	}
+}
+
+void ASelectableObject::setHardpointTarget()
+{
+	for (int i = 0; i < Hardpoints.Num(); i++)
+	{
+		if (Hardpoints.IsValidIndex(i))
+		{
+			if (Hardpoints[i]->GetClass()->ImplementsInterface(UInterface_Damage::StaticClass()))
+			{
+				IInterface_Damage::Execute_SetHpTarget(Hardpoints[i], Hardpoints, CurrentTarget);
+			}
+		}
+	}
+}
+
+//Hardpoint and class setup Functions
 
 void ASelectableObject::setHardpointsParent()
 {

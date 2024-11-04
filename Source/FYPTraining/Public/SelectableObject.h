@@ -46,11 +46,26 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "UnitSelect")
 	void ToggleSelect(bool ToggleOn); void ToggleSelect_Implementation(bool ToggleOn) override;
 
+
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Targeting")
 	void MoveToTarget(FVector TargetLocation, float AcceptanceRadius); void MoveToTarget_Implementation(FVector TargetLocation, float AcceptanceRadius) override;
 
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Targeting")
+	void AttackTarget(AActor* Target); 	void AttackTarget_Implementation(AActor* Target) override;
+
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Targeting")
+	void AttackExistingTarget(); 	void AttackExistingTarget_Implementation() override;
+
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "Targeting")
+	void moveToAttackTarget(AActor* target, float acceptanceRange);
+
+	UFUNCTION(BlueprintCallable, Category = "Targeting")
+	void setHardpointTarget();
+
+
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Damage")
 	void TriggerHealthCalculations(); void TriggerHealthCalculations_Implementation();
+
 
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "Setup")
 	void moveObject(FVector Location, float acceptanceRange); 
@@ -58,9 +73,13 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Setup")
 	void setHardpointsParent();
 
+
+
 	void HealthCalculations();
 
 	void calculateWeaponsRange();
+
+	void selectHardpointToTarget();
 
 	//Variables
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UnitTweakables")

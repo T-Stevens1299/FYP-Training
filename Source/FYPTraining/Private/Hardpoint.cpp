@@ -93,12 +93,15 @@ void AHardpoint::FireWeapon()
 {
 	if (currentHardpointTarget)
 	{
-		DealDamage(outputDamage);
+		if (currentHardpointTarget->GetClass()->ImplementsInterface(UInterface_Damage::StaticClass()))
+		{
+			IInterface_Damage::Execute_DealDamage(currentHardpointTarget, outputDamage);
+		}
 	}
 	else
 	{
 		GetWorldTimerManager().ClearTimer(FireHandle);
-		//Attack Exisitng Target - pass parent unit
+		hardpointParent->AttackExistingTarget_Implementation();
 	}
 }
 
