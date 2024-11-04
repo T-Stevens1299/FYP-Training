@@ -81,8 +81,10 @@ void ASelectableObject::AttackTarget_Implementation(AActor* Target)
 
 void ASelectableObject::AttackExistingTarget_Implementation()
 {
-	if (CurrentShipTarget)
+	UE_LOG(LogTemp, Warning, TEXT("Triggered"));
+	if (IsValid(CurrentShipTarget))
 	{
+		UE_LOG(LogTemp, Warning, TEXT("We keep attackin"));
 		CurrentTarget = CurrentShipTarget;
 		selectHardpointToTarget();
 	}

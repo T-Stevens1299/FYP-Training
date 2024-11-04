@@ -45,7 +45,10 @@ void AHardpoint::TriggerHealthCalculations_Implementation()
 
 void AHardpoint::DealDamage_Implementation(float damageDealt)
 {
+	FTimerHandle temp;
 	float tempHealth = currentHealth - damageDealt;
+
+	UE_LOG(LogTemp, Warning, TEXT("DamageDealt"));
 
 	if (tempHealth <= 0)
 	{
@@ -58,9 +61,9 @@ void AHardpoint::DealDamage_Implementation(float damageDealt)
 				{
 					if (hardpointParent->Hardpoints[i] == this)
 					{
-						hardpointParent->Hardpoints.Remove(hardpointParent->Hardpoints[i]);
+						hardpointParent->Hardpoints.RemoveSingle(hardpointParent->Hardpoints[i]);
 						hardpointParent->HealthCalculations();
-						this->Destroy(true);
+						destroyHardpoint();
 					}
 				}
 			}
@@ -77,6 +80,11 @@ void AHardpoint::DealDamage_Implementation(float damageDealt)
 	}
 }
 
+void AHardpoint::destroyHardpoint()
+{
+	this->Destroy(true);
+}
+
 void AHardpoint::SetHpTarget_Implementation(UPARAM(ref)TArray<AActor*>& actorsToIgnore, AActor* currentTarget)
 {
 	if (isWeapon)
@@ -84,15 +92,16 @@ void AHardpoint::SetHpTarget_Implementation(UPARAM(ref)TArray<AActor*>& actorsTo
 		currentHardpointTarget = currentTarget;
 		if (CheckTargetRange(actorsToIgnore))
 		{
-			GetWorldTimerManager().SetTimer(FireHandle, this, &AHardpoint::FireWeapon, 0.0f, true, fireRate);
+			GetWorldTimerManager().SetTimer(FireHandle, this, &AHardpoint::FireWeapon, fireRate, true, 0.0f);
 		}
 	}
 }
 
 void AHardpoint::FireWeapon()
 {
-	if (currentHardpointTarget)
+	if (IsValid(currentHardpointTarget)) 
 	{
+		UE_LOG(LogTemp, Warning, TEXT("Fire"));
 		if (currentHardpointTarget->GetClass()->ImplementsInterface(UInterface_Damage::StaticClass()))
 		{
 			IInterface_Damage::Execute_DealDamage(currentHardpointTarget, outputDamage);
@@ -100,8 +109,9 @@ void AHardpoint::FireWeapon()
 	}
 	else
 	{
+		UE_LOG(LogTemp, Warning, TEXT("ClearTimer"));
 		GetWorldTimerManager().ClearTimer(FireHandle);
-		hardpointParent->AttackExistingTarget_Implementation();
+		IInterface_Targeting::Execute_AttackExistingTarget(hardpointParent);
 	}
 }
 
@@ -116,24 +126,16 @@ bool AHardpoint::CheckTargetRange(TArray<AActor*> ActorsToIgnore)
 	FVector startLoc = FirePoint->GetComponentLocation();
 	FVector endLoc = currentHardpointTarget->GetActorLocation();
 
-	//for (int i = 0; i < ignore.Num(); i++)
-	//{
-	//	if (ignore.IsValidIndex(i))
-	//	{
-	//		if (ignore[i] = this)
-	//		{
-	//			ignore.Remove(ignore[i]);
-	//		}
-	//	}
-	//}
 	params.AddIgnoredActors(ActorsToIgnore);
 
-	if (currentHardpointTarget)
+	if (IsValid(currentHardpointTarget))
 	{
 		SetTargetsParent();
 
 		if (GetWorld()->LineTraceSingleByChannel(HitResult, startLoc, endLoc, ECollisionChannel::ECC_Visibility, params, FCollisionResponseParams()))
 		{
+			DrawDebugLine(GetWorld(), startLoc, endLoc, HitResult.GetActor() ? FColor::Blue : FColor::Red, false, 2.0f, 0, 2.0f);
+			
 			if (HitResult.Distance <= weaponRange)
 			{
 				canShoot = true;
@@ -147,6 +149,7 @@ bool AHardpoint::CheckTargetRange(TArray<AActor*> ActorsToIgnore)
 	}
 	else
 	{
+		UE_LOG(LogTemp, Warning, TEXT("ClearedTimer"));
 		GetWorldTimerManager().ClearTimer(FireHandle);
 	}
 
@@ -159,5 +162,6 @@ void AHardpoint::SetTargetsParent()
 	if (targetRef)
 	{
 		hardpointParent->CurrentShipTarget = targetRef->hardpointParent;
+		UE_LOG(LogTemp, Warning, TEXT("TargetSet"));
 	}
 }

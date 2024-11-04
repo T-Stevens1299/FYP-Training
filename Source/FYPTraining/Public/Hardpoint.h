@@ -83,6 +83,8 @@ public:
 
 	void SetTargetsParent();
 
+	void destroyHardpoint();
+
 	UFUNCTION(BlueprintImplementableEvent)
 	void init();
 
