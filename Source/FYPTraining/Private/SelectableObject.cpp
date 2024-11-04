@@ -3,6 +3,7 @@
 
 
 #include "SelectableObject.h"
+#include "Hardpoint.h"
 #include "Components/SphereComponent.h"
 
 // Sets default values
@@ -45,5 +46,95 @@ void ASelectableObject::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 
 void ASelectableObject::ToggleSelect_Implementation(bool ToggleOn)
 {
-	ClickDetector->SetVisibility(ToggleOn);
+	SelectorMesh->SetVisibility(ToggleOn);
+	UE_LOG(LogTemp, Warning, TEXT("Test"));
+}
+
+void ASelectableObject::MoveToTarget_Implementation(FVector TargetLocation, float AcceptanceRadius)
+{
+	if (!staticObject)
+	{
+		moveObject(TargetLocation, AcceptanceRadius);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Cannot move object is static"));
+	}
+}
+
+
+void ASelectableObject::setHardpointsParent()
+{
+		for (int i = 0; i < Hardpoints.Num(); i++)
+		{
+			if (Hardpoints.IsValidIndex(i))
+			{
+				tempHardpoint = Cast<AHardpoint>(Hardpoints[i]);
+
+				if (tempHardpoint)
+				{
+					tempHardpoint->hardpointParent = this;
+					tempHardpoint->playerControlled = playerControlled;
+					tempHardpoint->init();
+				}
+			}
+		}
+		calculateWeaponsRange();
+		HealthCalculations();
+}
+
+void ASelectableObject::TriggerHealthCalculations_Implementation()
+{
+	HealthCalculations();
+}
+
+void ASelectableObject::HealthCalculations()
+{
+	float newTotalHealth = 0.0f;
+	AHardpoint* curHardpointRef;
+
+	for (int i = 0; i < Hardpoints.Num(); i++)
+	{
+		curHardpointRef = Cast<AHardpoint>(Hardpoints[i]);
+		if (curHardpointRef)
+		{
+			newTotalHealth = newTotalHealth + curHardpointRef->currentHealth;
+		}
+	}
+
+	UE_LOG(LogTemp, Warning, TEXT("The Total unit health is: %d"), (int)newTotalHealth);
+
+	if (newTotalHealth <= 0)
+	{
+		//TriggerWinCheck
+		this->Destroy(true);
+	}
+}
+
+void ASelectableObject::calculateWeaponsRange()
+{
+	//Calculates the ships weapon range - determined by the lowest weapon range of all hardpoints. This becomes the acceptance radius when attacking a target so all weapons can fire
+	AHardpoint* currentHardpointRef;
+
+	TArray<float> hardpointWeaponRanges;
+
+	for (int i = 0; i < Hardpoints.Num(); i++)
+	{
+		currentHardpointRef = Cast<AHardpoint>(Hardpoints[i]);
+		if (currentHardpointRef)
+		{
+			if (currentHardpointRef->isWeapon)
+			{
+				hardpointWeaponRanges.Add(currentHardpointRef->weaponRange);
+			}
+		}
+	}
+
+	hardpointWeaponRanges.Sort();
+	
+	if (hardpointWeaponRanges.IsValidIndex(0))
+	{
+		WeaponsRange = hardpointWeaponRanges[0];
+		UE_LOG(LogTemp, Warning, TEXT("The weapon range is: %d"), (int)WeaponsRange);
+	}
 }

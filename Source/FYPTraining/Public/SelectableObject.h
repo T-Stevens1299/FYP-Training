@@ -6,12 +6,15 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "Interface_Selectable.h"
+#include "Interface_Targeting.h"
+#include "Interface_Damage.h"
 #include "SelectableObject.generated.h"
 
 class USphereComponent;
+class AHardpoint;
 
 UCLASS()
-class FYPTRAINING_API ASelectableObject : public ACharacter, public IInterface_Selectable
+class FYPTRAINING_API ASelectableObject : public ACharacter, public IInterface_Selectable, public IInterface_Targeting, public IInterface_Damage
 {
 	GENERATED_BODY()
 
@@ -43,11 +46,33 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "UnitSelect")
 	void ToggleSelect(bool ToggleOn); void ToggleSelect_Implementation(bool ToggleOn) override;
 
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Targeting")
+	void MoveToTarget(FVector TargetLocation, float AcceptanceRadius); void MoveToTarget_Implementation(FVector TargetLocation, float AcceptanceRadius) override;
+
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Damage")
+	void TriggerHealthCalculations(); void TriggerHealthCalculations_Implementation();
+
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "Setup")
+	void moveObject(FVector Location, float acceptanceRange); 
+
+	UFUNCTION(BlueprintCallable, Category = "Setup")
+	void setHardpointsParent();
+
+	void HealthCalculations();
+
+	void calculateWeaponsRange();
+
 	//Variables
-	//declare hardpoint array
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UnitTweakables")
+	TArray<AActor*> Hardpoints;
+
 	bool hasTarget;
 
-	bool isEnemy;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UnitTweakables")
+	bool staticObject;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UnitTweakables")
+	bool playerControlled;
 	
 	//Editable Variables
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UnitTweakables")
@@ -64,5 +89,7 @@ public:
 	AActor* CurrentTarget;
 
 	AActor* CurrentShipTarget;
+
+	AHardpoint* tempHardpoint;
 
 };
