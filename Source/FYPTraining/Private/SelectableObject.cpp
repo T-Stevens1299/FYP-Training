@@ -47,7 +47,6 @@ void ASelectableObject::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 void ASelectableObject::ToggleSelect_Implementation(bool ToggleOn)
 {
 	SelectorMesh->SetVisibility(ToggleOn);
-	UE_LOG(LogTemp, Warning, TEXT("Test"));
 }
 
 
@@ -69,7 +68,7 @@ void ASelectableObject::AttackTarget_Implementation(AActor* Target)
 {
 	CurrentTarget = Target;
 
-	if (CurrentTarget->GetClass() == this->GetClass())
+	if (ASelectableObject::CurrentTarget)
 	{
 		selectHardpointToTarget();
 	}
@@ -81,10 +80,8 @@ void ASelectableObject::AttackTarget_Implementation(AActor* Target)
 
 void ASelectableObject::AttackExistingTarget_Implementation()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Triggered"));
 	if (IsValid(CurrentShipTarget))
 	{
-		UE_LOG(LogTemp, Warning, TEXT("We keep attackin"));
 		CurrentTarget = CurrentShipTarget;
 		selectHardpointToTarget();
 	}
@@ -195,6 +192,5 @@ void ASelectableObject::calculateWeaponsRange()
 	if (hardpointWeaponRanges.IsValidIndex(0))
 	{
 		WeaponsRange = hardpointWeaponRanges[0];
-		UE_LOG(LogTemp, Warning, TEXT("The weapon range is: %d"), (int)WeaponsRange);
 	}
 }

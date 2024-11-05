@@ -48,8 +48,6 @@ void AHardpoint::DealDamage_Implementation(float damageDealt)
 	FTimerHandle temp;
 	float tempHealth = currentHealth - damageDealt;
 
-	UE_LOG(LogTemp, Warning, TEXT("DamageDealt"));
-
 	if (tempHealth <= 0)
 	{
 		//Removes hardpoint from the array before destroying it
@@ -101,7 +99,6 @@ void AHardpoint::FireWeapon()
 {
 	if (IsValid(currentHardpointTarget)) 
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Fire"));
 		if (currentHardpointTarget->GetClass()->ImplementsInterface(UInterface_Damage::StaticClass()))
 		{
 			IInterface_Damage::Execute_DealDamage(currentHardpointTarget, outputDamage);
@@ -109,7 +106,6 @@ void AHardpoint::FireWeapon()
 	}
 	else
 	{
-		UE_LOG(LogTemp, Warning, TEXT("ClearTimer"));
 		GetWorldTimerManager().ClearTimer(FireHandle);
 		IInterface_Targeting::Execute_AttackExistingTarget(hardpointParent);
 	}
@@ -149,7 +145,6 @@ bool AHardpoint::CheckTargetRange(TArray<AActor*> ActorsToIgnore)
 	}
 	else
 	{
-		UE_LOG(LogTemp, Warning, TEXT("ClearedTimer"));
 		GetWorldTimerManager().ClearTimer(FireHandle);
 	}
 
@@ -162,6 +157,5 @@ void AHardpoint::SetTargetsParent()
 	if (targetRef)
 	{
 		hardpointParent->CurrentShipTarget = targetRef->hardpointParent;
-		UE_LOG(LogTemp, Warning, TEXT("TargetSet"));
 	}
 }

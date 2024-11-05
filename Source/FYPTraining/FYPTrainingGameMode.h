@@ -9,6 +9,8 @@
 
 class UUserWidget;
 class UPlayerHUD;
+class AShipyard;
+class EFactionTag;
 
 UCLASS(minimalapi)
 class AFYPTrainingGameMode : public AGameModeBase
@@ -46,7 +48,12 @@ public:
 
 	APlayerController* PC;
 
+	//UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "AITweakables")
+	//EFactionTag FactionTag;
+
 	//Functions
 	void IncreaseIncome(bool isAiControlled, float moneyToAdd);
+
+	void setShipyards();
 
 };

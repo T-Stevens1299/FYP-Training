@@ -4,6 +4,7 @@
 #include "FYPTrainingGameMode.h"
 #include "FYPTrainingCharacter.h"
 #include "PlayerHUD.h"
+#include "Shipyard.h"
 #include "Blueprint/UserWidget.h"
 #include <Kismet/GameplayStatics.h>
 #include "UObject/ConstructorHelpers.h"
@@ -33,11 +34,13 @@ void AFYPTrainingGameMode::BeginPlay()
 
 	HUD->updateFunds(currentPlayerMoney);
 	HUD->AddToViewport();
+
+	setShipyards();
 }
 
 void AFYPTrainingGameMode::IncreaseIncome(bool isAiControlled, float moneyToAdd)
 {
-	if (isAiControlled)
+	if (!isAiControlled)
 	{
 		currentAIMoney = currentAIMoney + (moneyToAdd * aiIncomeMultiplier);
 	}
@@ -45,5 +48,22 @@ void AFYPTrainingGameMode::IncreaseIncome(bool isAiControlled, float moneyToAdd)
 	{
 		currentPlayerMoney = currentPlayerMoney + moneyToAdd;
 		HUD->updateFunds(currentPlayerMoney);
+	}
+}
+
+void AFYPTrainingGameMode::setShipyards()
+{
+	TArray<AActor*> foundActors;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AShipyard::StaticClass(), foundActors);
+	for(int i = 0; i < foundActors.Num(); i++)
+	{
+		if (foundActors.IsValidIndex(i))
+		{
+			AShipyard* foundShipyardRef = Cast<AShipyard>(foundActors[i]);
+			if (foundShipyardRef)
+			{
+				foundShipyardRef->init(this);
+			}
+		}
 	}
 }
