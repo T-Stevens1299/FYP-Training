@@ -3,6 +3,7 @@
 
 #include "ShipyardWidget.h"
 #include "Components/Button.h"
+#include "Shipyard.h"
 
 UShipyardWidget::UShipyardWidget(const FObjectInitializer& ObjectInitializer)
 	:Super(ObjectInitializer)
@@ -12,8 +13,177 @@ UShipyardWidget::UShipyardWidget(const FObjectInitializer& ObjectInitializer)
 
 void UShipyardWidget::NativeConstruct()
 {
-	//if (CloseButton)
-	//{
-	//	CloseButton->OnClicked.AddDynamic(this, &UShopHUD::closeShopWindow);
-	//}
+	if (BuildCorvette)
+	{
+		BuildCorvette->OnClicked.AddDynamic(this, &UShipyardWidget::queueCorvette);
+	}
+
+	if (BuildFrigate)
+	{
+		BuildFrigate->OnClicked.AddDynamic(this, &UShipyardWidget::queueFrigate);
+	}
+
+	if (BuildDestroyer)
+	{
+		BuildDestroyer->OnClicked.AddDynamic(this, &UShipyardWidget::queueDestroyer);
+	}
+
+	if (BuildBattleship)
+	{
+		BuildBattleship->OnClicked.AddDynamic(this, &UShipyardWidget::queueBattleship);
+	}
+
+	if (BuildAircraftCarrier)
+	{
+		BuildAircraftCarrier->OnClicked.AddDynamic(this, &UShipyardWidget::queueAircraftCarrier);
+	}
+
+	if (TechLevel2)
+	{
+		TechLevel2->OnClicked.AddDynamic(this, &UShipyardWidget::queueTechLevel2);
+	}
+
+	if (TechLevel3)
+	{
+		TechLevel3->OnClicked.AddDynamic(this, &UShipyardWidget::queueTechLevel3);
+	}
+
+	if (TechLevel4)
+	{
+		TechLevel4->OnClicked.AddDynamic(this, &UShipyardWidget::queueTechLevel4);
+	}
+}
+
+void UShipyardWidget::init(AShipyard* shipyardPtr)
+{
+	shipyardRef = shipyardPtr;
+	currentTechLevel = 0;
+	upgradeTechLevel();
+}
+
+void UShipyardWidget::upgradeTechLevel()
+{
+	currentTechLevel++;
+	switch (currentTechLevel)
+	{
+	case 1:
+		//Buttons to Show
+		BuildCorvette->SetVisibility(ESlateVisibility::Visible);
+		BuildCorvette->SetIsEnabled(true);
+
+		HealthUpgrade1->SetVisibility(ESlateVisibility::Visible);
+		HealthUpgrade1->SetIsEnabled(true);
+
+		DamageUpgrade1->SetVisibility(ESlateVisibility::Visible);
+		DamageUpgrade1->SetIsEnabled(true);
+
+		TechLevel2->SetVisibility(ESlateVisibility::Visible);
+		TechLevel2->SetIsEnabled(true);
+
+		break;
+	case 2:
+		//Buttons to Show
+		BuildFrigate->SetVisibility(ESlateVisibility::Visible);
+		BuildFrigate->SetIsEnabled(true);
+
+		BuildDestroyer->SetVisibility(ESlateVisibility::Visible);
+		BuildDestroyer->SetIsEnabled(true);
+
+		TechLevel3->SetVisibility(ESlateVisibility::Visible);
+		TechLevel3->SetIsEnabled(true);
+
+		//Buttons to hide
+		TechLevel2->SetVisibility(ESlateVisibility::Hidden);
+		TechLevel2->SetIsEnabled(false);
+
+		break;
+	case 3:
+		//Buttons to show
+		BuildCruiser->SetVisibility(ESlateVisibility::Visible);
+		BuildCruiser->SetIsEnabled(true);
+
+		TechLevel4->SetVisibility(ESlateVisibility::Visible);
+		TechLevel4->SetIsEnabled(true);
+
+		//Buttons to hide
+		TechLevel3->SetVisibility(ESlateVisibility::Hidden);
+		TechLevel3->SetIsEnabled(false);
+
+		break;
+	case 4:
+		//Buttons to show
+		BuildBattleship->SetVisibility(ESlateVisibility::Visible);
+		BuildBattleship->SetIsEnabled(true);
+
+		BuildAircraftCarrier->SetVisibility(ESlateVisibility::Visible);
+		BuildAircraftCarrier->SetIsEnabled(true);
+
+		//Buttons to hide
+		TechLevel4->SetVisibility(ESlateVisibility::Hidden);
+		TechLevel4->SetIsEnabled(false);
+		break;
+	default:
+		break;
+	}
+}
+
+void UShipyardWidget::triggerTechLevelCheck(FString techLevelRowName)
+{
+	FName rowToFind = FName(*techLevelRowName);
+	currentRow = dataTableRef.DataTable->FindRow<FConstructionData>(rowToFind, "");
+	
+	shipyardRef->canUpgradeTechLevel(currentRow->requiredFunds, currentRow->constructionTime);
+}
+
+void UShipyardWidget::queueCorvette()
+{
+	addShipToQueue("Corvette");
+}
+
+void UShipyardWidget::queueFrigate()
+{
+	addShipToQueue("Frigate");
+}
+
+void UShipyardWidget::queueDestroyer()
+{
+	addShipToQueue("Destroyer");
+}
+
+void UShipyardWidget::queueCruiser()
+{
+	addShipToQueue("Cruiser");
+}
+
+void UShipyardWidget::queueBattleship()
+{
+	addShipToQueue("Battleship");
+}
+
+void UShipyardWidget::queueAircraftCarrier()
+{
+	addShipToQueue("AircraftCarrier");
+}
+
+void UShipyardWidget::queueTechLevel2()
+{
+	triggerTechLevelCheck("TechLevel2");
+}
+
+void UShipyardWidget::queueTechLevel3()
+{
+	triggerTechLevelCheck("TechLevel3");
+}
+
+void UShipyardWidget::queueTechLevel4()
+{
+	triggerTechLevelCheck("TechLevel4");
+}
+
+void UShipyardWidget::addShipToQueue(FString RelatedRowName)
+{
+	FName rowToFind = FName(*RelatedRowName);
+	currentRow = dataTableRef.DataTable->FindRow<FConstructionData>(rowToFind, "");
+
+	shipyardRef->constructShip(currentRow->shipToSpawn.Get(), currentRow->requiredFunds, currentRow->constructionTime);
 }

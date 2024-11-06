@@ -3,12 +3,35 @@
 #pragma once
 
 #include "CoreMinimal.h"
+
+#include "Engine/DataTable.h"
+
 #include "Blueprint/UserWidget.h"
 #include "ShipyardWidget.generated.h"
 
-/**
- * 
- */
+class AShipyard;
+class ASelectableObject;
+
+
+USTRUCT(BlueprintType)
+struct FConstructionData : public FTableRowBase
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	FText AssetName;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	float requiredFunds;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	float constructionTime;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	TSoftClassPtr<AActor> shipToSpawn;
+};
+
+
 UCLASS()
 class FYPTRAINING_API UShipyardWidget : public UUserWidget
 {
@@ -20,9 +43,27 @@ public:
 
 	virtual void NativeConstruct() override;
 
-	//Variables
+	void addShipToQueue(FString RelatedRowName);
 
-	//Components
+	void init(AShipyard* shipyardPtr);
+
+	void triggerTechLevelCheck(FString techLevelRowName);
+
+	void upgradeTechLevel();
+
+	//References
+	AShipyard* shipyardRef;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	FDataTableRowHandle dataTableRef;
+
+	FConstructionData* currentRow;
+
+	//Variables
+	int currentTechLevel;
+
+protected:
+	//UI Components
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UButton* BuildCorvette;
 
@@ -81,4 +122,32 @@ public:
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UButton* AircraftCarrierUpgrade;
+
+	//Bound Functions
+	UFUNCTION()
+	void queueCorvette();
+
+	UFUNCTION()
+	void queueFrigate();
+
+	UFUNCTION()
+	void queueDestroyer();
+
+	UFUNCTION()
+	void queueCruiser();
+
+	UFUNCTION()
+	void queueBattleship();
+
+	UFUNCTION()
+	void queueAircraftCarrier();
+
+	UFUNCTION()
+	void queueTechLevel2();
+
+	UFUNCTION()
+	void queueTechLevel3();
+
+	UFUNCTION()
+	void queueTechLevel4();
 };

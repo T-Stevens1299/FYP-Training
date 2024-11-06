@@ -99,8 +99,10 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UnitTweakables")
 	float UnitRotationSpeed;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UnitTweakables")
 	int PopulationValue;
+
 
 	//Weapons Range variable decided by lowest hardpoint weapons range
 	float WeaponsRange;
