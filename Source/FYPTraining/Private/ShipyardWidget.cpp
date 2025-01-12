@@ -52,6 +52,11 @@ void UShipyardWidget::NativeConstruct()
 	{
 		TechLevel4->OnClicked.AddDynamic(this, &UShipyardWidget::queueTechLevel4);
 	}
+
+	if (BuildMines)
+	{
+		BuildMines->OnClicked.AddDynamic(this, &UShipyardWidget::triggerMineBuild);
+	}
 }
 
 void UShipyardWidget::init(AShipyard* shipyardPtr)
@@ -59,6 +64,12 @@ void UShipyardWidget::init(AShipyard* shipyardPtr)
 	shipyardRef = shipyardPtr;
 	currentTechLevel = 0;
 	upgradeTechLevel();
+}
+
+void UShipyardWidget::triggerMineBuild()
+{
+	UE_LOG(LogTemp, Warning, TEXT("TriggerMineBuild"));
+	shipyardRef->buildMines();
 }
 
 void UShipyardWidget::upgradeTechLevel()
@@ -70,6 +81,9 @@ void UShipyardWidget::upgradeTechLevel()
 		//Buttons to Show
 		BuildCorvette->SetVisibility(ESlateVisibility::Visible);
 		BuildCorvette->SetIsEnabled(true);
+
+		BuildMines->SetVisibility(ESlateVisibility::Visible);
+		BuildMines->SetIsEnabled(true);
 
 		HealthUpgrade1->SetVisibility(ESlateVisibility::Visible);
 		HealthUpgrade1->SetIsEnabled(true);

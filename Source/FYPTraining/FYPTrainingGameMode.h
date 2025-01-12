@@ -48,6 +48,11 @@ public:
 
 	APlayerController* PC;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ResourceMines")
+	TArray<AActor*> AIResourceMine;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ResourceMines")
+	TArray<AActor*> PlayerResourceMine;
+
 	//UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "AITweakables")
 	//EFactionTag FactionTag;
 
@@ -55,5 +60,9 @@ public:
 	void IncreaseIncome(bool isAiControlled, float moneyToAdd);
 
 	void setShipyards();
+
+	void setMines();
+
+	void updateMineStatus(AActor* passedMine, bool playerControlled, bool isCaptured);
 
 };

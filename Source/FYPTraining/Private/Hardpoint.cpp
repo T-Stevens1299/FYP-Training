@@ -27,7 +27,6 @@ AHardpoint::AHardpoint()
 void AHardpoint::BeginPlay()
 {
 	Super::BeginPlay();
-	
 	currentHealth = totalHealth;
 }
 

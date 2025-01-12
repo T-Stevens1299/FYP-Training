@@ -75,7 +75,7 @@ public:
 
 
 
-	void HealthCalculations();
+	virtual void HealthCalculations();
 
 	void calculateWeaponsRange();
 

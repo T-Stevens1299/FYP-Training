@@ -119,9 +119,8 @@ protected:
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UButton* DamageUpgrade4;
 
-
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UButton* AircraftCarrierUpgrade;
+	class UButton* BuildMines;
 
 	//Bound Functions
 	UFUNCTION()
@@ -150,4 +149,7 @@ protected:
 
 	UFUNCTION()
 	void queueTechLevel4();
+
+	UFUNCTION()
+	void triggerMineBuild();
 };

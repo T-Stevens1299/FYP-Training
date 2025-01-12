@@ -6,6 +6,7 @@
 #include "Hardpoint.h"
 #include "Components/SphereComponent.h"
 
+
 // Sets default values
 ASelectableObject::ASelectableObject()
 {

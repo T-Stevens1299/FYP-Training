@@ -51,6 +51,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "HardpointTweakables")
 	float totalHealth;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "HardpointTweakables")
 	float currentHealth;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "HardpointTweakables")
@@ -84,6 +85,8 @@ public:
 	void SetTargetsParent();
 
 	void destroyHardpoint();
+
+	void setHealthAtStart(); //This is a workaround as instansiating hardpoints will destroy the actor you try to spawn one on.
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void init();

@@ -6,6 +6,7 @@
 #include "Blueprint/UserWidget.h"
 #include "ShipyardWidget.h"
 #include <Kismet/GameplayStatics.h>
+#include "ResourceMine.h"
 
 AShipyard::AShipyard()
 {
@@ -79,6 +80,38 @@ void AShipyard::buildShip()
 	UE_LOG(LogTemp, Warning, TEXT("Construction Finished"));
 	isConstructingAlready = false;
 	GetWorldTimerManager().ClearTimer(constructionTime);
+}
+
+void AShipyard::buildMines()
+{
+	TArray<AActor*> mineRef = gmRef->PlayerResourceMine;
+	AResourceMine* curMine;
+
+	if (!(mineRef.Num() == 0))
+	{
+		if (gmRef->currentPlayerMoney >= (mineCost * mineRef.Num()))
+		{
+			for (int i = 0; i < mineRef.Num(); i++)
+			{
+				if (mineRef.IsValidIndex(i))
+				{
+					curMine = Cast<AResourceMine>(mineRef[i]);
+					if (curMine)
+					{
+						if (!(curMine->isBuilt))
+						{
+							gmRef->IncreaseIncome(playerControlled, -mineCost);
+							curMine->buildMine();
+						}
+					}
+				}
+			}
+		}
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("No Active Mines"));
+	}
 }
 
 void AShipyard::canUpgradeTechLevel(float upgradeCost, float upgradeTime)

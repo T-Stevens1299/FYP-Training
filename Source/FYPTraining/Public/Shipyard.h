@@ -30,6 +30,8 @@ public:
 
 	void buildShip();
 
+	void buildMines();
+
 	void canUpgradeTechLevel(float upgradeCost, float upgradeTime);
 
 	void upgradeLevel();
@@ -37,6 +39,9 @@ public:
 	//Variables
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ShipyardTweakables")
 	float baseIncomeRate;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ShipyardTweakables")
+	float mineCost;
 
 	bool isConstructingAlready;
 

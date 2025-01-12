@@ -5,6 +5,7 @@
 #include "FYPTrainingCharacter.h"
 #include "PlayerHUD.h"
 #include "Shipyard.h"
+#include "ResourceMine.h"
 #include "Blueprint/UserWidget.h"
 #include <Kismet/GameplayStatics.h>
 #include "UObject/ConstructorHelpers.h"
@@ -36,6 +37,8 @@ void AFYPTrainingGameMode::BeginPlay()
 	HUD->AddToViewport();
 
 	setShipyards();
+
+	setMines();
 }
 
 void AFYPTrainingGameMode::IncreaseIncome(bool isAiControlled, float moneyToAdd)
@@ -66,4 +69,60 @@ void AFYPTrainingGameMode::setShipyards()
 			}
 		}
 	}
+}
+
+void AFYPTrainingGameMode::setMines()
+{
+	TArray<AActor*> foundMines;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AResourceMine::StaticClass(), foundMines);
+	for (int i = 0; i < foundMines.Num(); i++)
+	{
+		if (foundMines.IsValidIndex(i))
+		{
+			AResourceMine* foundMineRef = Cast<AResourceMine>(foundMines[i]);
+			if (foundMineRef)
+			{
+				foundMineRef->Init(this);
+			}
+		}
+	}
+}
+
+void AFYPTrainingGameMode::updateMineStatus(AActor* passedMine, bool playerControlled, bool isCaptured)
+{
+	if (isCaptured)
+	{
+		if (playerControlled)
+		{
+			PlayerResourceMine.Add(passedMine);
+		}
+		else 
+		{
+			AIResourceMine.Add(passedMine);
+		}
+	}
+	else 
+	{
+		if (playerControlled)
+		{
+			for (int i = 0; PlayerResourceMine.Num(); i++)
+			{
+				if (passedMine == PlayerResourceMine[i])
+				{
+					PlayerResourceMine.RemoveSingle(AIResourceMine[i]);
+				}
+			}
+		}
+		else
+		{
+			for (int i = 0; AIResourceMine.Num(); i++)
+			{
+				if (passedMine == AIResourceMine[i])
+				{
+					AIResourceMine.RemoveSingle(AIResourceMine[i]);
+				}
+			}
+		}
+	}
+
 }
