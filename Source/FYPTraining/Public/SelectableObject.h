@@ -12,6 +12,7 @@
 
 class USphereComponent;
 class AHardpoint;
+class UBehaviorTree;
 
 UCLASS()
 class FYPTRAINING_API ASelectableObject : public ACharacter, public IInterface_Selectable, public IInterface_Targeting, public IInterface_Damage
@@ -73,13 +74,16 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Setup")
 	void setHardpointsParent();
 
-
-
 	virtual void HealthCalculations();
 
 	void calculateWeaponsRange();
 
 	void selectHardpointToTarget();
+
+	//Health Percentage getter
+	float getUnitHealthPercentage() { return (currentUnitHealth / totalUnitHealth); }
+
+	float getStrengthValue() { return (unitCost * currentUnitHealth) / totalUnitHealth; }
 
 	//Variables
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UnitTweakables")
@@ -87,11 +91,20 @@ public:
 
 	bool hasTarget;
 
+	bool initHealthCheck = true;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UnitTweakables")
 	bool staticObject;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UnitTweakables")
 	bool playerControlled;
+
+	float totalUnitHealth;
+
+	float currentUnitHealth;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UnitTweakables")
+	float unitCost;
 	
 	//Editable Variables
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UnitTweakables")
@@ -102,6 +115,12 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UnitTweakables")
 	int PopulationValue;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UnitTweakables")
+	int orderCode;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UnitTweakables")
+	UBehaviorTree* BT_Asset;
 
 
 	//Weapons Range variable decided by lowest hardpoint weapons range

@@ -160,7 +160,14 @@ void ASelectableObject::HealthCalculations()
 		}
 	}
 
-	UE_LOG(LogTemp, Warning, TEXT("The Total unit health is: %d"), (int)newTotalHealth);
+	if (initHealthCheck)
+	{
+		totalUnitHealth = newTotalHealth;
+		initHealthCheck = false;
+		UE_LOG(LogTemp, Warning, TEXT("The Total unit health is: %d"), (int)newTotalHealth);
+	}
+
+	currentUnitHealth = newTotalHealth;
 
 	if (newTotalHealth <= 0)
 	{

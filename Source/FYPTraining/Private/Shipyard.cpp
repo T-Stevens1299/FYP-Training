@@ -20,16 +20,24 @@ void AShipyard::init(AFYPTrainingGameMode* gamemodeReference)
 
 	gmRef = gamemodeReference;
 
-	GetWorldTimerManager().SetTimer(incomeTimer, this, &AShipyard::GenerateBaseIncome, 1.0f, true, 1.0f);
+	generateIncome(0, false);
 
 	HUD = CreateWidget<UShipyardWidget>(PC, HUDref);
 	HUD->init(this);
 	HUD->AddToViewport();
 }
 
-void AShipyard::GenerateBaseIncome()
+void AShipyard::generateIncome(float prevIncomeRate, bool techUpgrade)
 {
-	gmRef->IncreaseIncome(playerControlled, baseIncomeRate);
+	if (techUpgrade)
+	{
+		float incomeToAdd = IncomeRate - prevIncomeRate;
+		gmRef->increaseIncomePerSecond(true, incomeToAdd);
+	}
+	else
+	{
+		gmRef->increaseIncomePerSecond(true, IncomeRate);
+	}
 }
 
 void AShipyard::constructShip(TSubclassOf<AActor> shipToSpawn, float shipCost, float buildTime)
@@ -41,9 +49,10 @@ void AShipyard::constructShip(TSubclassOf<AActor> shipToSpawn, float shipCost, f
 		int fundCheck = (gmRef->currentPlayerMoney - shipCost);
 		if (fundCheck >= 0)
 		{
+			currentShipCost = shipCost;
 			shipConstructing = shipToSpawn;
 			isConstructingAlready = true;
-			gmRef->IncreaseIncome(playerControlled, -shipCost);
+			gmRef->subtractCost(playerControlled, shipCost);
 			UE_LOG(LogTemp, Warning, TEXT("Construction Time Again"));
 			GetWorldTimerManager().SetTimer(constructionTime, this, &AShipyard::buildShip, buildTime, true, buildTime);
 		}
@@ -75,6 +84,7 @@ void AShipyard::buildShip()
 	if (classRef)
 	{
 		classRef->playerControlled = playerControlled;
+		classRef->unitCost = currentShipCost;
 	}
 
 	UE_LOG(LogTemp, Warning, TEXT("Construction Finished"));
@@ -100,7 +110,7 @@ void AShipyard::buildMines()
 					{
 						if (!(curMine->isBuilt))
 						{
-							gmRef->IncreaseIncome(playerControlled, -mineCost);
+							gmRef->subtractCost(playerControlled, mineCost);
 							curMine->buildMine();
 						}
 					}
@@ -122,7 +132,7 @@ void AShipyard::canUpgradeTechLevel(float upgradeCost, float upgradeTime)
 		if (fundsCheck >= 0)
 		{
 			isUpgradingAlready = true;
-			gmRef->IncreaseIncome(playerControlled, -upgradeCost);
+			gmRef->subtractCost(playerControlled, upgradeCost);
 			GetWorldTimerManager().SetTimer(upgradingTimer, this, &AShipyard::upgradeLevel, upgradeTime, true, upgradeTime);
 			UE_LOG(LogTemp, Warning, TEXT("Upgrading Time Again"));
 		}

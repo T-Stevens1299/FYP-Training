@@ -9,6 +9,7 @@
 #include "Blueprint/UserWidget.h"
 #include <Kismet/GameplayStatics.h>
 #include "UObject/ConstructorHelpers.h"
+#include "AIMasterControlManager.h"
 
 AFYPTrainingGameMode::AFYPTrainingGameMode()
 {
@@ -26,6 +27,13 @@ void AFYPTrainingGameMode::BeginPlay()
 
 	PC = UGameplayStatics::GetPlayerController(GetWorld(), 0);
 
+	AActor* spawnedAiManager = GetWorld()->SpawnActor(aiManager);
+	aiManagerRef = Cast<AAIMasterControlManager>(spawnedAiManager);
+	if (aiManagerRef)
+	{
+		aiManagerRef->Init(this);
+	}
+
 	HUD = CreateWidget<UPlayerHUD>(PC, HUDref);
 	HUD->SetGmPtr(this);
 
@@ -36,21 +44,41 @@ void AFYPTrainingGameMode::BeginPlay()
 	HUD->updateFunds(currentPlayerMoney);
 	HUD->AddToViewport();
 
+	GetWorldTimerManager().SetTimer(incomeHandle, this, &AFYPTrainingGameMode::IncreaseIncome, 1.0f, true, 1.0f);
+
 	setShipyards();
 
 	setMines();
 }
 
-void AFYPTrainingGameMode::IncreaseIncome(bool isAiControlled, float moneyToAdd)
+void AFYPTrainingGameMode::IncreaseIncome()
 {
-	if (!isAiControlled)
+	currentAIMoney = currentAIMoney + (aiIncomePerSecond * aiIncomeMultiplier);
+	currentPlayerMoney = currentPlayerMoney + playerIncomePerSecond;
+	HUD->updateFunds(currentPlayerMoney);
+}
+
+void AFYPTrainingGameMode::increaseIncomePerSecond(bool playerControlled, float incomeToIncrease)
+{
+	if (playerControlled)
 	{
-		currentAIMoney = currentAIMoney + (moneyToAdd * aiIncomeMultiplier);
+		playerIncomePerSecond = playerIncomePerSecond + incomeToIncrease;
 	}
-	else 
+	else
 	{
-		currentPlayerMoney = currentPlayerMoney + moneyToAdd;
-		HUD->updateFunds(currentPlayerMoney);
+		aiIncomePerSecond = aiIncomePerSecond + incomeToIncrease;
+	}
+}
+
+void AFYPTrainingGameMode::subtractCost(bool playerControlled, float incomeToSubtract)
+{
+	if (playerControlled)
+	{
+		currentPlayerMoney = currentPlayerMoney - incomeToSubtract;
+	}
+	else
+	{
+		currentAIMoney = currentAIMoney - incomeToSubtract;
 	}
 }
 
@@ -124,5 +152,28 @@ void AFYPTrainingGameMode::updateMineStatus(AActor* passedMine, bool playerContr
 			}
 		}
 	}
+}
 
+void AFYPTrainingGameMode::addShipsToArray(AActor* shipToAdd, bool isPlayerControlled)
+{
+	if (isPlayerControlled)
+	{
+		ActivePlayerShips.Add(shipToAdd);
+	}
+	else
+	{
+		ActiveAiShips.Add(shipToAdd);
+	}
+}
+
+void AFYPTrainingGameMode::removeShipsFromArray(AActor* shipToAdd, bool isPlayerControlled)
+{
+	if (isPlayerControlled)
+	{
+		ActivePlayerShips.RemoveSingle(shipToAdd);
+	}
+	else
+	{
+		ActiveAiShips.RemoveSingle(shipToAdd);
+	}
 }

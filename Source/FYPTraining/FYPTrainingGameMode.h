@@ -10,7 +10,9 @@
 class UUserWidget;
 class UPlayerHUD;
 class AShipyard;
-class EFactionTag;
+class AAIMasterControlManager;
+
+//class EFactionTag;
 
 UCLASS(minimalapi)
 class AFYPTrainingGameMode : public AGameModeBase
@@ -26,8 +28,10 @@ protected:
 
 public:
 	//Variables
+	UPROPERTY(BlueprintReadOnly, Category = "AITweakables")
 	float currentPlayerMoney;
 
+	UPROPERTY(BlueprintReadOnly, Category = "AITweakables")
 	float currentAIMoney;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AITweakables")
@@ -39,6 +43,18 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AITweakables")
 	float startingPlayerFunds;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AITweakables")
+	float aiIncomePerSecond;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AITweakables")
+	float playerIncomePerSecond;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AITweakables")
+	TSubclassOf<AActor> aiManager;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AITweakables")
+	AAIMasterControlManager* aiManagerRef;
+
 	/** HUD Widget */
 	UPROPERTY(EditDefaultsOnly, Category = "HUD")
 	TSubclassOf<UUserWidget> HUDref;
@@ -48,21 +64,36 @@ public:
 
 	APlayerController* PC;
 
+	FTimerHandle incomeHandle;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ResourceMines")
 	TArray<AActor*> AIResourceMine;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ResourceMines")
 	TArray<AActor*> PlayerResourceMine;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ShipArrays")
+	TArray<AActor*> ActiveAiShips;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ShipArrays")
+	TArray<AActor*> ActivePlayerShips;
+
 	//UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "AITweakables")
 	//EFactionTag FactionTag;
 
 	//Functions
-	void IncreaseIncome(bool isAiControlled, float moneyToAdd);
+	void IncreaseIncome();
+
+	void increaseIncomePerSecond(bool playerControlled, float incomeToIncrease);
+
+	void subtractCost(bool playerControlled, float incomeToSubtract);
 
 	void setShipyards();
 
 	void setMines();
 
 	void updateMineStatus(AActor* passedMine, bool playerControlled, bool isCaptured);
+
+	void addShipsToArray(AActor* shipToAdd, bool isPlayerControlled);
+
+	void removeShipsFromArray(AActor* shipToAdd, bool isPlayerControlled);
 
 };

@@ -33,9 +33,17 @@ void AResourceMine::Tick(float DeltaTime)
 	captureMine();
 }
 
-void AResourceMine::generateIncome()
+void AResourceMine::generateIncome(float prevIncomeRate, bool techUpgrade)
 {
-	gmRef->IncreaseIncome(playerControlled, IncomeRate);
+	if (techUpgrade)
+	{
+		float incomeToAdd = IncomeRate - prevIncomeRate;
+		gmRef->increaseIncomePerSecond(playerControlled, incomeToAdd);
+	}
+	else
+	{
+		gmRef->increaseIncomePerSecond(playerControlled, IncomeRate);
+	}
 }
 
 void AResourceMine::setMineLevel(int newMineLevel)
@@ -43,6 +51,7 @@ void AResourceMine::setMineLevel(int newMineLevel)
 	if (IncomeRateLevels.IsValidIndex(newMineLevel))
 	{
 		IncomeRate = IncomeRateLevels[newMineLevel];
+		generateIncome(IncomeRateLevels[newMineLevel], true);
 	}
 }
 
@@ -131,7 +140,7 @@ void AResourceMine::buildMine()
 
 	setHardpointsParent();
 
-	GetWorldTimerManager().SetTimer(incomeTimer, this, &AResourceMine::generateIncome, 1.0f, true, 1.0f);
+	generateIncome(0, false);
 }
 
 void AResourceMine::HealthCalculations()
@@ -160,6 +169,7 @@ void AResourceMine::HealthCalculations()
 		{
 			gmRef->AIResourceMine.RemoveSingle(this);
 		}
+		GetWorldTimerManager().ClearTimer(incomeTimer);
 		isBuilt = false;
 		isCaptured = false;
 	}

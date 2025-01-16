@@ -24,7 +24,7 @@ public:
 
 	void init(AFYPTrainingGameMode* gamemodeReference);
 
-	void GenerateBaseIncome();
+	void generateIncome(float prevIncomeRate, bool techUpgrade);
 
 	void constructShip(TSubclassOf<AActor> shipToSpawn, float shipCost, float buildTime);
 
@@ -38,10 +38,12 @@ public:
 
 	//Variables
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ShipyardTweakables")
-	float baseIncomeRate;
+	float IncomeRate;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ShipyardTweakables")
 	float mineCost;
+
+	float currentShipCost;
 
 	bool isConstructingAlready;
 
