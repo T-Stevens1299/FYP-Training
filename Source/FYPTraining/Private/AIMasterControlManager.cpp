@@ -6,6 +6,9 @@
 #include "ResourceManager.h"
 #include <Kismet/GameplayStatics.h>
 #include "SelectableObject.h"
+#include "ResourceManager.h"
+#include "ResearchManager.h"
+#include "UnitManager.h"
 
 // Sets default values
 AAIMasterControlManager::AAIMasterControlManager()
@@ -28,6 +31,27 @@ void AAIMasterControlManager::Init(AFYPTrainingGameMode* gmRef)
 	if (dynamicDifficultyScalingActive)
 	{
 		GetWorldTimerManager().SetTimer(ddsCheckTimer, this, &AAIMasterControlManager::dynamicDifficultyScalingCheck, 5.0f, true, 5.0f);
+	}
+
+	AActor* spawnedResourceManager = GetWorld()->SpawnActor(resourceManager);
+	resourceManagerRef = Cast<AResourceManager>(spawnedResourceManager);
+	if (resourceManagerRef)
+	{
+		resourceManagerRef;
+	}
+
+	AActor* spawnedResearchManager = GetWorld()->SpawnActor(researchManager);
+	researchManagerRef = Cast<AResearchManager>(spawnedResearchManager);
+	if (researchManagerRef)
+	{
+		researchManagerRef;
+	}
+
+	AActor* spawnedUnitManager = GetWorld()->SpawnActor(unitManager);
+	unitManagerRef = Cast<AUnitManager>(spawnedUnitManager);
+	if (unitManagerRef)
+	{
+		unitManagerRef;
 	}
 }
 

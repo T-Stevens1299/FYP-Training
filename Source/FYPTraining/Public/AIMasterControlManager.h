@@ -8,6 +8,8 @@
 
 class AFYPTrainingGameMode;
 class AResourceManager;
+class AResearchManager;
+class AUnitManager;
 
 UCLASS()
 class FYPTRAINING_API AAIMasterControlManager : public AActor
@@ -19,6 +21,8 @@ public:
 	AAIMasterControlManager();
 
 	void Init(AFYPTrainingGameMode* gmRef);
+
+
 
 public:	
 	AFYPTrainingGameMode* gamemodeRef;
@@ -37,6 +41,21 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AIProperties")
 	float learningRate = 0.01;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AIManagers")
+	TSubclassOf<AActor> resourceManager;
+
+	AResourceManager* resourceManagerRef;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AIManagers")
+	TSubclassOf<AActor> researchManager;
+
+	AResearchManager* researchManagerRef;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AIManagers")
+	TSubclassOf<AActor> unitManager;
+
+	AUnitManager* unitManagerRef;
 
 private:
 	FTimerHandle ddsCheckTimer;

@@ -44,7 +44,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ManagerProperties")
 	bool usingLanchesterModel;
 
-	bool captureMine;
+	bool captureMine = false;
 
 	bool shouldAttack;
 

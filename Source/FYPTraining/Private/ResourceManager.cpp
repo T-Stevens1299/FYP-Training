@@ -17,10 +17,11 @@ void AResourceManager::Init(AFYPTrainingGameMode* gmRef)
 {
 	gamemodeRef = gmRef;
 
-	ACombatManager* cm = Cast<ACombatManager>(cmRef);
-	if (cm)
+	AActor* spawnedCombatManager = GetWorld()->SpawnActor(combatManager);
+	cmRef = Cast<ACombatManager>(spawnedCombatManager);
+	if (cmRef)
 	{
-		cm->captureInitialMines(gamemodeRef, mine1, mine2);
+		cmRef->captureInitialMines(gmRef, mine1, mine2);
 	}
 }
 
