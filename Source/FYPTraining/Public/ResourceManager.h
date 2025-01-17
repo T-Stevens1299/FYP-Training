@@ -26,6 +26,7 @@ public:
 
 	AFYPTrainingGameMode* gamemodeRef;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "CombatManager")
 	TSubclassOf<AActor> combatManager;
 	
 	ACombatManager* cmRef;

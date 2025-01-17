@@ -37,7 +37,7 @@ void AAIMasterControlManager::Init(AFYPTrainingGameMode* gmRef)
 	resourceManagerRef = Cast<AResourceManager>(spawnedResourceManager);
 	if (resourceManagerRef)
 	{
-		resourceManagerRef;
+		resourceManagerRef->Init(gamemodeRef);
 	}
 
 	AActor* spawnedResearchManager = GetWorld()->SpawnActor(researchManager);

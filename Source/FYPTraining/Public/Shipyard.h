@@ -36,6 +36,8 @@ public:
 
 	void upgradeLevel();
 
+	virtual void triggerWinCheck() override;
+
 	//Variables
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ShipyardTweakables")
 	float IncomeRate;

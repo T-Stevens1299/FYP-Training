@@ -28,10 +28,10 @@ protected:
 
 public:
 	//Variables
-	UPROPERTY(BlueprintReadOnly, Category = "AITweakables")
+	UPROPERTY(EditAnywhere, Category = "AITweakables")
 	float currentPlayerMoney;
 
-	UPROPERTY(BlueprintReadOnly, Category = "AITweakables")
+	UPROPERTY(EditAnywhere, Category = "AITweakables")
 	float currentAIMoney;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AITweakables")
@@ -95,5 +95,7 @@ public:
 	void addShipsToArray(AActor* shipToAdd, bool isPlayerControlled);
 
 	void removeShipsFromArray(AActor* shipToAdd, bool isPlayerControlled);
+
+	void gameEnd(bool playerControlled);
 
 };

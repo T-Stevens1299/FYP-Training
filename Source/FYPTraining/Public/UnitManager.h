@@ -6,6 +6,8 @@
 #include "GameFramework/Actor.h"
 #include "UnitManager.generated.h"
 
+class AShipyard;
+
 UCLASS()
 class FYPTRAINING_API AUnitManager : public AActor
 {
@@ -14,6 +16,10 @@ class FYPTRAINING_API AUnitManager : public AActor
 public:	
 	// Sets default values for this actor's properties
 	AUnitManager();
+
+	void setShipyardPtr(AShipyard* shipyardRef);
+	
+	AShipyard* shipYardRef;
 
 protected:
 	// Called when the game starts or when spawned

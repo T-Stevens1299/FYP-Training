@@ -2,6 +2,7 @@
 
 
 #include "UnitManager.h"
+#include "Shipyard.h"
 
 // Sets default values
 AUnitManager::AUnitManager()
@@ -9,6 +10,12 @@ AUnitManager::AUnitManager()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+}
+
+void AUnitManager::setShipyardPtr(AShipyard* shipyardRef)
+{
+	shipYardRef = shipyardRef;
+	UE_LOG(LogTemp, Warning, TEXT("Shipyard Ref Set"));
 }
 
 // Called when the game starts or when spawned

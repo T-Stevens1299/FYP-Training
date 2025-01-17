@@ -7,6 +7,7 @@
 #include "ShipyardWidget.h"
 #include <Kismet/GameplayStatics.h>
 #include "ResourceMine.h"
+#include "UnitManager.h"
 
 AShipyard::AShipyard()
 {
@@ -16,15 +17,36 @@ AShipyard::AShipyard()
 
 void AShipyard::init(AFYPTrainingGameMode* gamemodeReference)
 {
-	PC = UGameplayStatics::GetPlayerController(GetWorld(), 0);
 
 	gmRef = gamemodeReference;
 
 	generateIncome(0, false);
 
-	HUD = CreateWidget<UShipyardWidget>(PC, HUDref);
-	HUD->init(this);
-	HUD->AddToViewport();
+	if (playerControlled)
+	{
+		//Player shipyard sets the Player controller and creates a HUD interface
+		PC = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+		HUD = CreateWidget<UShipyardWidget>(PC, HUDref);
+		HUD->init(this);
+		HUD->AddToViewport();
+	}
+	else
+	{
+		//Enemy shipyard locates the combat manager and sends a reference of its self to it
+		TArray<AActor*> foundActors;
+		UGameplayStatics::GetAllActorsOfClass(GetWorld(), AUnitManager::StaticClass(), foundActors);
+		for (int i = 0; i < foundActors.Num(); i++)
+		{
+			if (foundActors.IsValidIndex(i))
+			{
+				AUnitManager* managerRef = Cast<AUnitManager>(foundActors[i]);
+				if (managerRef)
+				{
+					managerRef->setShipyardPtr(this);
+				}
+			}
+		}
+	}
 }
 
 void AShipyard::generateIncome(float prevIncomeRate, bool techUpgrade)
@@ -32,11 +54,11 @@ void AShipyard::generateIncome(float prevIncomeRate, bool techUpgrade)
 	if (techUpgrade)
 	{
 		float incomeToAdd = IncomeRate - prevIncomeRate;
-		gmRef->increaseIncomePerSecond(true, incomeToAdd);
+		gmRef->increaseIncomePerSecond(playerControlled, incomeToAdd);
 	}
 	else
 	{
-		gmRef->increaseIncomePerSecond(true, IncomeRate);
+		gmRef->increaseIncomePerSecond(playerControlled, IncomeRate);
 	}
 }
 
@@ -46,7 +68,11 @@ void AShipyard::constructShip(TSubclassOf<AActor> shipToSpawn, float shipCost, f
 	if (!isConstructingAlready)
 	{
 		//Detemines if the unit can be built
-		int fundCheck = (gmRef->currentPlayerMoney - shipCost);
+		int fundCheck;
+
+		if (playerControlled) { fundCheck = (gmRef->currentPlayerMoney - shipCost); }
+		if (!playerControlled) { fundCheck = (gmRef->currentAIMoney - shipCost); }
+
 		if (fundCheck >= 0)
 		{
 			currentShipCost = shipCost;
@@ -83,6 +109,7 @@ void AShipyard::buildShip()
 	ASelectableObject* classRef = Cast<ASelectableObject>(spawnedShip);
 	if (classRef)
 	{
+		gmRef->addShipsToArray(classRef, playerControlled);
 		classRef->playerControlled = playerControlled;
 		classRef->unitCost = currentShipCost;
 	}
@@ -94,12 +121,17 @@ void AShipyard::buildShip()
 
 void AShipyard::buildMines()
 {
-	TArray<AActor*> mineRef = gmRef->PlayerResourceMine;
+	TArray<AActor*> mineRef;
 	AResourceMine* curMine;
+	float curMoney;
+
+	//Seperate grabs depending on shipyard type
+	if (playerControlled) { mineRef = gmRef->PlayerResourceMine; curMoney = gmRef->currentPlayerMoney; }
+	if (!playerControlled) { mineRef = gmRef->AIResourceMine; curMoney = gmRef->currentAIMoney; }
 
 	if (!(mineRef.Num() == 0))
 	{
-		if (gmRef->currentPlayerMoney >= (mineCost * mineRef.Num()))
+		if (curMoney >= (mineCost * mineRef.Num()))
 		{
 			for (int i = 0; i < mineRef.Num(); i++)
 			{
@@ -128,7 +160,11 @@ void AShipyard::canUpgradeTechLevel(float upgradeCost, float upgradeTime)
 {
 	if (!isUpgradingAlready)
 	{
-		int fundsCheck = (gmRef->currentPlayerMoney - upgradeCost);
+		int fundsCheck;
+
+		if (playerControlled) { fundsCheck = (gmRef->currentPlayerMoney - upgradeCost); }
+		if (!playerControlled) { fundsCheck = (gmRef->currentAIMoney - upgradeCost); }
+
 		if (fundsCheck >= 0)
 		{
 			isUpgradingAlready = true;
@@ -152,4 +188,10 @@ void AShipyard::upgradeLevel()
 	isUpgradingAlready = false;
 	GetWorldTimerManager().ClearTimer(upgradingTimer);
 	HUD->upgradeTechLevel();
+}
+
+void AShipyard::triggerWinCheck()
+{
+	gmRef->gameEnd(playerControlled);
+	this->Destroy(true);
 }

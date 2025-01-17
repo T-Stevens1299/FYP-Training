@@ -177,3 +177,15 @@ void AFYPTrainingGameMode::removeShipsFromArray(AActor* shipToAdd, bool isPlayer
 		ActiveAiShips.RemoveSingle(shipToAdd);
 	}
 }
+
+void AFYPTrainingGameMode::gameEnd(bool playerControlled)
+{
+	if (playerControlled)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("AI Wins"));
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Player Wins"));
+	}
+}

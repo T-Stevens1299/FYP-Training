@@ -62,13 +62,13 @@ void ACombatManager::selectorCombatPredictionAlgorithm()
 	if (shouldAttack)
 	{
 		taskOrderUnit(2);
-		UE_LOG(LogTemp, Warning, TEXT("AttackOrder"));
+		//UE_LOG(LogTemp, Warning, TEXT("AttackOrder"));
 	}
 	else
 	{
 		//Add functionality to allow ships to stay idle
 		taskOrderUnit(1);
-		UE_LOG(LogTemp, Warning, TEXT("RetreatOrder"));
+		//UE_LOG(LogTemp, Warning, TEXT("RetreatOrder"));
 	}
 }
 
@@ -122,10 +122,13 @@ float ACombatManager::calculateArmyStrength(bool calculateAIStrength)
 
 		for (int i = 0; gamemodeRef->ActiveAiShips.Num(); i++)
 		{
-			ASelectableObject* shipRef = Cast<ASelectableObject>(gamemodeRef->ActiveAiShips[i]);
-			if (shipRef)
-			{
-				AIArmyStrength += shipRef->getStrengthValue();
+			if (gamemodeRef->ActiveAiShips.IsValidIndex(i))
+			{ 
+				ASelectableObject* shipRef = Cast<ASelectableObject>(gamemodeRef->ActiveAiShips[i]);
+				if (shipRef)
+				{
+					AIArmyStrength += shipRef->getStrengthValue();
+				}
 			}
 		}
 
@@ -137,10 +140,13 @@ float ACombatManager::calculateArmyStrength(bool calculateAIStrength)
 
 		for (int i = 0; gamemodeRef->ActivePlayerShips.Num(); i++)
 		{
-			ASelectableObject* shipRef = Cast<ASelectableObject>(gamemodeRef->ActivePlayerShips[i]);
-			if (shipRef)
+			if (gamemodeRef->ActiveAiShips.IsValidIndex(i))
 			{
-				PlayerArmyStrength += shipRef->getStrengthValue();
+				ASelectableObject* shipRef = Cast<ASelectableObject>(gamemodeRef->ActivePlayerShips[i]);
+				if (shipRef)
+				{
+					PlayerArmyStrength += shipRef->getStrengthValue();
+				}
 			}
 		}
 

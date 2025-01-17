@@ -80,6 +80,8 @@ public:
 
 	void selectHardpointToTarget();
 
+	virtual void triggerWinCheck();
+
 	//Health Percentage getter
 	float getUnitHealthPercentage() { return (currentUnitHealth / totalUnitHealth); }
 

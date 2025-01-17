@@ -171,9 +171,14 @@ void ASelectableObject::HealthCalculations()
 
 	if (newTotalHealth <= 0)
 	{
-		//TriggerWinCheck
-		this->Destroy(true);
+		triggerWinCheck();
 	}
+}
+
+//Function only exists to override in shipyard class
+void ASelectableObject::triggerWinCheck()
+{
+	this->Destroy(true);
 }
 
 void ASelectableObject::calculateWeaponsRange()
