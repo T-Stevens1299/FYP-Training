@@ -28,10 +28,10 @@ protected:
 
 public:
 	//Variables
-	UPROPERTY(EditAnywhere, Category = "AITweakables")
+	UPROPERTY(EditAnywhere, Category = "GameStats")
 	float currentPlayerMoney;
 
-	UPROPERTY(EditAnywhere, Category = "AITweakables")
+	UPROPERTY(EditAnywhere, Category = "GameStats")
 	float currentAIMoney;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AITweakables")
@@ -43,11 +43,29 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AITweakables")
 	float startingPlayerFunds;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AITweakables")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "GameStats")
 	float aiIncomePerSecond;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AITweakables")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "GameStats")
 	float playerIncomePerSecond;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "GameStats")
+	int playerPopCap;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "GameStats")
+	int currentPlayerPopCap;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "GameStats")
+	int aiPopCap;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "GameStats")
+	int currentAiPopCap;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "GameStats")
+	int playerTechLevel;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "GameStats")
+	int aiTechLevel;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AITweakables")
 	TSubclassOf<AActor> aiManager;
@@ -89,6 +107,8 @@ public:
 	void setShipyards();
 
 	void setMines();
+
+	void updatePopCap(bool playerControlled, int popValue);
 
 	void updateMineStatus(AActor* passedMine, bool playerControlled, bool isCaptured);
 

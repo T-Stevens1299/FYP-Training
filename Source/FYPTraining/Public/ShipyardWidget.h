@@ -28,6 +28,9 @@ struct FConstructionData : public FTableRowBase
 	float constructionTime;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	int populationValue;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	TSoftClassPtr<AActor> shipToSpawn;
 };
 

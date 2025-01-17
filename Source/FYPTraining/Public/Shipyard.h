@@ -8,6 +8,7 @@
 
 class AFYPTrainingGameMode;
 class UShipyardWidget;
+class AUnitManager;
 
 UCLASS()
 class FYPTRAINING_API AShipyard : public ASelectableObject
@@ -26,13 +27,13 @@ public:
 
 	void generateIncome(float prevIncomeRate, bool techUpgrade);
 
-	void constructShip(TSubclassOf<AActor> shipToSpawn, float shipCost, float buildTime);
+	void constructShip(TSubclassOf<AActor> shipToSpawn, float shipCost, float buildTime, int popValue);
 
 	void buildShip();
 
 	void buildMines();
 
-	void canUpgradeTechLevel(float upgradeCost, float upgradeTime);
+	bool canUpgradeTechLevel(float upgradeCost, float upgradeTime);
 
 	void upgradeLevel();
 
@@ -46,6 +47,8 @@ public:
 	float mineCost;
 
 	float currentShipCost;
+
+	int currentShipPopValue;
 
 	bool isConstructingAlready;
 
@@ -63,6 +66,8 @@ public:
 	FTimerHandle upgradingTimer;
 
 	APlayerController* PC;
+
+	AUnitManager* managerRef;
 
 	UPROPERTY(EditDefaultsOnly, Category = "ShipyardTweakables")
 	TSubclassOf<UUserWidget> HUDref;

@@ -5,6 +5,8 @@
 #include "SelectableObject.h"
 #include "Hardpoint.h"
 #include "Components/SphereComponent.h"
+#include <Kismet/GameplayStatics.h>
+#include "FYPTraining/FYPTrainingGameMode.h"
 
 
 // Sets default values
@@ -178,6 +180,12 @@ void ASelectableObject::HealthCalculations()
 //Function only exists to override in shipyard class
 void ASelectableObject::triggerWinCheck()
 {
+	AFYPTrainingGameMode* gmRef = Cast<AFYPTrainingGameMode>(UGameplayStatics::GetGameMode(this));
+	if (gmRef)
+	{
+		gmRef->updatePopCap(playerControlled, -PopulationValue);
+	}
+
 	this->Destroy(true);
 }
 

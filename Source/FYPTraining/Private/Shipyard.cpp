@@ -22,29 +22,30 @@ void AShipyard::init(AFYPTrainingGameMode* gamemodeReference)
 
 	generateIncome(0, false);
 
-	if (playerControlled)
+	
+	//Enemy shipyard locates the combat manager and sends a reference of its self to it
+	TArray<AActor*> foundActors;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AUnitManager::StaticClass(), foundActors);
+	for (int i = 0; i < foundActors.Num(); i++)
 	{
-		//Player shipyard sets the Player controller and creates a HUD interface
-		PC = UGameplayStatics::GetPlayerController(GetWorld(), 0);
-		HUD = CreateWidget<UShipyardWidget>(PC, HUDref);
-		HUD->init(this);
-		HUD->AddToViewport();
-	}
-	else
-	{
-		//Enemy shipyard locates the combat manager and sends a reference of its self to it
-		TArray<AActor*> foundActors;
-		UGameplayStatics::GetAllActorsOfClass(GetWorld(), AUnitManager::StaticClass(), foundActors);
-		for (int i = 0; i < foundActors.Num(); i++)
+		if (foundActors.IsValidIndex(i))
 		{
-			if (foundActors.IsValidIndex(i))
+			managerRef = Cast<AUnitManager>(foundActors[i]);
+			if (managerRef)
 			{
-				AUnitManager* managerRef = Cast<AUnitManager>(foundActors[i]);
-				if (managerRef)
+				if (playerControlled)
 				{
-					managerRef->setShipyardPtr(this);
+					//Player shipyard sets the Player controller and creates a HUD interface
+					PC = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+					HUD = CreateWidget<UShipyardWidget>(PC, HUDref);
+					HUD->init(this);
+					HUD->AddToViewport();
 				}
-			}
+				else
+				{
+					managerRef->setShipyardPtr(this); 
+				}
+			}			
 		}
 	}
 }
@@ -62,7 +63,7 @@ void AShipyard::generateIncome(float prevIncomeRate, bool techUpgrade)
 	}
 }
 
-void AShipyard::constructShip(TSubclassOf<AActor> shipToSpawn, float shipCost, float buildTime)
+void AShipyard::constructShip(TSubclassOf<AActor> shipToSpawn, float shipCost, float buildTime, int popValue)
 {
 	//Checks if there is already something constructing
 	if (!isConstructingAlready)
@@ -70,13 +71,34 @@ void AShipyard::constructShip(TSubclassOf<AActor> shipToSpawn, float shipCost, f
 		//Detemines if the unit can be built
 		int fundCheck;
 
-		if (playerControlled) { fundCheck = (gmRef->currentPlayerMoney - shipCost); }
-		if (!playerControlled) { fundCheck = (gmRef->currentAIMoney - shipCost); }
+		if (playerControlled)
+		{ 
+			if (gmRef->currentPlayerPopCap + popValue <= gmRef->playerPopCap)
+			{
+				fundCheck = (gmRef->currentPlayerMoney - shipCost); 
+			}
+			else
+			{
+				fundCheck = -1;
+			}
+		}
+		else
+		{
+			if (gmRef->currentAiPopCap + popValue <= gmRef->aiPopCap)
+			{
+				fundCheck = (gmRef->currentAIMoney - shipCost);
+			}
+			else
+			{
+				fundCheck = -1;
+			}
+		}
 
 		if (fundCheck >= 0)
 		{
 			currentShipCost = shipCost;
 			shipConstructing = shipToSpawn;
+			currentShipPopValue = popValue;
 			isConstructingAlready = true;
 			gmRef->subtractCost(playerControlled, shipCost);
 			UE_LOG(LogTemp, Warning, TEXT("Construction Time Again"));
@@ -109,9 +131,12 @@ void AShipyard::buildShip()
 	ASelectableObject* classRef = Cast<ASelectableObject>(spawnedShip);
 	if (classRef)
 	{
-		gmRef->addShipsToArray(classRef, playerControlled);
+		gmRef->addShipsToArray(spawnedShip, playerControlled);
+		gmRef->updatePopCap(playerControlled, currentShipPopValue);
+
 		classRef->playerControlled = playerControlled;
 		classRef->unitCost = currentShipCost;
+		classRef->PopulationValue = currentShipPopValue;
 	}
 
 	UE_LOG(LogTemp, Warning, TEXT("Construction Finished"));
@@ -156,14 +181,11 @@ void AShipyard::buildMines()
 	}
 }
 
-void AShipyard::canUpgradeTechLevel(float upgradeCost, float upgradeTime)
+bool AShipyard::canUpgradeTechLevel(float upgradeCost, float upgradeTime)
 {
 	if (!isUpgradingAlready)
 	{
-		int fundsCheck;
-
-		if (playerControlled) { fundsCheck = (gmRef->currentPlayerMoney - upgradeCost); }
-		if (!playerControlled) { fundsCheck = (gmRef->currentAIMoney - upgradeCost); }
+		int fundsCheck = (gmRef->currentPlayerMoney - upgradeCost);
 
 		if (fundsCheck >= 0)
 		{
@@ -171,15 +193,18 @@ void AShipyard::canUpgradeTechLevel(float upgradeCost, float upgradeTime)
 			gmRef->subtractCost(playerControlled, upgradeCost);
 			GetWorldTimerManager().SetTimer(upgradingTimer, this, &AShipyard::upgradeLevel, upgradeTime, true, upgradeTime);
 			UE_LOG(LogTemp, Warning, TEXT("Upgrading Time Again"));
+			return true;
 		}
 		else
 		{
 			UE_LOG(LogTemp, Warning, TEXT("No Money :("));
-		}
+			return false;
+		}	
 	}
 	else
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Upgrading RN"));
+		return false;
 	}
 }
 

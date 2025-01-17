@@ -87,6 +87,7 @@ void ACombatManager::taskOrderUnit(int passedOrderCode)
 			if (curShip)
 			{
 				curShip->orderCode = passedOrderCode;
+				UE_LOG(LogTemp, Warning, TEXT("Order passed"));
 			}
 		}
 	}
@@ -120,36 +121,34 @@ float ACombatManager::calculateArmyStrength(bool calculateAIStrength)
 	{
 		float AIArmyStrength = 0;
 
-		for (int i = 0; gamemodeRef->ActiveAiShips.Num(); i++)
+		for (int i = 0; i < gamemodeRef->ActiveAiShips.Num(); i++)
 		{
 			if (gamemodeRef->ActiveAiShips.IsValidIndex(i))
 			{ 
 				ASelectableObject* shipRef = Cast<ASelectableObject>(gamemodeRef->ActiveAiShips[i]);
 				if (shipRef)
 				{
-					AIArmyStrength += shipRef->getStrengthValue();
+					AIArmyStrength = AIArmyStrength + shipRef->getStrengthValue();
 				}
 			}
 		}
-
 		return AIArmyStrength;
 	}
 	else
 	{
 		float PlayerArmyStrength = 0;
 
-		for (int i = 0; gamemodeRef->ActivePlayerShips.Num(); i++)
+		for (int i = 0; i< gamemodeRef->ActivePlayerShips.Num(); i++)
 		{
 			if (gamemodeRef->ActiveAiShips.IsValidIndex(i))
 			{
 				ASelectableObject* shipRef = Cast<ASelectableObject>(gamemodeRef->ActivePlayerShips[i]);
 				if (shipRef)
 				{
-					PlayerArmyStrength += shipRef->getStrengthValue();
+					PlayerArmyStrength = PlayerArmyStrength + shipRef->getStrengthValue();
 				}
 			}
 		}
-
 		return PlayerArmyStrength;
 	}
 }

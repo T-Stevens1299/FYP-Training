@@ -178,6 +178,18 @@ void AFYPTrainingGameMode::removeShipsFromArray(AActor* shipToAdd, bool isPlayer
 	}
 }
 
+void AFYPTrainingGameMode::updatePopCap(bool playerControlled, int popValue)
+{
+	if (playerControlled)
+	{
+		currentPlayerPopCap = currentPlayerPopCap + popValue;
+	}
+	else
+	{
+		currentAiPopCap = currentAiPopCap + popValue;
+	}
+}
+
 void AFYPTrainingGameMode::gameEnd(bool playerControlled)
 {
 	if (playerControlled)

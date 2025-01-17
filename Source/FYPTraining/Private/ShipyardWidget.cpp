@@ -4,6 +4,8 @@
 #include "ShipyardWidget.h"
 #include "Components/Button.h"
 #include "Shipyard.h"
+#include "FYPTraining/FYPTrainingGameMode.h"
+#include "UnitManager.h"
 
 UShipyardWidget::UShipyardWidget(const FObjectInitializer& ObjectInitializer)
 	:Super(ObjectInitializer)
@@ -75,6 +77,8 @@ void UShipyardWidget::triggerMineBuild()
 void UShipyardWidget::upgradeTechLevel()
 {
 	currentTechLevel++;
+	shipyardRef->gmRef->playerTechLevel = currentTechLevel;
+
 	switch (currentTechLevel)
 	{
 	case 1:
@@ -146,7 +150,14 @@ void UShipyardWidget::triggerTechLevelCheck(FString techLevelRowName)
 	FName rowToFind = FName(*techLevelRowName);
 	currentRow = dataTableRef.DataTable->FindRow<FConstructionData>(rowToFind, "");
 	
-	shipyardRef->canUpgradeTechLevel(currentRow->requiredFunds, currentRow->constructionTime);
+	bool aiCanUpgrade = shipyardRef->canUpgradeTechLevel(currentRow->requiredFunds, currentRow->constructionTime);
+	//change the upgrade functionality from setting it here to setting it in a new function triggered when the player shipyard finishes its upgrade
+	//otherwise AI will have the tech minutes ahead of the player which is too difficulty
+	if (aiCanUpgrade) 
+	{ 
+		shipyardRef->managerRef->upgradeTechLevel(currentRow); 	
+	}
+	
 }
 
 void UShipyardWidget::queueCorvette()
@@ -199,5 +210,5 @@ void UShipyardWidget::addShipToQueue(FString RelatedRowName)
 	FName rowToFind = FName(*RelatedRowName);
 	currentRow = dataTableRef.DataTable->FindRow<FConstructionData>(rowToFind, "");
 
-	shipyardRef->constructShip(currentRow->shipToSpawn.Get(), currentRow->requiredFunds, currentRow->constructionTime);
+	shipyardRef->constructShip(currentRow->shipToSpawn.Get(), currentRow->requiredFunds, currentRow->constructionTime, currentRow->populationValue);
 }

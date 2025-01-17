@@ -51,7 +51,7 @@ void AAIMasterControlManager::Init(AFYPTrainingGameMode* gmRef)
 	unitManagerRef = Cast<AUnitManager>(spawnedUnitManager);
 	if (unitManagerRef)
 	{
-		unitManagerRef;
+		unitManagerRef->Init(gamemodeRef);
 	}
 }
 
