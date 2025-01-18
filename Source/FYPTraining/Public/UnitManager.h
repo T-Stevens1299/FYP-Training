@@ -19,6 +19,8 @@ public:
 	// Sets default values for this actor's properties
 	AUnitManager();
 
+	virtual void Tick(float DeltaTime) override;
+
 	void Init(AFYPTrainingGameMode* gmRef);
 
 	void setShipyardPtr(AShipyard* shipyardRef);
@@ -35,14 +37,22 @@ public:
 	AFYPTrainingGameMode* gamemodeRef;
 
 	//Variables
-	int currentTechLevel = 1;
+	int currentTechLevel;
 
-protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
+	UPROPERTY(EditAnywhere, Category = "ArrayValues")
+	TArray<FString> availableUnitsToBuild;
 
-public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
+	UPROPERTY(EditAnywhere, Category = "ArrayValues")
+	TArray<int> unitWeights;
 
+private:
+	void addNewUnitOptions();
+
+	void startUnitBuildingOperation();
+
+	int determineUnitToBuild();
+
+	int findUnitWeightValue(FString rowName);
+
+	FConstructionData* findCurrentRow(FString rowName);
 };

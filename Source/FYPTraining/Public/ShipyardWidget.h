@@ -31,6 +31,9 @@ struct FConstructionData : public FTableRowBase
 	int populationValue;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	int buildWeight;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	TSoftClassPtr<AActor> shipToSpawn;
 };
 

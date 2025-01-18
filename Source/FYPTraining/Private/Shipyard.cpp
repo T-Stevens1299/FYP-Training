@@ -63,7 +63,7 @@ void AShipyard::generateIncome(float prevIncomeRate, bool techUpgrade)
 	}
 }
 
-void AShipyard::constructShip(TSubclassOf<AActor> shipToSpawn, float shipCost, float buildTime, int popValue)
+bool AShipyard::constructShip(TSubclassOf<AActor> shipToSpawn, float shipCost, float buildTime, int popValue)
 {
 	//Checks if there is already something constructing
 	if (!isConstructingAlready)
@@ -103,15 +103,18 @@ void AShipyard::constructShip(TSubclassOf<AActor> shipToSpawn, float shipCost, f
 			gmRef->subtractCost(playerControlled, shipCost);
 			UE_LOG(LogTemp, Warning, TEXT("Construction Time Again"));
 			GetWorldTimerManager().SetTimer(constructionTime, this, &AShipyard::buildShip, buildTime, true, buildTime);
+			return true;
 		}
 		else
 		{
 			UE_LOG(LogTemp, Warning, TEXT("No Money :("));
+			return false;
 		}
 	}
 	else
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Constructing RN"));
+		return false;
 	}
 }
 

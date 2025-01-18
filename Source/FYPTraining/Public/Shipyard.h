@@ -27,7 +27,7 @@ public:
 
 	void generateIncome(float prevIncomeRate, bool techUpgrade);
 
-	void constructShip(TSubclassOf<AActor> shipToSpawn, float shipCost, float buildTime, int popValue);
+	bool constructShip(TSubclassOf<AActor> shipToSpawn, float shipCost, float buildTime, int popValue);
 
 	void buildShip();
 
