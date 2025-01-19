@@ -120,16 +120,7 @@ bool AShipyard::constructShip(TSubclassOf<AActor> shipToSpawn, float shipCost, f
 
 void AShipyard::buildShip()
 {
-	//Set Spawn params
-	FActorSpawnParameters spawnParams;
-
-	spawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
-
-	FVector spawnLoc = unitSpawner->GetComponentLocation();
-	FRotator spawnRot = unitSpawner->GetComponentRotation();
-
-	AActor* spawnedShip = GetWorld()->SpawnActor<AActor>(shipConstructing, spawnLoc, spawnRot, spawnParams);
-
+	AActor* spawnedShip = spawnShip(shipConstructing);
 	//Sets the faction of the spawned ship
 	ASelectableObject* classRef = Cast<ASelectableObject>(spawnedShip);
 	if (classRef)
@@ -145,6 +136,19 @@ void AShipyard::buildShip()
 	UE_LOG(LogTemp, Warning, TEXT("Construction Finished"));
 	isConstructingAlready = false;
 	GetWorldTimerManager().ClearTimer(constructionTime);
+}
+
+AActor* AShipyard::spawnShip(TSubclassOf<AActor> shipToSpawn)
+{
+	//Set Spawn params
+	FActorSpawnParameters spawnParams;
+
+	spawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+
+	FVector spawnLoc = unitSpawner->GetComponentLocation();
+	FRotator spawnRot = unitSpawner->GetComponentRotation();
+
+	return GetWorld()->SpawnActor<AActor>(shipToSpawn, spawnLoc, spawnRot, spawnParams);
 }
 
 void AShipyard::buildMines()

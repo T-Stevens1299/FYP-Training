@@ -28,8 +28,6 @@ public:
 
 	void Init(AFYPTrainingGameMode* gamemodeReference);
 
-	virtual void Tick(float DeltaTime) override;
-
 	void BeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 	
 	/*void EndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);*/
@@ -78,5 +76,6 @@ public:
 	FTimerHandle incomeTimer;
 
 	FTimerHandle captureTimer;
-	
+
+	FTimerHandle captureTriggerTimer;
 };

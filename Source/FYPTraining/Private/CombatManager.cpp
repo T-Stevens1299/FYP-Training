@@ -4,6 +4,8 @@
 #include "CombatManager.h"
 #include "FYPTraining/FYPTrainingGameMode.h"
 #include "SelectableObject.h"
+#include "ResourceManager.h"
+#include "Shipyard.h"
 
 
 // Sets default values
@@ -20,27 +22,31 @@ void ACombatManager::Init()
 	GetWorldTimerManager().SetTimer(combatLoopTimer, this, &ACombatManager::selectorCaptureMineOrder, 2, true, 2);
 }
 
-void ACombatManager::captureInitialMines(AFYPTrainingGameMode* gmRef, AActor* passedMine1, AActor* passedMine2)
+void ACombatManager::captureInitialMines(AFYPTrainingGameMode* gmRef, AResourceManager* rmRef, AActor* passedMine1, AActor* passedMine2)
 {
 	gamemodeRef = gmRef;
 
-	AActor* firstShipToOrder = GetWorld()->SpawnActor(corvetteSpawnRef);
-	AActor* secondShipToOrder = GetWorld()->SpawnActor(corvetteSpawnRef);
+	resourceManRef = rmRef;
 
-	//gamemodeRef->ActiveAiShips.Add(firstShipToOrder);
-	//gamemodeRef->ActiveAiShips.Add(secondShipToOrder);
+	AActor* firstShipToOrder = resourceManRef->shipyardRef->spawnShip(corvetteSpawnRef);
+	AActor* secondShipToOrder = resourceManRef->shipyardRef->spawnShip(corvetteSpawnRef);
 
-	//ASelectableObject* firstShip = Cast<ASelectableObject>(firstShipToOrder);
-	//if (firstShip)
-	//{
-	//	firstShip->moveObject(passedMine1->GetActorLocation(), firstShip->WeaponsRange);
-	//}
+	gamemodeRef->ActiveAiShips.Add(firstShipToOrder);
+	gamemodeRef->ActiveAiShips.Add(secondShipToOrder);
 
-	//ASelectableObject* secondShip = Cast<ASelectableObject>(secondShipToOrder);
-	//if (secondShip)
-	//{
-	//	secondShip->moveObject(passedMine2->GetActorLocation(), secondShip->WeaponsRange);
-	//}
+	UE_LOG(LogTemp, Warning, TEXT("captureMineFunctionRan"));
+
+	ASelectableObject* firstShip = Cast<ASelectableObject>(firstShipToOrder);
+	if (firstShip)
+	{
+		firstShip->moveObject(passedMine2->GetActorLocation(), 100);
+	}
+
+	ASelectableObject* secondShip = Cast<ASelectableObject>(secondShipToOrder);
+	if (secondShip)
+	{
+		secondShip->moveObject(passedMine1->GetActorLocation(), 100);
+	}
 
 	Init();
 }
@@ -83,7 +89,14 @@ void ACombatManager::selectorCombatPredictionAlgorithm()
 
 void ACombatManager::taskCaptureMine()
 {
-
+	//Selects rnadom ship out of AI pool and sends it to destroy/capture a player resource mine.
+	int totalAIShips = gamemodeRef->ActiveAiShips.Num() - 1;
+	int shipToChoose = FMath::RandRange(0, totalAIShips);
+	ASelectableObject* chosenShip = Cast<ASelectableObject>(gamemodeRef->ActiveAiShips[shipToChoose]);
+	if (chosenShip)
+	{
+		chosenShip->moveToAttackTarget(gamemodeRef->PlayerResourceMine.Last(), 100);
+	}
 }
 
 void ACombatManager::taskOrderUnit(int passedOrderCode)

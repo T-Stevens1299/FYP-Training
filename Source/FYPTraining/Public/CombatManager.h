@@ -7,6 +7,7 @@
 #include "CombatManager.generated.h"
 
 class AFYPTrainingGameMode;
+class AResourceManager;
 
 UCLASS()
 class FYPTRAINING_API ACombatManager : public AActor
@@ -24,7 +25,7 @@ public:
 
 	void Init();
 
-	void captureInitialMines(AFYPTrainingGameMode* gmRef, AActor* passedMine1, AActor* passedMine2);
+	void captureInitialMines(AFYPTrainingGameMode* gmRef, AResourceManager* rmRef, AActor* passedMine1, AActor* passedMine2);
 
 	void taskCaptureMine();
 
@@ -47,6 +48,8 @@ public:
 	bool initStageComplete = false;
 
 	AFYPTrainingGameMode* gamemodeRef;
+
+	AResourceManager* resourceManRef;
 
 	FTimerHandle combatLoopTimer;
 

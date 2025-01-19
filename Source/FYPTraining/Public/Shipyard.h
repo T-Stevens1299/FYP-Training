@@ -37,6 +37,8 @@ public:
 
 	void upgradeLevel();
 
+	AActor* spawnShip(TSubclassOf<AActor> shipToSpawn);
+
 	virtual void triggerWinCheck() override;
 
 	//Variables

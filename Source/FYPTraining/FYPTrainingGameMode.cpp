@@ -10,6 +10,7 @@
 #include <Kismet/GameplayStatics.h>
 #include "UObject/ConstructorHelpers.h"
 #include "AIMasterControlManager.h"
+#include "ResourceManager.h"
 
 AFYPTrainingGameMode::AFYPTrainingGameMode()
 {
@@ -127,6 +128,7 @@ void AFYPTrainingGameMode::updateMineStatus(AActor* passedMine, bool playerContr
 		else 
 		{
 			AIResourceMine.Add(passedMine);
+			aiManagerRef->resourceManagerRef->triggerMineBuild();
 		}
 	}
 	else 

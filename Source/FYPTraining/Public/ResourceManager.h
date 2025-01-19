@@ -8,6 +8,7 @@
 
 class AFYPTrainingGameMode;
 class ACombatManager;
+class AShipyard;
 
 UCLASS()
 class FYPTRAINING_API AResourceManager : public AActor
@@ -20,9 +21,9 @@ public:
 
 	void Init(AFYPTrainingGameMode* gmRef);
 
+	void triggerMineBuild();
+
 public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
 
 	AFYPTrainingGameMode* gamemodeRef;
 
@@ -42,4 +43,11 @@ public:
 
 	AActor* mine1Spawned;
 	AActor* mine2Spawned;
+
+	AShipyard* shipyardRef;
+private:
+
+	FTimerHandle mineStatusCheckTimer;
+
+	void checkMineStatus();
 };

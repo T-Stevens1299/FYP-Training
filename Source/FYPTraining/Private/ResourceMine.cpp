@@ -18,19 +18,13 @@ AResourceMine::AResourceMine()
 
 void AResourceMine::Init(AFYPTrainingGameMode* gamemodeReference)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Init"));
-
 	PC = UGameplayStatics::GetPlayerController(GetWorld(), 0);
 
 	gmRef = gamemodeReference;
 
 	playerControlled = false;
-}
 
-void AResourceMine::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-	captureMine();
+	GetWorldTimerManager().SetTimer(captureTriggerTimer, this, &AResourceMine::captureMine, 1, true, 1);
 }
 
 void AResourceMine::generateIncome(float prevIncomeRate, bool techUpgrade)
