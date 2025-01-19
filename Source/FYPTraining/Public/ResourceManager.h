@@ -32,8 +32,14 @@ public:
 	ACombatManager* cmRef;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MineProperties")
-	AActor* mine1;
+	TSubclassOf<AActor> mineClass;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MineProperties")
-	AActor* mine2;
+	FVector mine1SpawnLoc;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MineProperties")
+	FVector mine2SpawnLoc;
+
+	AActor* mine1Spawned;
+	AActor* mine2Spawned;
 };

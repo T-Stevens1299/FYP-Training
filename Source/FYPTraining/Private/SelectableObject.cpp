@@ -184,6 +184,14 @@ void ASelectableObject::triggerWinCheck()
 	if (gmRef)
 	{
 		gmRef->updatePopCap(playerControlled, -PopulationValue);
+		if (playerControlled)
+		{
+			gmRef->ActivePlayerShips.RemoveSingle(this);
+		}
+		else
+		{
+			gmRef->ActiveAiShips.RemoveSingle(this);
+		}
 	}
 
 	this->Destroy(true);

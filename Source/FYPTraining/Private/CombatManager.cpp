@@ -14,26 +14,35 @@ ACombatManager::ACombatManager()
 
 }
 
-void ACombatManager::Init(AFYPTrainingGameMode* gmRef)
+void ACombatManager::Init()
 {
 	initStageComplete = true;
-	gamemodeRef = gmRef;
-}
-
-// Called every frame
-void ACombatManager::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-	if (initStageComplete)
-	{
-		selectorCaptureMineOrder();
-	}
+	GetWorldTimerManager().SetTimer(combatLoopTimer, this, &ACombatManager::selectorCaptureMineOrder, 2, true, 2);
 }
 
 void ACombatManager::captureInitialMines(AFYPTrainingGameMode* gmRef, AActor* passedMine1, AActor* passedMine2)
 {
-	//Functionality
-	Init(gmRef);
+	gamemodeRef = gmRef;
+
+	AActor* firstShipToOrder = GetWorld()->SpawnActor(corvetteSpawnRef);
+	AActor* secondShipToOrder = GetWorld()->SpawnActor(corvetteSpawnRef);
+
+	//gamemodeRef->ActiveAiShips.Add(firstShipToOrder);
+	//gamemodeRef->ActiveAiShips.Add(secondShipToOrder);
+
+	//ASelectableObject* firstShip = Cast<ASelectableObject>(firstShipToOrder);
+	//if (firstShip)
+	//{
+	//	firstShip->moveObject(passedMine1->GetActorLocation(), firstShip->WeaponsRange);
+	//}
+
+	//ASelectableObject* secondShip = Cast<ASelectableObject>(secondShipToOrder);
+	//if (secondShip)
+	//{
+	//	secondShip->moveObject(passedMine2->GetActorLocation(), secondShip->WeaponsRange);
+	//}
+
+	Init();
 }
 
 void ACombatManager::selectorCaptureMineOrder()
@@ -87,7 +96,7 @@ void ACombatManager::taskOrderUnit(int passedOrderCode)
 			if (curShip)
 			{
 				curShip->orderCode = passedOrderCode;
-				UE_LOG(LogTemp, Warning, TEXT("Order passed"));
+				UE_LOG(LogTemp, Warning, TEXT("Passed Order Is: %i"), passedOrderCode);
 			}
 		}
 	}

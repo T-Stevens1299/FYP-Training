@@ -21,16 +21,12 @@ protected:
 
 
 public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
 
-	void Init(AFYPTrainingGameMode* gmRef);
+	void Init();
 
 	void captureInitialMines(AFYPTrainingGameMode* gmRef, AActor* passedMine1, AActor* passedMine2);
 
 	void taskCaptureMine();
-
-
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ManagerProperties")
 	AActor* retreatLocationActor;
@@ -52,6 +48,11 @@ public:
 
 	AFYPTrainingGameMode* gamemodeRef;
 
+	FTimerHandle combatLoopTimer;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ManagerProperties")
+	TSubclassOf<AActor> corvetteSpawnRef;
+
 private:
 	//Behaviour Tree Tasks
 	void taskOrderUnit(int passedOrderCode);
@@ -65,5 +66,4 @@ private:
 	bool BasicCombatPredictionAlgorithm();
 
 	float calculateArmyStrength(bool calculateAIStrength);
-
 };

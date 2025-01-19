@@ -20,12 +20,7 @@ void AUnitManager::Init(AFYPTrainingGameMode* gmRef)
 	gamemodeRef = gmRef;
 	currentTechLevel = 1;
 	addNewUnitOptions();
-}
-
-void AUnitManager::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-	startUnitBuildingOperation();
+	GetWorldTimerManager().SetTimer(unitConstructionTimer, this, &AUnitManager::startUnitBuildingOperation, 2, true, 2);
 }
 
 void AUnitManager::setShipyardPtr(AShipyard* shipyardRef)
@@ -94,10 +89,7 @@ void AUnitManager::startUnitBuildingOperation()
 	float buildTime = currentRow->constructionTime;
 	int popValue = currentRow->populationValue;
 
-	if (!(shipYardRef->constructShip(currentRow->shipToSpawn.Get(), shipCost, buildTime, popValue)))
-	{
-		startUnitBuildingOperation();
-	}
+	bool ableToBuildUnit = shipYardRef->constructShip(currentRow->shipToSpawn.Get(), shipCost, buildTime, popValue);
 }
 
 //Determines a potential unit to build based on the unit weight
@@ -108,17 +100,20 @@ int AUnitManager::determineUnitToBuild()
 
 	for (int i = 0; i < unitWeights.Num(); i++)
 	{
-		total += unitWeights[i];
+		if(unitWeights.IsValidIndex(i)) { total += unitWeights[i]; }
 	}
 
 	int random = FMath::RandRange(0, total);
 
 	for (int i = 0; i < unitWeights.Num(); i++)
 	{
-		cursor += unitWeights[i];
-		if (cursor >= random)
+		if (unitWeights.IsValidIndex(i))
 		{
-			return i;
+			cursor += unitWeights[i];
+			if (cursor >= random)
+			{
+				return i;
+			}
 		}
 	}
 	return 0;

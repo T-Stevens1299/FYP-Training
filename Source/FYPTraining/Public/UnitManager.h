@@ -19,8 +19,6 @@ public:
 	// Sets default values for this actor's properties
 	AUnitManager();
 
-	virtual void Tick(float DeltaTime) override;
-
 	void Init(AFYPTrainingGameMode* gmRef);
 
 	void setShipyardPtr(AShipyard* shipyardRef);
@@ -55,4 +53,6 @@ private:
 	int findUnitWeightValue(FString rowName);
 
 	FConstructionData* findCurrentRow(FString rowName);
+
+	FTimerHandle unitConstructionTimer;
 };
