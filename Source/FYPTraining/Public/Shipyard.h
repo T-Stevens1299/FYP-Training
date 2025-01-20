@@ -58,6 +58,12 @@ public:
 
 	TSubclassOf<AActor> shipConstructing;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ShipyardTweakables")
+	AActor* retreatPoint;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ShipyardTweakables")
+	AActor* attackPoint;
+
 	//References
 	AFYPTrainingGameMode* gmRef;
 	

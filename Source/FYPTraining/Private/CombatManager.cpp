@@ -19,6 +19,7 @@ ACombatManager::ACombatManager()
 void ACombatManager::Init()
 {
 	initStageComplete = true;
+
 	GetWorldTimerManager().SetTimer(combatLoopTimer, this, &ACombatManager::selectorCaptureMineOrder, 2, true, 2);
 }
 
@@ -34,18 +35,26 @@ void ACombatManager::captureInitialMines(AFYPTrainingGameMode* gmRef, AResourceM
 	gamemodeRef->ActiveAiShips.Add(firstShipToOrder);
 	gamemodeRef->ActiveAiShips.Add(secondShipToOrder);
 
-	UE_LOG(LogTemp, Warning, TEXT("captureMineFunctionRan"));
+	gamemodeRef->currentAiPopCap += 20.0f;
 
 	ASelectableObject* firstShip = Cast<ASelectableObject>(firstShipToOrder);
 	if (firstShip)
 	{
-		firstShip->moveObject(passedMine2->GetActorLocation(), 100);
+		firstShip->playerControlled = false;
+		firstShip->retreatPointRef = resourceManRef->shipyardRef->retreatPoint;
+		firstShip->attackPointRef = resourceManRef->shipyardRef->attackPoint;
+		firstShip->initialise();
+		firstShip->moveObject(passedMine1->GetActorLocation(), 100);
 	}
 
 	ASelectableObject* secondShip = Cast<ASelectableObject>(secondShipToOrder);
 	if (secondShip)
 	{
-		secondShip->moveObject(passedMine1->GetActorLocation(), 100);
+		secondShip->playerControlled = false;
+		secondShip->retreatPointRef = resourceManRef->shipyardRef->retreatPoint;
+		secondShip->attackPointRef = resourceManRef->shipyardRef->attackPoint;
+		secondShip->initialise();
+		secondShip->moveObject(passedMine2->GetActorLocation(), 100);
 	}
 
 	Init();
@@ -77,13 +86,10 @@ void ACombatManager::selectorCombatPredictionAlgorithm()
 	if (shouldAttack)
 	{
 		taskOrderUnit(2);
-		//UE_LOG(LogTemp, Warning, TEXT("AttackOrder"));
 	}
 	else
 	{
-		//Add functionality to allow ships to stay idle
 		taskOrderUnit(1);
-		//UE_LOG(LogTemp, Warning, TEXT("RetreatOrder"));
 	}
 }
 
@@ -109,7 +115,7 @@ void ACombatManager::taskOrderUnit(int passedOrderCode)
 			if (curShip)
 			{
 				curShip->orderCode = passedOrderCode;
-				UE_LOG(LogTemp, Warning, TEXT("Passed Order Is: %i"), passedOrderCode);
+				//UE_LOG(LogTemp, Warning, TEXT("Passed Order Is: %i"), passedOrderCode);
 			}
 		}
 	}

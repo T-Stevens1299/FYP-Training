@@ -23,10 +23,6 @@ public:
 	// Sets default values for this character's properties
 	ASelectableObject();
 
-protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
-
 public:	
 	//Components
 
@@ -40,13 +36,11 @@ public:
 	USphereComponent* ClickDetector;
 
 	//Functions
-	virtual void Tick(float DeltaTime) override;
 
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "UnitSelect")
 	void ToggleSelect(bool ToggleOn); void ToggleSelect_Implementation(bool ToggleOn) override;
-
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Targeting")
 	void MoveToTarget(FVector TargetLocation, float AcceptanceRadius); void MoveToTarget_Implementation(FVector TargetLocation, float AcceptanceRadius) override;
@@ -63,10 +57,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Targeting")
 	void setHardpointTarget();
 
-
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Damage")
 	void TriggerHealthCalculations(); void TriggerHealthCalculations_Implementation();
-
 
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "Setup")
 	void moveObject(FVector Location, float acceptanceRange); 
@@ -80,6 +72,8 @@ public:
 
 	void selectHardpointToTarget();
 
+	void initialise();
+
 	virtual void triggerWinCheck();
 
 	//Health Percentage getter
@@ -91,7 +85,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UnitTweakables")
 	TArray<AActor*> Hardpoints;
 
-	bool hasTarget;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UnitTweakables")
+	bool hasTarget = false;
 
 	bool initHealthCheck = true;
 
@@ -128,10 +123,21 @@ public:
 	//Weapons Range variable decided by lowest hardpoint weapons range
 	float WeaponsRange;
 
+	UPROPERTY(EditAnywhere)
+	AActor* retreatPointRef;
+
+	UPROPERTY(EditAnywhere)
+	AActor* attackPointRef;
+
 	AActor* CurrentTarget;
 
 	AActor* CurrentShipTarget;
 
 	AHardpoint* tempHardpoint;
+
+private:
+	void checkOrderCode();
+
+	FTimerHandle behaviourTreeTick;
 
 };

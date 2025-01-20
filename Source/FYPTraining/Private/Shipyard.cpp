@@ -131,6 +131,12 @@ void AShipyard::buildShip()
 		classRef->playerControlled = playerControlled;
 		classRef->unitCost = currentShipCost;
 		classRef->PopulationValue = currentShipPopValue;
+		if (!playerControlled)
+		{
+			classRef->retreatPointRef = retreatPoint;
+			classRef->attackPointRef = attackPoint;
+			classRef->initialise();
+		}
 	}
 
 	UE_LOG(LogTemp, Warning, TEXT("Construction Finished"));

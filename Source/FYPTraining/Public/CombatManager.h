@@ -38,6 +38,10 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ManagerProperties")
 	AActor* passedMine;
 
+	AActor* retreatPoint;
+
+	AActor* attackPoint;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ManagerProperties")
 	bool usingLanchesterModel;
 

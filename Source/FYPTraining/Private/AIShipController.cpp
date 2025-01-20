@@ -3,17 +3,36 @@
 
 #include "AIShipController.h"
 #include "SelectableObject.h"
+#include "BehaviorTree/BlackboardComponent.h"
 
 void AAIShipController::BeginPlay()
 {
 	Super::BeginPlay();
 
-	ASelectableObject* AIShip = Cast<ASelectableObject>(GetPawn());
-	if (AIShip && AIShip->BT_Asset)
+}
+
+void AAIShipController::checkOrderCode()
+{
+	switch (controlledShip->orderCode)
 	{
-		if (!(AIShip->playerControlled))
+	case 0:
+		break;
+
+	case 1:
+		controlledShip->moveObject(controlledShip->retreatPointRef->GetActorLocation(), 500.0f);
+		UE_LOG(LogTemp, Warning, TEXT("Order 1 Recieved"));
+		break;
+
+	case 2:
+		if (controlledShip->CurrentTarget == NULL)
 		{
-			RunBehaviorTree(AIShip->BT_Asset);
+			controlledShip->moveObject(controlledShip->attackPointRef->GetActorLocation(), controlledShip->WeaponsRange);
+			UE_LOG(LogTemp, Warning, TEXT("Order 2 Recieved"));
 		}
+		break;
+
+	default:
+		break;
 	}
+
 }

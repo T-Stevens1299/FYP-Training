@@ -26,18 +26,9 @@ ASelectableObject::ASelectableObject()
 
 }
 
-// Called when the game starts or when spawned
-void ASelectableObject::BeginPlay()
+void ASelectableObject::initialise()
 {
-	Super::BeginPlay();
-	
-}
-
-// Called every frame
-void ASelectableObject::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-
+	GetWorldTimerManager().SetTimer(behaviourTreeTick, this, &ASelectableObject::checkOrderCode, 2, true, 2);
 }
 
 // Called to bind functionality to input
@@ -52,6 +43,36 @@ void ASelectableObject::ToggleSelect_Implementation(bool ToggleOn)
 	SelectorMesh->SetVisibility(ToggleOn);
 }
 
+void ASelectableObject::checkOrderCode()
+{
+	switch (orderCode)
+	{
+	case 0:
+		break;
+
+	case 1:
+		moveObject(retreatPointRef->GetActorLocation(), 500.0f);
+		UE_LOG(LogTemp, Warning, TEXT("Order 1 Recieved"));
+		break;
+
+	case 2:
+		//if (CurrentTarget == NULL)
+		//{
+			if (!hasTarget) 
+			{
+				FVector loc = attackPointRef->GetActorLocation();
+
+				moveObject(loc, 100.0f);
+				
+				UE_LOG(LogTemp, Warning, TEXT("Actor location %s"), *loc.ToCompactString());
+			}
+		//}
+		break;
+
+	default:
+		break;
+	}
+}
 
 //Targeting Functions
 
