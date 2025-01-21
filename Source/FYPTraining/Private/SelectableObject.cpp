@@ -7,6 +7,7 @@
 #include "Components/SphereComponent.h"
 #include <Kismet/GameplayStatics.h>
 #include "FYPTraining/FYPTrainingGameMode.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 
 // Sets default values
@@ -24,9 +25,27 @@ ASelectableObject::ASelectableObject()
 	ClickDetector = CreateDefaultSubobject<USphereComponent>(TEXT("ClickDetectorComponent"));
 	ClickDetector->SetupAttachment(RootComponent);
 
+	GetCharacterMovement()->RotationRate = FRotator(0.0f, 0.0f, UnitRotationSpeed);
 }
 
-void ASelectableObject::initialise()
+//Function only used on ship classes. Resource mine and shipyards
+//Despite all being children of this class use their own init methods
+void ASelectableObject::initaliseSelectableObject(bool player_controlled, float unit_Cost, int pop_Value)
+{
+	//Init Variables
+	playerControlled = player_controlled;
+	unitCost = unit_Cost;
+	PopulationValue = pop_Value;
+	GetCharacterMovement()->MaxWalkSpeed = UnitSpeed;
+
+	//Init Functionality
+	initBlueprintScript();
+	setHardpointsParent();
+
+	if (!playerControlled) { initialiseAIShips(); }
+}
+
+void ASelectableObject::initialiseAIShips() //Only initialise on enemy ships - function name should be changed to reflect this
 {
 	GetWorldTimerManager().SetTimer(behaviourTreeTick, this, &ASelectableObject::checkOrderCode, 2, true, 2);
 }
@@ -56,13 +75,13 @@ void ASelectableObject::checkOrderCode()
 		break;
 
 	case 2:
-		//if (CurrentTarget == NULL)
-		//{
+		if (CurrentTarget == NULL)
+		{
 			if (!hasTarget) 
 			{
 				MoveToTarget(attackPointRef->GetActorLocation(), 100);
 			}
-		//}
+		}
 		break;
 
 	default:
@@ -143,22 +162,39 @@ void ASelectableObject::setHardpointTarget()
 
 void ASelectableObject::setHardpointsParent()
 {
-		for (int i = 0; i < Hardpoints.Num(); i++)
-		{
-			if (Hardpoints.IsValidIndex(i))
-			{
-				tempHardpoint = Cast<AHardpoint>(Hardpoints[i]);
+	TArray<AActor*> childActors;
+	GetAllChildActors(childActors);
 
-				if (tempHardpoint)
-				{
-					tempHardpoint->hardpointParent = this;
-					tempHardpoint->playerControlled = playerControlled;
-					tempHardpoint->init();
-				}
+	for (int LosingMyEdge = 0; LosingMyEdge < childActors.Num(); LosingMyEdge++)
+	{
+		AHardpoint* validHardpoint = Cast<AHardpoint>(childActors[LosingMyEdge]);
+		if (validHardpoint)
+		{
+			Hardpoints.Add(validHardpoint);
+		}
+	}
+
+	//The Array of hardpoints in theory should be changed but the functions it is used in require AActor arrays, so casting is unfortunately required despite the fact
+	//it seems counterproductive
+	//Rewrite at some point
+
+	for (int i = 0; i < Hardpoints.Num(); i++)
+	{
+		if (Hardpoints.IsValidIndex(i))
+		{
+			tempHardpoint = Cast<AHardpoint>(Hardpoints[i]);
+
+			if (tempHardpoint)
+			{
+				tempHardpoint->hardpointParent = this;
+				tempHardpoint->playerControlled = playerControlled;
+				tempHardpoint->init();
 			}
 		}
-		calculateWeaponsRange();
-		HealthCalculations();
+	}
+
+	calculateWeaponsRange();
+	HealthCalculations();
 }
 
 void ASelectableObject::TriggerHealthCalculations_Implementation()

@@ -40,20 +40,18 @@ void ACombatManager::captureInitialMines(AFYPTrainingGameMode* gmRef, AResourceM
 	ASelectableObject* firstShip = Cast<ASelectableObject>(firstShipToOrder);
 	if (firstShip)
 	{
-		firstShip->playerControlled = false;
 		firstShip->retreatPointRef = resourceManRef->shipyardRef->retreatPoint;
 		firstShip->attackPointRef = resourceManRef->shipyardRef->attackPoint;
-		firstShip->initialise();
+		firstShip->initaliseSelectableObject(false, 750, 10);
 		firstShip->moveObject(passedMine1->GetActorLocation(), 100);
 	}
 
 	ASelectableObject* secondShip = Cast<ASelectableObject>(secondShipToOrder);
 	if (secondShip)
 	{
-		secondShip->playerControlled = false;
 		secondShip->retreatPointRef = resourceManRef->shipyardRef->retreatPoint;
 		secondShip->attackPointRef = resourceManRef->shipyardRef->attackPoint;
-		secondShip->initialise();
+		secondShip->initaliseSelectableObject(false, 750, 10);
 		secondShip->moveObject(passedMine2->GetActorLocation(), 100);
 	}
 

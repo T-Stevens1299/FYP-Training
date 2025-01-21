@@ -22,7 +22,8 @@ void AShipyard::init(AFYPTrainingGameMode* gamemodeReference)
 
 	generateIncome(0, false);
 
-	
+	initBlueprintScript();
+
 	//Enemy shipyard locates the combat manager and sends a reference of its self to it
 	TArray<AActor*> foundActors;
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AUnitManager::StaticClass(), foundActors);
@@ -128,14 +129,12 @@ void AShipyard::buildShip()
 		gmRef->addShipsToArray(spawnedShip, playerControlled);
 		gmRef->updatePopCap(playerControlled, currentShipPopValue);
 
-		classRef->playerControlled = playerControlled;
-		classRef->unitCost = currentShipCost;
-		classRef->PopulationValue = currentShipPopValue;
+		classRef->initaliseSelectableObject(playerControlled, currentShipCost, currentShipPopValue);
+
 		if (!playerControlled)
 		{
 			classRef->retreatPointRef = retreatPoint;
 			classRef->attackPointRef = attackPoint;
-			classRef->initialise();
 		}
 	}
 

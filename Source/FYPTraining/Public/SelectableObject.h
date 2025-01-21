@@ -23,7 +23,6 @@ public:
 	// Sets default values for this character's properties
 	ASelectableObject();
 
-public:	
 	//Components
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "CoreParts", meta = (AllowPrivateAccess = "true"))
@@ -63,7 +62,9 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "Setup")
 	void moveObject(FVector Location, float acceptanceRange); 
 
-	UFUNCTION(BlueprintCallable, Category = "Setup")
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "Setup")
+	void initBlueprintScript();
+
 	void setHardpointsParent();
 
 	virtual void HealthCalculations();
@@ -72,7 +73,9 @@ public:
 
 	void selectHardpointToTarget();
 
-	void initialise();
+	void initaliseSelectableObject(bool player_controlled, float unit_Cost, int pop_Value);
+
+	void initialiseAIShips();
 
 	virtual void triggerWinCheck();
 
