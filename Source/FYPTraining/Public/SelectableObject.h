@@ -123,10 +123,11 @@ public:
 	//Weapons Range variable decided by lowest hardpoint weapons range
 	float WeaponsRange;
 
-	UPROPERTY(EditAnywhere)
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UnitTweakables")
 	AActor* retreatPointRef;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UnitTweakables")
 	AActor* attackPointRef;
 
 	AActor* CurrentTarget;

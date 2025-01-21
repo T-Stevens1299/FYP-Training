@@ -60,11 +60,7 @@ void ASelectableObject::checkOrderCode()
 		//{
 			if (!hasTarget) 
 			{
-				FVector loc = attackPointRef->GetActorLocation();
-
-				moveObject(loc, 100.0f);
-				
-				UE_LOG(LogTemp, Warning, TEXT("Actor location %s"), *loc.ToCompactString());
+				MoveToTarget(attackPointRef->GetActorLocation(), 100);
 			}
 		//}
 		break;
@@ -80,6 +76,7 @@ void ASelectableObject::MoveToTarget_Implementation(FVector TargetLocation, floa
 {
 	if (!staticObject)
 	{
+		//UE_LOG(LogTemp, Warning, TEXT("Actor location %s"), *TargetLocation.ToCompactString());
 		moveObject(TargetLocation, AcceptanceRadius);
 	}
 	else
