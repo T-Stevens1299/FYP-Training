@@ -162,6 +162,7 @@ void ASelectableObject::setHardpointTarget()
 
 void ASelectableObject::setHardpointsParent()
 {
+
 	TArray<AActor*> childActors;
 	GetAllChildActors(childActors);
 
@@ -170,26 +171,12 @@ void ASelectableObject::setHardpointsParent()
 		AHardpoint* validHardpoint = Cast<AHardpoint>(childActors[LosingMyEdge]);
 		if (validHardpoint)
 		{
+			//Adds prospective hardpoints to the array then initialises it
 			Hardpoints.Add(validHardpoint);
-		}
-	}
 
-	//The Array of hardpoints in theory should be changed but the functions it is used in require AActor arrays, so casting is unfortunately required despite the fact
-	//it seems counterproductive
-	//Rewrite at some point
-
-	for (int i = 0; i < Hardpoints.Num(); i++)
-	{
-		if (Hardpoints.IsValidIndex(i))
-		{
-			tempHardpoint = Cast<AHardpoint>(Hardpoints[i]);
-
-			if (tempHardpoint)
-			{
-				tempHardpoint->hardpointParent = this;
-				tempHardpoint->playerControlled = playerControlled;
-				tempHardpoint->init();
-			}
+			validHardpoint->hardpointParent = this;
+			validHardpoint->playerControlled = playerControlled;
+			validHardpoint->init();
 		}
 	}
 
@@ -247,6 +234,7 @@ void ASelectableObject::triggerWinCheck()
 			gmRef->ActiveAiShips.RemoveSingle(this);
 		}
 	}
+
 
 	this->Destroy(true);
 }

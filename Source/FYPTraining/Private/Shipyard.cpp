@@ -49,6 +49,8 @@ void AShipyard::init(AFYPTrainingGameMode* gamemodeReference)
 			}			
 		}
 	}
+
+	setHardpointsParent();
 }
 
 void AShipyard::generateIncome(float prevIncomeRate, bool techUpgrade)

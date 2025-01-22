@@ -77,7 +77,13 @@ void UShipyardWidget::triggerMineBuild()
 void UShipyardWidget::upgradeTechLevel()
 {
 	currentTechLevel++;
+
+	//Sets tech level on player and AI side
 	shipyardRef->gmRef->playerTechLevel = currentTechLevel;
+	if (aiCanUpgrade) 
+	{ 
+		shipyardRef->managerRef->upgradeTechLevel(currentRow); 	
+	}
 
 	switch (currentTechLevel)
 	{
@@ -149,15 +155,9 @@ void UShipyardWidget::triggerTechLevelCheck(FString techLevelRowName)
 {
 	FName rowToFind = FName(*techLevelRowName);
 	currentRow = dataTableRef.DataTable->FindRow<FConstructionData>(rowToFind, "");
-	
-	bool aiCanUpgrade = shipyardRef->canUpgradeTechLevel(currentRow->requiredFunds, currentRow->constructionTime);
-	//change the upgrade functionality from setting it here to setting it in a new function triggered when the player shipyard finishes its upgrade
-	//otherwise AI will have the tech minutes ahead of the player which is too difficulty
-	if (aiCanUpgrade) 
-	{ 
-		shipyardRef->managerRef->upgradeTechLevel(currentRow); 	
-	}
-	
+	//Triggers the can upgrade tech function. If true is returned the upgrade process starts and boolean variable set for later to upgrade the AI
+	aiCanUpgrade = shipyardRef->canUpgradeTechLevel(currentRow->requiredFunds, currentRow->constructionTime);
+
 }
 
 void UShipyardWidget::queueCorvette()

@@ -68,6 +68,9 @@ public:
 	//Variables
 	int currentTechLevel;
 
+private:
+	bool aiCanUpgrade;
+
 protected:
 	//UI Components
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
