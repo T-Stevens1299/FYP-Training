@@ -34,6 +34,9 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "CoreParts", meta = (AllowPrivateAccess = "true"))
 	USphereComponent* ClickDetector;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "CoreParts", meta = (AllowPrivateAccess = "true"))
+	USphereComponent* enemyShipSensor;
+
 	//Functions
 
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
@@ -133,6 +136,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UnitTweakables")
 	AActor* attackPointRef;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UnitTweakables")
 	AActor* CurrentTarget;
 
 	AActor* CurrentShipTarget;
@@ -142,6 +146,10 @@ public:
 private:
 	void checkOrderCode();
 
+	void locateEnemyInRange();
+
 	FTimerHandle behaviourTreeTick;
+
+	FTimerHandle enemySensorTimer;
 
 };

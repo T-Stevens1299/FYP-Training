@@ -130,7 +130,6 @@ void AResourceMine::buildMine()
 
 	FActorSpawnParameters spawnParams;
 	AActor* hardpoint = GetWorld()->SpawnActor<AHardpoint>(hardpointSpawnRef, GetActorLocation(), GetActorRotation(), spawnParams);
-	Hardpoints.Add(hardpoint);
 
 	setHardpointsParent();
 

@@ -25,6 +25,9 @@ ASelectableObject::ASelectableObject()
 	ClickDetector = CreateDefaultSubobject<USphereComponent>(TEXT("ClickDetectorComponent"));
 	ClickDetector->SetupAttachment(RootComponent);
 
+	enemyShipSensor = CreateDefaultSubobject<USphereComponent>(TEXT("ShipSensorComponent"));
+	enemyShipSensor->SetupAttachment(RootComponent);
+
 	GetCharacterMovement()->RotationRate = FRotator(0.0f, 0.0f, UnitRotationSpeed);
 }
 
@@ -41,6 +44,9 @@ void ASelectableObject::initaliseSelectableObject(bool player_controlled, float 
 	//Init Functionality
 	initBlueprintScript();
 	setHardpointsParent();
+
+	//Sets enemy sensor timer up
+	GetWorldTimerManager().SetTimer(enemySensorTimer, this, &ASelectableObject::locateEnemyInRange, 2, true, 2);
 
 	if (!playerControlled) { initialiseAIShips(); }
 }
@@ -127,6 +133,7 @@ void ASelectableObject::AttackExistingTarget_Implementation()
 	}
 	else
 	{
+		CurrentTarget = NULL;
 		CurrentShipTarget = NULL;
 	}
 }
@@ -263,5 +270,35 @@ void ASelectableObject::calculateWeaponsRange()
 	if (hardpointWeaponRanges.IsValidIndex(0))
 	{
 		WeaponsRange = hardpointWeaponRanges[0];
+	}
+
+	enemyShipSensor->SetSphereRadius(WeaponsRange);
+}
+
+void ASelectableObject::locateEnemyInRange()
+{
+	//If Ship has the order code of 1, it is retreating and should not be seeking new targets
+	if (orderCode == 1) { return; }
+
+	//If the ship has no target, find one om weapons range and set it to current target
+	if (CurrentTarget != NULL) { return; }
+
+	TArray<AActor*> overlappingActors;
+	enemyShipSensor->GetOverlappingActors(overlappingActors);
+	for (int meanGirls = 0; meanGirls < overlappingActors.Num(); meanGirls++)
+	{
+		ASelectableObject* foundShip = Cast<ASelectableObject>(overlappingActors[meanGirls]);
+		if (foundShip)
+		{
+			//if the ship is player controlled target non-player controlled ships and vice versa
+			if (!playerControlled)
+			{
+				if (foundShip->playerControlled) { UE_LOG(LogTemp, Warning, TEXT("FoundTarget")); AttackTarget_Implementation(foundShip); break; }
+			}
+			else
+			{
+				if (!foundShip->playerControlled) { UE_LOG(LogTemp, Warning, TEXT("FoundTarget")); AttackTarget_Implementation(foundShip); break; }
+			}
+		}
 	}
 }
