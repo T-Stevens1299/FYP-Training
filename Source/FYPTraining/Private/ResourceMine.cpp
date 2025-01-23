@@ -14,6 +14,9 @@ AResourceMine::AResourceMine()
 
 	CaptureSensor = CreateDefaultSubobject<UBoxComponent>(TEXT("CaptureSensorComponent"));
 	CaptureSensor->SetupAttachment(MineMesh);
+
+	hardpointSpawn = CreateDefaultSubobject<USceneComponent>(TEXT("hardpointSpawnComponent"));
+	hardpointSpawn->SetupAttachment(MineMesh);
 }
 
 void AResourceMine::Init(AFYPTrainingGameMode* gamemodeReference)
@@ -25,6 +28,8 @@ void AResourceMine::Init(AFYPTrainingGameMode* gamemodeReference)
 	playerControlled = false;
 
 	GetWorldTimerManager().SetTimer(captureTriggerTimer, this, &AResourceMine::captureMine, 1, true, 1);
+
+	setHardpointsParent();
 }
 
 void AResourceMine::generateIncome(float prevIncomeRate, bool techUpgrade)
@@ -127,11 +132,14 @@ void AResourceMine::buildMine()
 {
 	isBuilt = true;
 	UE_LOG(LogTemp, Warning, TEXT("MineBuilt"));
+	if (!firstCapture)
+	{
+		FActorSpawnParameters spawnParams;
+		AActor* hardpoint = GetWorld()->SpawnActor<AHardpoint>(hardpointSpawnRef, hardpointSpawn->GetRelativeLocation(), GetActorRotation(), spawnParams);
+		setHardpointsParent();
+	}
 
-	FActorSpawnParameters spawnParams;
-	AActor* hardpoint = GetWorld()->SpawnActor<AHardpoint>(hardpointSpawnRef, GetActorLocation(), GetActorRotation(), spawnParams);
-
-	setHardpointsParent();
+	firstCapture = false;
 
 	generateIncome(0, false);
 }

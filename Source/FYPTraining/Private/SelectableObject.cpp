@@ -8,6 +8,7 @@
 #include <Kismet/GameplayStatics.h>
 #include "FYPTraining/FYPTrainingGameMode.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "ResourceMine.h"
 
 
 // Sets default values
@@ -166,9 +167,18 @@ void ASelectableObject::selectHardpointToTarget()
 
 	targetRef = Cast<ASelectableObject>(CurrentTarget);
 
-	if (targetRef)
+	if (!targetRef) { return; }
+
+	AResourceMine* mineRef = Cast<AResourceMine>(targetRef);
+	if (mineRef)
 	{
-		CurrentTarget = targetRef->Hardpoints.Last();		
+		if (!mineRef->isBuilt) { UE_LOG(LogTemp, Warning, TEXT("UnCapturedMineNotValidToAttack")); CurrentTarget = NULL; return; }
+		//Remove the prebuilt hardpoint on the resource mines it was not needed I am a idiot
+	}
+	else
+	{
+		CurrentTarget = targetRef->Hardpoints.Last();	
+		if(!CurrentTarget) { return; }
 		moveToAttackTarget(CurrentTarget, WeaponsRange);
 	}
 }

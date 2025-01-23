@@ -23,6 +23,9 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "MineParts", meta = (AllowPrivateAccess = "true"))
 	UBoxComponent* CaptureSensor;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "MineParts", meta = (AllowPrivateAccess = "true"))
+	USceneComponent* hardpointSpawn;
+
 	//Functions
 	AResourceMine();
 
@@ -64,6 +67,8 @@ public:
 	bool isCaptured = false;
 
 	bool isBuilt = false;
+
+	bool firstCapture = true;
 
 	int enemyShipsCapturing;
 	int playerShipsCapturing;
