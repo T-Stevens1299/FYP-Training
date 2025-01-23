@@ -143,10 +143,18 @@ public:
 
 	AHardpoint* tempHardpoint;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UnitTweakables")
+	UMaterial* playerMaterial;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UnitTweakables")
+	UMaterialInstance* playerTexture;
+
 private:
 	void checkOrderCode();
 
 	void locateEnemyInRange();
+
+	void SetMaterials();
 
 	FTimerHandle behaviourTreeTick;
 

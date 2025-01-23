@@ -48,12 +48,34 @@ void ASelectableObject::initaliseSelectableObject(bool player_controlled, float 
 	//Sets enemy sensor timer up
 	GetWorldTimerManager().SetTimer(enemySensorTimer, this, &ASelectableObject::locateEnemyInRange, 2, true, 2);
 
-	if (!playerControlled) { initialiseAIShips(); }
+	if (!playerControlled) 
+	{ 
+		initialiseAIShips(); 
+	}
+	else
+	{
+		SetMaterials();
+	}
 }
 
 void ASelectableObject::initialiseAIShips() //Only initialise on enemy ships - function name should be changed to reflect this
 {
 	GetWorldTimerManager().SetTimer(behaviourTreeTick, this, &ASelectableObject::checkOrderCode, 2, true, 2);
+}
+
+//Only player ships require material changes, the blueprint defaults to having the AI colours
+void ASelectableObject::SetMaterials()
+{
+	if (UnitMesh->GetMaterials().Num() > 1)
+	{
+		//Two ship types feature models that have more than 1 matreial slot - this code accounts for that
+		if (IsValid(UnitMesh->GetMaterial(2))) { UnitMesh->SetMaterial(2, playerMaterial); }
+		if (IsValid(UnitMesh->GetMaterial(3))) { UnitMesh->SetMaterial(3, playerMaterial); }
+	}
+	else
+	{
+		UnitMesh->SetMaterial(0, playerTexture);
+	}
 }
 
 // Called to bind functionality to input
