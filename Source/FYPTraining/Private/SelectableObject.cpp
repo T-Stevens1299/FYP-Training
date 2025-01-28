@@ -216,6 +216,14 @@ void ASelectableObject::setHardpointsParent()
 			validHardpoint->hardpointParent = this;
 			validHardpoint->playerControlled = playerControlled;
 			validHardpoint->init();
+			if (playerControlled)
+			{
+				validHardpoint->usedDamageLine = validHardpoint->playerDamageLine;
+			}
+			else
+			{
+				validHardpoint->usedDamageLine = validHardpoint->aiDamageLine;
+			}
 		}
 	}
 
@@ -266,15 +274,13 @@ void ASelectableObject::triggerWinCheck()
 		gmRef->updatePopCap(playerControlled, -PopulationValue);
 		if (playerControlled)
 		{
-			gmRef->ActivePlayerShips.RemoveSingle(this);
+			gmRef->removeShipsFromArray(this, GetClass()->GetName(), playerControlled);
 		}
 		else
 		{
-			gmRef->ActiveAiShips.RemoveSingle(this);
+			gmRef->removeShipsFromArray(this, GetClass()->GetName(), playerControlled);
 		}
 	}
-
-
 	this->Destroy(true);
 }
 

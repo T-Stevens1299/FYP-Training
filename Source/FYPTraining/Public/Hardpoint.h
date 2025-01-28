@@ -33,9 +33,6 @@ public:
 	UStaticMeshComponent* HardpointMesh;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "HardpointParts", meta = (AllowPrivateAccess = "true"))
-	UStaticMeshComponent* BlockingPlane;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "HardpointParts", meta = (AllowPrivateAccess = "true"))
 	USceneComponent* FirePoint;
 
 	//Variables
@@ -67,6 +64,14 @@ public:
 	ASelectableObject* hardpointParent;
 
 	AActor* currentHardpointTarget;
+
+	TArray<AActor*> ignoreActorsArray;
+
+	FColor playerDamageLine = FColor::Green;
+
+	FColor aiDamageLine = FColor::Red;
+
+	FColor usedDamageLine;
 
 	//Functions
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Damage")

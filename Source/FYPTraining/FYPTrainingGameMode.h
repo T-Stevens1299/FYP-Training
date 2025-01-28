@@ -9,6 +9,7 @@
 
 class UUserWidget;
 class UPlayerHUD;
+class UGameEndScreen;
 class AShipyard;
 class AAIMasterControlManager;
 
@@ -80,9 +81,17 @@ public:
 	UPROPERTY(BlueprintReadOnly, Category = "HUD")
 	UPlayerHUD* HUD;
 
+	UPROPERTY(EditDefaultsOnly, Category = "HUD")
+	TSubclassOf<UUserWidget> gameEndRef;
+
+	UPROPERTY(BlueprintReadOnly, Category = "HUD")
+	UGameEndScreen* GameEnd;
+
 	APlayerController* PC;
 
 	FTimerHandle incomeHandle;
+
+	int matchDuration = 0;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ResourceMines")
 	TArray<AActor*> AIResourceMine;
@@ -94,8 +103,11 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ShipArrays")
 	TArray<AActor*> ActivePlayerShips;
 
-	//UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "AITweakables")
-	//EFactionTag FactionTag;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ShipArrays")
+	TArray<FString> playerShipsLost;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ShipArrays")
+	TArray<FString> aiShipsLost;
 
 	//Functions
 	void IncreaseIncome();
@@ -114,8 +126,10 @@ public:
 
 	void addShipsToArray(AActor* shipToAdd, bool isPlayerControlled);
 
-	void removeShipsFromArray(AActor* shipToAdd, bool isPlayerControlled);
+	void removeShipsFromArray(AActor* shipToAdd, FString className, bool isPlayerControlled);
 
 	void gameEnd(bool playerControlled);
+
+	void calculateLostShips();
 
 };

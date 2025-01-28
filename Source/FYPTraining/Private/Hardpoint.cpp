@@ -15,9 +15,6 @@ AHardpoint::AHardpoint()
 	HardpointMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("HardpointMeshComponent"));
 	HardpointMesh->SetupAttachment(RootComponent);
 
-	BlockingPlane = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("BlockingPlaneComponent"));
-	BlockingPlane->SetupAttachment(RootComponent);
-
 	FirePoint = CreateDefaultSubobject<USceneComponent>(TEXT("UnitMeshComponent"));
 	FirePoint->SetupAttachment(HardpointMesh);
 
@@ -28,6 +25,7 @@ void AHardpoint::BeginPlay()
 {
 	Super::BeginPlay();
 	currentHealth = totalHealth;
+	GetWorldTimerManager().SetTimer(FireHandle, this, &AHardpoint::FireWeapon, fireRate, true, 0.0f);
 }
 
 
@@ -87,25 +85,22 @@ void AHardpoint::SetHpTarget_Implementation(UPARAM(ref)TArray<AActor*>& actorsTo
 	if (isWeapon)
 	{
 		currentHardpointTarget = currentTarget;
-		if (CheckTargetRange(actorsToIgnore))
-		{
-			GetWorldTimerManager().SetTimer(FireHandle, this, &AHardpoint::FireWeapon, fireRate, true, 0.0f);
-		}
+		ignoreActorsArray = actorsToIgnore;
 	}
 }
 
 void AHardpoint::FireWeapon()
 {
-	if (IsValid(currentHardpointTarget)) 
+	if (CheckTargetRange(ignoreActorsArray))
 	{
 		if (currentHardpointTarget->GetClass()->ImplementsInterface(UInterface_Damage::StaticClass()))
 		{
 			IInterface_Damage::Execute_DealDamage(currentHardpointTarget, outputDamage);
+			UE_LOG(LogTemp, Warning, TEXT("Fire"))
 		}
 	}
 	else
 	{
-		GetWorldTimerManager().ClearTimer(FireHandle);
 		IInterface_Targeting::Execute_AttackExistingTarget(hardpointParent);
 	}
 }
@@ -113,6 +108,7 @@ void AHardpoint::FireWeapon()
 bool AHardpoint::CheckTargetRange(TArray<AActor*> ActorsToIgnore)
 {
 	//Local Variables
+	if (currentHardpointTarget == NULL) { return false; }
 	bool canShoot;
 
 	FHitResult HitResult;
@@ -129,7 +125,7 @@ bool AHardpoint::CheckTargetRange(TArray<AActor*> ActorsToIgnore)
 
 		if (GetWorld()->LineTraceSingleByChannel(HitResult, startLoc, endLoc, ECollisionChannel::ECC_Visibility, params, FCollisionResponseParams()))
 		{
-			DrawDebugLine(GetWorld(), startLoc, endLoc, HitResult.GetActor() ? FColor::Blue : FColor::Red, false, 2.0f, 0, 2.0f);
+			DrawDebugLine(GetWorld(), startLoc, endLoc, HitResult.GetActor() ? usedDamageLine : usedDamageLine, false, 2.0f, 0, 2.0f);
 			
 			if (HitResult.Distance <= weaponRange)
 			{
