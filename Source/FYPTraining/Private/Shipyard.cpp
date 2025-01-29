@@ -8,6 +8,7 @@
 #include <Kismet/GameplayStatics.h>
 #include "ResourceMine.h"
 #include "UnitManager.h"
+#include "Components/WidgetComponent.h"
 
 AShipyard::AShipyard()
 {
@@ -21,6 +22,8 @@ void AShipyard::init(AFYPTrainingGameMode* gamemodeReference)
 	gmRef = gamemodeReference;
 
 	generateIncome(0, false);
+
+	//healthBarRef = Cast<UShipHealthBar>(healthBar->GetUserWidgetObject());
 
 	initBlueprintScript();
 
@@ -51,6 +54,16 @@ void AShipyard::init(AFYPTrainingGameMode* gamemodeReference)
 	}
 
 	setHardpointsParent();
+
+	spawnStartingShips();
+
+	GetWorldTimerManager().SetTimer(healthBarDelay, this, &AShipyard::healthBarSet, 1.0f, true, 1.0f);
+}
+
+void AShipyard::healthBarSet()
+{
+	GetWorldTimerManager().ClearTimer(healthBarDelay);
+	HealthCalculations();
 }
 
 void AShipyard::generateIncome(float prevIncomeRate, bool techUpgrade)
@@ -118,6 +131,15 @@ bool AShipyard::constructShip(TSubclassOf<AActor> shipToSpawn, float shipCost, f
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Constructing RN"));
 		return false;
+	}
+}
+
+void AShipyard::spawnStartingShips()
+{
+	shipConstructing = startingShipRef;
+	for (int i = 0; i < startingShipCount; i++)
+	{
+		buildShip();
 	}
 }
 

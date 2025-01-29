@@ -37,6 +37,8 @@ public:
 
 	void upgradeLevel();
 
+	void spawnStartingShips();
+
 	AActor* spawnShip(TSubclassOf<AActor> shipToSpawn);
 
 	virtual void triggerWinCheck() override;
@@ -47,6 +49,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ShipyardTweakables")
 	float mineCost;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ShipyardTweakables")
+	int startingShipCount;
 
 	float currentShipCost;
 
@@ -59,6 +64,9 @@ public:
 	TSubclassOf<AActor> shipConstructing;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ShipyardTweakables")
+	TSubclassOf<AActor> startingShipRef;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ShipyardTweakables")
 	AActor* retreatPoint;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ShipyardTweakables")
@@ -67,7 +75,7 @@ public:
 	//References
 	AFYPTrainingGameMode* gmRef;
 	
-	FTimerHandle incomeTimer;
+	FTimerHandle healthBarDelay;
 
 	FTimerHandle constructionTime;
 
@@ -82,4 +90,7 @@ public:
 
 	UPROPERTY(BlueprintReadOnly, Category = "ShipyardTweakables")
 	class UShipyardWidget* HUD;
+
+private:
+	void healthBarSet();
 };

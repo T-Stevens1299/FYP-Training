@@ -13,6 +13,8 @@
 class USphereComponent;
 class AHardpoint;
 class UBehaviorTree;
+class UShipHealthBar;
+class UWidgetComponent;
 
 UCLASS()
 class FYPTRAINING_API ASelectableObject : public ACharacter, public IInterface_Selectable, public IInterface_Targeting, public IInterface_Damage
@@ -37,6 +39,8 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "CoreParts", meta = (AllowPrivateAccess = "true"))
 	USphereComponent* enemyShipSensor;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "CoreParts", meta = (AllowPrivateAccess = "true"))
+	UWidgetComponent* healthBar;
 	//Functions
 
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
@@ -148,6 +152,12 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UnitTweakables")
 	UMaterialInstance* playerTexture;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UnitTweakables")
+	UShipHealthBar* healthBarRef;
+
+protected:
+	virtual void BeginPlay() override;
 
 private:
 	void checkOrderCode();
@@ -159,5 +169,6 @@ private:
 	FTimerHandle behaviourTreeTick;
 
 	FTimerHandle enemySensorTimer;
+
 
 };

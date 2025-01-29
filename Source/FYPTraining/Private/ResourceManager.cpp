@@ -47,7 +47,7 @@ void AResourceManager::Init(AFYPTrainingGameMode* gmRef)
 	cmRef = Cast<ACombatManager>(spawnedCombatManager);
 	if (cmRef)
 	{
-		cmRef->captureInitialMines(gmRef, this, mine1Spawned, mine2Spawned);
+		cmRef->Init(gmRef, this, mine1Spawned, mine2Spawned);
 	}
 
 	GetWorldTimerManager().SetTimer(mineStatusCheckTimer, this, &AResourceManager::checkMineStatus, 5.0f, true, 5.0f);

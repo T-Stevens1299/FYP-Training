@@ -23,9 +23,9 @@ protected:
 
 public:	
 
-	void Init();
+	void captureInitialMines();
 
-	void captureInitialMines(AFYPTrainingGameMode* gmRef, AResourceManager* rmRef, AActor* passedMine1, AActor* passedMine2);
+	void Init(AFYPTrainingGameMode* gmRef, AResourceManager* rmRef, AActor* passedMine1, AActor* passedMine2);
 
 	void taskCaptureMine();
 
@@ -73,4 +73,8 @@ private:
 	bool BasicCombatPredictionAlgorithm();
 
 	float calculateArmyStrength(bool calculateAIStrength);
+
+	TArray<AActor*> mineRefArray;
+
+	FTimerHandle initDelay;
 };

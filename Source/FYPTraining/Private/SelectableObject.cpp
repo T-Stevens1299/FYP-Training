@@ -9,6 +9,8 @@
 #include "FYPTraining/FYPTrainingGameMode.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "ResourceMine.h"
+#include "Components/WidgetComponent.h"
+#include "ShipHealthBar.h"
 
 
 // Sets default values
@@ -29,7 +31,16 @@ ASelectableObject::ASelectableObject()
 	enemyShipSensor = CreateDefaultSubobject<USphereComponent>(TEXT("ShipSensorComponent"));
 	enemyShipSensor->SetupAttachment(RootComponent);
 
+	healthBar = CreateDefaultSubobject<UWidgetComponent>(TEXT("ShipHealthBarComponent"));
+	healthBar->SetupAttachment(RootComponent);
+
 	GetCharacterMovement()->RotationRate = FRotator(0.0f, 0.0f, UnitRotationSpeed);
+}
+
+void ASelectableObject::BeginPlay()
+{
+	Super::BeginPlay();
+	healthBarRef = Cast<UShipHealthBar>(healthBar->GetUserWidgetObject());
 }
 
 //Function only used on ship classes. Resource mine and shipyards
@@ -45,6 +56,7 @@ void ASelectableObject::initaliseSelectableObject(bool player_controlled, float 
 	//Init Functionality
 	initBlueprintScript();
 	setHardpointsParent();
+
 
 	//Sets enemy sensor timer up
 	GetWorldTimerManager().SetTimer(enemySensorTimer, this, &ASelectableObject::locateEnemyInRange, 2, true, 2);
@@ -254,10 +266,13 @@ void ASelectableObject::HealthCalculations()
 	{
 		totalUnitHealth = newTotalHealth;
 		initHealthCheck = false;
-		UE_LOG(LogTemp, Warning, TEXT("The Total unit health is: %d"), (int)newTotalHealth);
 	}
 
 	currentUnitHealth = newTotalHealth;
+	
+	float percent = currentUnitHealth / totalUnitHealth;
+
+	if (IsValid(healthBarRef)) { healthBarRef->updateHealthBar(percent); UE_LOG(LogTemp, Warning, TEXT("The Total unit health is: %d"), (int)newTotalHealth); }
 
 	if (newTotalHealth <= 0)
 	{
@@ -319,23 +334,24 @@ void ASelectableObject::locateEnemyInRange()
 	if (orderCode == 1) { return; }
 
 	//If the ship has no target, find one om weapons range and set it to current target
-	if (CurrentTarget != NULL) { return; }
-
-	TArray<AActor*> overlappingActors;
-	enemyShipSensor->GetOverlappingActors(overlappingActors);
-	for (int meanGirls = 0; meanGirls < overlappingActors.Num(); meanGirls++)
+	if (CurrentTarget == NULL)
 	{
-		ASelectableObject* foundShip = Cast<ASelectableObject>(overlappingActors[meanGirls]);
-		if (foundShip)
+		TArray<AActor*> overlappingActors;
+		enemyShipSensor->GetOverlappingActors(overlappingActors);
+		for (int meanGirls = 0; meanGirls < overlappingActors.Num(); meanGirls++)
 		{
-			//if the ship is player controlled target non-player controlled ships and vice versa
-			if (!playerControlled)
+			ASelectableObject* foundShip = Cast<ASelectableObject>(overlappingActors[meanGirls]);
+			if (foundShip)
 			{
-				if (foundShip->playerControlled) { UE_LOG(LogTemp, Warning, TEXT("FoundTarget")); AttackTarget_Implementation(foundShip); break; }
-			}
-			else
-			{
-				if (!foundShip->playerControlled) { UE_LOG(LogTemp, Warning, TEXT("FoundTarget")); AttackTarget_Implementation(foundShip); break; }
+				//if the ship is player controlled target non-player controlled ships and vice versa
+				if (!playerControlled)
+				{
+					if (foundShip->playerControlled) { UE_LOG(LogTemp, Warning, TEXT("FoundTarget")); AttackTarget_Implementation(foundShip); break; }
+				}
+				else
+				{
+					if (!foundShip->playerControlled) { UE_LOG(LogTemp, Warning, TEXT("FoundTarget")); AttackTarget_Implementation(foundShip); break; }
+				}
 			}
 		}
 	}

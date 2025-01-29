@@ -16,46 +16,37 @@ ACombatManager::ACombatManager()
 
 }
 
-void ACombatManager::Init()
+void ACombatManager::captureInitialMines()
 {
+	GetWorldTimerManager().ClearTimer(initDelay);
+
+	TArray<AActor*> aiShipArray = gamemodeRef->ActiveAiShips;
+
+	for (int i = 0; i < aiShipArray.Num(); i++)
+	{
+		ASelectableObject* shipRef = Cast<ASelectableObject>(aiShipArray[i]);
+		if (shipRef)
+		{
+			shipRef->moveObject(mineRefArray[i]->GetActorLocation(), 100);
+		}
+	}
+
 	initStageComplete = true;
 
-	GetWorldTimerManager().SetTimer(combatLoopTimer, this, &ACombatManager::selectorCaptureMineOrder, 2, true, 2);
+	GetWorldTimerManager().SetTimer(combatLoopTimer, this, &ACombatManager::selectorCaptureMineOrder, 1, true, 1);
 }
 
-void ACombatManager::captureInitialMines(AFYPTrainingGameMode* gmRef, AResourceManager* rmRef, AActor* passedMine1, AActor* passedMine2)
+void ACombatManager::Init(AFYPTrainingGameMode* gmRef, AResourceManager* rmRef, AActor* passedMine1, AActor* passedMine2)
 {
+
 	gamemodeRef = gmRef;
 
 	resourceManRef = rmRef;
 
-	AActor* firstShipToOrder = resourceManRef->shipyardRef->spawnShip(corvetteSpawnRef);
-	AActor* secondShipToOrder = resourceManRef->shipyardRef->spawnShip(corvetteSpawnRef);
+	mineRefArray.Add(passedMine2);
+	mineRefArray.Add(passedMine1);
 
-	gamemodeRef->ActiveAiShips.Add(firstShipToOrder);
-	gamemodeRef->ActiveAiShips.Add(secondShipToOrder);
-
-	gamemodeRef->currentAiPopCap += 20.0f;
-
-	ASelectableObject* firstShip = Cast<ASelectableObject>(firstShipToOrder);
-	if (firstShip)
-	{
-		firstShip->retreatPointRef = resourceManRef->shipyardRef->retreatPoint;
-		firstShip->attackPointRef = resourceManRef->shipyardRef->attackPoint;
-		firstShip->initaliseSelectableObject(false, 750, 10);
-		firstShip->moveObject(passedMine2->GetActorLocation(), 100);
-	}
-
-	ASelectableObject* secondShip = Cast<ASelectableObject>(secondShipToOrder);
-	if (secondShip)
-	{
-		secondShip->retreatPointRef = resourceManRef->shipyardRef->retreatPoint;
-		secondShip->attackPointRef = resourceManRef->shipyardRef->attackPoint;
-		secondShip->initaliseSelectableObject(false, 750, 10);
-		secondShip->moveObject(passedMine1->GetActorLocation(), 100);
-	}
-
-	Init();
+	GetWorldTimerManager().SetTimer(initDelay, this, &ACombatManager::captureInitialMines, 2, true, 2);
 }
 
 void ACombatManager::selectorCaptureMineOrder()

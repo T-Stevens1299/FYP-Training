@@ -124,12 +124,11 @@ bool AHardpoint::CheckTargetRange(TArray<AActor*> ActorsToIgnore)
 		SetTargetsParent();
 
 		if (GetWorld()->LineTraceSingleByChannel(HitResult, startLoc, endLoc, ECollisionChannel::ECC_Visibility, params, FCollisionResponseParams()))
-		{
-			DrawDebugLine(GetWorld(), startLoc, endLoc, HitResult.GetActor() ? usedDamageLine : usedDamageLine, false, 2.0f, 0, 2.0f);
-			
+		{	
 			if (HitResult.Distance <= weaponRange)
 			{
 				canShoot = true;
+				DrawDebugLine(GetWorld(), startLoc, endLoc, HitResult.GetActor() ? usedDamageLine : usedDamageLine, false, 1.0f, 0, 1.0f);
 			}
 			else
 			{

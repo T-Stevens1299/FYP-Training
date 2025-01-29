@@ -5,6 +5,7 @@
 #include "FYPTraining/FYPTrainingGameMode.h"
 #include <Kismet/GameplayStatics.h>
 #include "Components/BoxComponent.h"
+#include "Components/WidgetComponent.h"
 #include "Hardpoint.h"
 
 AResourceMine::AResourceMine()
@@ -24,6 +25,8 @@ void AResourceMine::Init(AFYPTrainingGameMode* gamemodeReference)
 	PC = UGameplayStatics::GetPlayerController(GetWorld(), 0);
 
 	gmRef = gamemodeReference;
+
+	//healthBarRef = Cast<UShipHealthBar>(healthBar->GetUserWidgetObject());
 
 	playerControlled = false;
 
