@@ -95,13 +95,17 @@ void AHardpoint::FireWeapon()
 	{
 		if (currentHardpointTarget->GetClass()->ImplementsInterface(UInterface_Damage::StaticClass()))
 		{
-			IInterface_Damage::Execute_DealDamage(currentHardpointTarget, outputDamage);
+			if (currentHardpointTarget) { IInterface_Damage::Execute_DealDamage(currentHardpointTarget, outputDamage); }
 			UE_LOG(LogTemp, Warning, TEXT("Fire"))
 		}
 	}
 	else
 	{
-		IInterface_Targeting::Execute_AttackExistingTarget(hardpointParent);
+		if (hardpointParent) 
+		{
+			IInterface_Targeting::Execute_AttackExistingTarget(hardpointParent);
+
+		}
 	}
 }
 

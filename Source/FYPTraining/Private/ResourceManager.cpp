@@ -15,7 +15,7 @@ AResourceManager::AResourceManager()
 
 }
 
-void AResourceManager::Init(AFYPTrainingGameMode* gmRef)
+void AResourceManager::Init(AFYPTrainingGameMode* gmRef, bool useLanchester)
 {
 	gamemodeRef = gmRef;
 
@@ -47,7 +47,7 @@ void AResourceManager::Init(AFYPTrainingGameMode* gmRef)
 	cmRef = Cast<ACombatManager>(spawnedCombatManager);
 	if (cmRef)
 	{
-		cmRef->Init(gmRef, this, mine1Spawned, mine2Spawned);
+		cmRef->Init(gmRef, this, mine1Spawned, mine2Spawned, useLanchester);
 	}
 
 	GetWorldTimerManager().SetTimer(mineStatusCheckTimer, this, &AResourceManager::checkMineStatus, 5.0f, true, 5.0f);

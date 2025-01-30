@@ -33,7 +33,7 @@ void AFYPTrainingGameMode::BeginPlay()
 	aiManagerRef = Cast<AAIMasterControlManager>(spawnedAiManager);
 	if (aiManagerRef)
 	{
-		aiManagerRef->Init(this);
+		aiManagerRef->Init(this, useDDS, useLanchester);
 	}
 
 	HUD = CreateWidget<UPlayerHUD>(PC, HUDref);

@@ -7,6 +7,7 @@
 #include "GameFramework/Controller.h" 
 #include <Kismet/GameplayStatics.h>
 #include "InputActionValue.h"
+//#include "Components/BoxComponent.h"
 
 // Sets default values
 ARTS_Camera::ARTS_Camera()
@@ -17,8 +18,11 @@ ARTS_Camera::ARTS_Camera()
 	bUseControllerRotationYaw = false;
 	bUseControllerRotationRoll = false;
 
+	cameraMover = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Root"));
+	cameraMover->SetupAttachment(GetRootComponent());
+
 	CameraArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraArm"));
-	CameraArm->SetupAttachment(RootComponent);
+	CameraArm->SetupAttachment(cameraMover);
 	CameraArm->SetRelativeLocation(FVector(0.0f, 0.0f, 0.0f)); // Position the camera
 	CameraArm->TargetArmLength = 400.0f;
 	CameraArm->bUsePawnControlRotation = false;
@@ -60,7 +64,6 @@ void ARTS_Camera::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 
 		EnhancedInputComponent->BindAction(CameraRotate, ETriggerEvent::Triggered, this, &ARTS_Camera::RotateCamera);
 	}
-
 }
 
 void ARTS_Camera::ZoomCamera(const FInputActionValue& Value)
@@ -84,6 +87,7 @@ void ARTS_Camera::MoveCamera(const FInputActionValue& Value)
 		const FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
 
 		// add movement 
+
 		AddMovementInput(ForwardDirection, MovementVector.Y);
 		AddMovementInput(RightDirection, MovementVector.X);
 	}

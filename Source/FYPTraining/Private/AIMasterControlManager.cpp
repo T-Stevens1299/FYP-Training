@@ -18,7 +18,7 @@ AAIMasterControlManager::AAIMasterControlManager()
 
 }
 
-void AAIMasterControlManager::Init(AFYPTrainingGameMode* gmRef)
+void AAIMasterControlManager::Init(AFYPTrainingGameMode* gmRef, bool useDDS, bool useLanchester)
 {
 	gamemodeRef = gmRef;
 
@@ -27,6 +27,8 @@ void AAIMasterControlManager::Init(AFYPTrainingGameMode* gmRef)
 	//{
 	//	rm->Init(gamemodeRef);
 	//}
+	
+	dynamicDifficultyScalingActive = useDDS;
 
 	if (dynamicDifficultyScalingActive)
 	{
@@ -37,7 +39,7 @@ void AAIMasterControlManager::Init(AFYPTrainingGameMode* gmRef)
 	resourceManagerRef = Cast<AResourceManager>(spawnedResourceManager);
 	if (resourceManagerRef)
 	{
-		resourceManagerRef->Init(gamemodeRef);
+		resourceManagerRef->Init(gamemodeRef, useLanchester);
 	}
 
 	AActor* spawnedResearchManager = GetWorld()->SpawnActor(researchManager);

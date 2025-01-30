@@ -25,7 +25,7 @@ public:
 
 	void captureInitialMines();
 
-	void Init(AFYPTrainingGameMode* gmRef, AResourceManager* rmRef, AActor* passedMine1, AActor* passedMine2);
+	void Init(AFYPTrainingGameMode* gmRef, AResourceManager* rmRef, AActor* passedMine1, AActor* passedMine2, bool useLanchester);
 
 	void taskCaptureMine();
 

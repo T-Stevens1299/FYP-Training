@@ -151,6 +151,9 @@ public:
 	UMaterial* playerMaterial;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UnitTweakables")
+	UMaterial* enemyMaterial;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UnitTweakables")
 	UMaterialInstance* playerTexture;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UnitTweakables")

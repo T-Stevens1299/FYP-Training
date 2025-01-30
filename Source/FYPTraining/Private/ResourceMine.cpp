@@ -133,18 +133,19 @@ void AResourceMine::captureMineSequence()
 
 void AResourceMine::buildMine()
 {
-	isBuilt = true;
 	UE_LOG(LogTemp, Warning, TEXT("MineBuilt"));
-	if (!firstCapture)
-	{
-		FActorSpawnParameters spawnParams;
-		AActor* hardpoint = GetWorld()->SpawnActor<AHardpoint>(hardpointSpawnRef, hardpointSpawn->GetRelativeLocation(), GetActorRotation(), spawnParams);
-		setHardpointsParent();
-	}
 
-	firstCapture = false;
+	FActorSpawnParameters spawnParams;
+	AActor* hardpoint = GetWorld()->SpawnActor<AHardpoint>(hardpointSpawnRef, hardpointSpawn->GetRelativeLocation(), GetActorRotation(), spawnParams);
+
+	setHardpointsParent();
+
+	if (playerControlled) { MineMesh->SetMaterial(0, playerMaterial); }
+	else { MineMesh->SetMaterial(0, enemyMaterial); }
+
 
 	generateIncome(0, false);
+	isBuilt = true;
 }
 
 void AResourceMine::HealthCalculations()

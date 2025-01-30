@@ -20,7 +20,7 @@ public:
 	// Sets default values for this actor's properties
 	AAIMasterControlManager();
 
-	void Init(AFYPTrainingGameMode* gmRef);
+	void Init(AFYPTrainingGameMode* gmRef, bool useDDS, bool useLanchester);
 
 
 

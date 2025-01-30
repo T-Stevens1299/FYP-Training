@@ -19,7 +19,7 @@ public:
 	// Sets default values for this actor's properties
 	AResourceManager();
 
-	void Init(AFYPTrainingGameMode* gmRef);
+	void Init(AFYPTrainingGameMode* gmRef, bool useLanchester);
 
 	void triggerMineBuild();
 

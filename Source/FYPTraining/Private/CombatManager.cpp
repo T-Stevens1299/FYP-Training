@@ -36,7 +36,7 @@ void ACombatManager::captureInitialMines()
 	GetWorldTimerManager().SetTimer(combatLoopTimer, this, &ACombatManager::selectorCaptureMineOrder, 1, true, 1);
 }
 
-void ACombatManager::Init(AFYPTrainingGameMode* gmRef, AResourceManager* rmRef, AActor* passedMine1, AActor* passedMine2)
+void ACombatManager::Init(AFYPTrainingGameMode* gmRef, AResourceManager* rmRef, AActor* passedMine1, AActor* passedMine2, bool useLanchester)
 {
 
 	gamemodeRef = gmRef;
@@ -45,6 +45,8 @@ void ACombatManager::Init(AFYPTrainingGameMode* gmRef, AResourceManager* rmRef, 
 
 	mineRefArray.Add(passedMine2);
 	mineRefArray.Add(passedMine1);
+
+	usingLanchesterModel = useLanchester;
 
 	GetWorldTimerManager().SetTimer(initDelay, this, &ACombatManager::captureInitialMines, 2, true, 2);
 }
@@ -104,7 +106,6 @@ void ACombatManager::taskOrderUnit(int passedOrderCode)
 			if (curShip)
 			{
 				curShip->orderCode = passedOrderCode;
-				//UE_LOG(LogTemp, Warning, TEXT("Passed Order Is: %i"), passedOrderCode);
 			}
 		}
 	}

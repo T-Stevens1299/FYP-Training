@@ -112,7 +112,6 @@ void ASelectableObject::checkOrderCode()
 
 	case 1:
 		moveObject(retreatPointRef->GetActorLocation(), 500.0f);
-		UE_LOG(LogTemp, Warning, TEXT("Order 1 Recieved"));
 		break;
 
 	case 2:
@@ -149,7 +148,7 @@ void ASelectableObject::AttackTarget_Implementation(AActor* Target)
 {
 	CurrentTarget = Target;
 
-	if (ASelectableObject::CurrentTarget)
+	if (CurrentTarget)
 	{
 		selectHardpointToTarget();
 	}
@@ -180,19 +179,9 @@ void ASelectableObject::selectHardpointToTarget()
 	targetRef = Cast<ASelectableObject>(CurrentTarget);
 
 	if (!targetRef) { return; }
-
-	AResourceMine* mineRef = Cast<AResourceMine>(targetRef);
-	if (mineRef)
-	{
-		if (!mineRef->isBuilt) { UE_LOG(LogTemp, Warning, TEXT("UnCapturedMineNotValidToAttack")); CurrentTarget = NULL; return; }
-		//Remove the prebuilt hardpoint on the resource mines it was not needed I am a idiot
-	}
-	else
-	{
-		CurrentTarget = targetRef->Hardpoints.Last();	
-		if(!CurrentTarget) { return; }
-		moveToAttackTarget(CurrentTarget, WeaponsRange);
-	}
+	CurrentTarget = targetRef->Hardpoints.Last();	
+	if(!CurrentTarget) { return; }
+	moveToAttackTarget(CurrentTarget, WeaponsRange);
 }
 
 void ASelectableObject::setHardpointTarget()
@@ -341,16 +330,24 @@ void ASelectableObject::locateEnemyInRange()
 		for (int meanGirls = 0; meanGirls < overlappingActors.Num(); meanGirls++)
 		{
 			ASelectableObject* foundShip = Cast<ASelectableObject>(overlappingActors[meanGirls]);
-			if (foundShip)
+			if (foundShip) 
 			{
-				//if the ship is player controlled target non-player controlled ships and vice versa
-				if (!playerControlled)
-				{
-					if (foundShip->playerControlled) { UE_LOG(LogTemp, Warning, TEXT("FoundTarget")); AttackTarget_Implementation(foundShip); break; }
+				AResourceMine* mineRef = Cast<AResourceMine>(foundShip);
+				if (mineRef) 
+				{ 
+					if (mineRef->isBuilt == false) { UE_LOG(LogTemp, Warning, TEXT("UnCapturedMineNotValidToAttack")); return; } 
 				}
 				else
 				{
-					if (!foundShip->playerControlled) { UE_LOG(LogTemp, Warning, TEXT("FoundTarget")); AttackTarget_Implementation(foundShip); break; }
+					//if the ship is player controlled target non-player controlled ships and vice versa
+					if (!playerControlled)
+					{
+						if (foundShip->playerControlled) { UE_LOG(LogTemp, Warning, TEXT("FoundTarget")); AttackTarget_Implementation(foundShip); break; }
+					}
+					else
+					{
+						if (!foundShip->playerControlled) { UE_LOG(LogTemp, Warning, TEXT("FoundTarget")); AttackTarget_Implementation(foundShip); break; }
+					}
 				}
 			}
 		}

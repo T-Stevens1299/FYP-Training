@@ -36,6 +36,12 @@ public:
 	float currentAIMoney;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AITweakables")
+	bool useDDS;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AITweakables")
+	bool useLanchester;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AITweakables")
 	float aiIncomeMultiplier;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AITweakables")
