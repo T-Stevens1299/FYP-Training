@@ -29,13 +29,10 @@ public:
 
 	bool constructShip(TSubclassOf<AActor> shipToSpawn, float shipCost, float buildTime, int popValue);
 
-	void buildShip();
-
 	void buildMines();
 
 	bool canUpgradeTechLevel(float upgradeCost, float upgradeTime);
 
-	void upgradeLevel();
 
 	void spawnStartingShips();
 
@@ -81,6 +78,8 @@ public:
 
 	FTimerHandle upgradingTimer;
 
+	FTimerHandle conProgressTimer;
+
 	APlayerController* PC;
 
 	AUnitManager* managerRef;
@@ -92,5 +91,21 @@ public:
 	class UShipyardWidget* HUD;
 
 private:
+	void buildShip();
+
+	void buildShipProgress();
+
 	void healthBarSet();
+
+	void upgradeLevelProgress();
+
+	void upgradeLevel();
+
+	float curShipConTime = 0.0f;
+
+	float constructionProgress = 0.0f;
+
+	float curTechUpgradeTime = 0.0f;
+
+	float techUpgradeProgress = 0.0f;
 };

@@ -7,6 +7,8 @@
 #include "Components/BoxComponent.h"
 #include "Components/WidgetComponent.h"
 #include "Hardpoint.h"
+#include "ShipHealthBar.h"
+
 
 AResourceMine::AResourceMine()
 {
@@ -31,8 +33,6 @@ void AResourceMine::Init(AFYPTrainingGameMode* gamemodeReference)
 	playerControlled = false;
 
 	GetWorldTimerManager().SetTimer(captureTriggerTimer, this, &AResourceMine::captureMine, 1, true, 1);
-
-	setHardpointsParent();
 }
 
 void AResourceMine::generateIncome(float prevIncomeRate, bool techUpgrade)
@@ -89,8 +89,8 @@ void AResourceMine::captureMine()
 		if (playerShipsCapturing == 0 && enemyShipsCapturing > 0)
 		{
 			if (!GetWorldTimerManager().IsTimerActive(captureTimer))
-			{
-				GetWorldTimerManager().SetTimer(captureTimer, this, &AResourceMine::captureMineSequence, captureTime, true, captureTime);
+			{			
+				GetWorldTimerManager().SetTimer(captureTimer, this, &AResourceMine::captureMineSequence, 1.0f, true, 1.0f);
 				UE_LOG(LogTemp, Warning, TEXT("StartTime"));
 				playerControlled = false;
 			}
@@ -99,7 +99,7 @@ void AResourceMine::captureMine()
 		{
 			if (!GetWorldTimerManager().IsTimerActive(captureTimer))
 			{
-				GetWorldTimerManager().SetTimer(captureTimer, this, &AResourceMine::captureMineSequence, captureTime, true, captureTime);
+				GetWorldTimerManager().SetTimer(captureTimer, this, &AResourceMine::captureMineSequence, 1.0f, true, 1.0f);
 				UE_LOG(LogTemp, Warning, TEXT("StartTime"));
 				playerControlled = true;
 			}
@@ -117,6 +117,11 @@ void AResourceMine::captureMine()
 
 void AResourceMine::captureMineSequence()
 {
+	curCaptureTime++;
+	healthBarRef->updateHealthBar(curCaptureTime / captureTime);
+	UE_LOG(LogTemp, Warning, TEXT("Capture Time: %d"), (int)curCaptureTime);
+	if (curCaptureTime != captureTime) { return; }
+
 	isCaptured = true;
 	if (playerControlled)
 	{
@@ -129,6 +134,7 @@ void AResourceMine::captureMineSequence()
 		gmRef->updateMineStatus(this, playerControlled, isCaptured);
 	}
 	GetWorldTimerManager().ClearTimer(captureTimer);
+	healthBarRef->updateHealthBar(0.0f);
 }
 
 void AResourceMine::buildMine()
@@ -161,6 +167,18 @@ void AResourceMine::HealthCalculations()
 			newTotalHealth = newTotalHealth + curHardpointRef->currentHealth;
 		}
 	}
+
+	if (initHealthCheck)
+	{
+		totalUnitHealth = newTotalHealth;
+		initHealthCheck = false;
+	}
+
+	currentUnitHealth = newTotalHealth;
+
+	float percent = currentUnitHealth / totalUnitHealth;
+
+	if (IsValid(healthBarRef)) { healthBarRef->updateHealthBar(percent); }
 
 	UE_LOG(LogTemp, Warning, TEXT("Overriden The Total unit health is: %d"), (int)newTotalHealth);
 

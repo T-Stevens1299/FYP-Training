@@ -70,6 +70,8 @@ public:
 
 	bool firstCapture = true;
 
+	float curCaptureTime;
+
 	int enemyShipsCapturing;
 	int playerShipsCapturing;
 

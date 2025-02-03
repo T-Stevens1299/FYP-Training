@@ -6,6 +6,7 @@
 #include "Shipyard.h"
 #include "FYPTraining/FYPTrainingGameMode.h"
 #include "UnitManager.h"
+#include "Components/ProgressBar.h"
 
 UShipyardWidget::UShipyardWidget(const FObjectInitializer& ObjectInitializer)
 	:Super(ObjectInitializer)
@@ -95,12 +96,6 @@ void UShipyardWidget::upgradeTechLevel()
 		BuildMines->SetVisibility(ESlateVisibility::Visible);
 		BuildMines->SetIsEnabled(true);
 
-		HealthUpgrade1->SetVisibility(ESlateVisibility::Visible);
-		HealthUpgrade1->SetIsEnabled(true);
-
-		DamageUpgrade1->SetVisibility(ESlateVisibility::Visible);
-		DamageUpgrade1->SetIsEnabled(true);
-
 		TechLevel2->SetVisibility(ESlateVisibility::Visible);
 		TechLevel2->SetIsEnabled(true);
 
@@ -139,9 +134,6 @@ void UShipyardWidget::upgradeTechLevel()
 		BuildBattleship->SetVisibility(ESlateVisibility::Visible);
 		BuildBattleship->SetIsEnabled(true);
 
-		BuildAircraftCarrier->SetVisibility(ESlateVisibility::Visible);
-		BuildAircraftCarrier->SetIsEnabled(true);
-
 		//Buttons to hide
 		TechLevel4->SetVisibility(ESlateVisibility::Hidden);
 		TechLevel4->SetIsEnabled(false);
@@ -157,7 +149,16 @@ void UShipyardWidget::triggerTechLevelCheck(FString techLevelRowName)
 	currentRow = dataTableRef.DataTable->FindRow<FConstructionData>(rowToFind, "");
 	//Triggers the can upgrade tech function. If true is returned the upgrade process starts and boolean variable set for later to upgrade the AI
 	aiCanUpgrade = shipyardRef->canUpgradeTechLevel(currentRow->requiredFunds, currentRow->constructionTime);
+}
 
+void UShipyardWidget::updateConstructionBar(float passedPercentage)
+{
+	ConstructionProgressBar->SetPercent(passedPercentage);
+}
+
+void UShipyardWidget::updateTechBar(float passedPercentage)
+{
+	TechUpgradeBar->SetPercent(passedPercentage);
 }
 
 void UShipyardWidget::queueCorvette()

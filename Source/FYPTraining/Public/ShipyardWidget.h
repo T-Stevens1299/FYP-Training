@@ -57,6 +57,10 @@ public:
 
 	void upgradeTechLevel();
 
+	void updateConstructionBar(float passedPercentage);
+
+	void updateTechBar(float passedPercentage);
+
 	//References
 	AShipyard* shipyardRef;
 
@@ -130,6 +134,13 @@ protected:
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UButton* BuildMines;
+
+
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	class UProgressBar* ConstructionProgressBar;
+
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	class UProgressBar* TechUpgradeBar;
 
 	//Bound Functions
 	UFUNCTION()

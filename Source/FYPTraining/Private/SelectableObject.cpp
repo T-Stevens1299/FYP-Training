@@ -261,7 +261,7 @@ void ASelectableObject::HealthCalculations()
 	
 	float percent = currentUnitHealth / totalUnitHealth;
 
-	if (IsValid(healthBarRef)) { healthBarRef->updateHealthBar(percent); UE_LOG(LogTemp, Warning, TEXT("The Total unit health is: %d"), (int)newTotalHealth); }
+	if (IsValid(healthBarRef)) { healthBarRef->updateHealthBar(percent); }
 
 	if (newTotalHealth <= 0)
 	{

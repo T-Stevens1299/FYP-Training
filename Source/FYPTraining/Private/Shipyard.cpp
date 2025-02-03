@@ -116,9 +116,11 @@ bool AShipyard::constructShip(TSubclassOf<AActor> shipToSpawn, float shipCost, f
 			shipConstructing = shipToSpawn;
 			currentShipPopValue = popValue;
 			isConstructingAlready = true;
+			curShipConTime = buildTime;
+			constructionProgress = 0.0f;
 			gmRef->subtractCost(playerControlled, shipCost);
 			UE_LOG(LogTemp, Warning, TEXT("Construction Time Again"));
-			GetWorldTimerManager().SetTimer(constructionTime, this, &AShipyard::buildShip, buildTime, true, buildTime);
+			GetWorldTimerManager().SetTimer(constructionTime, this, &AShipyard::buildShipProgress, 1.0f, true, 1.0f);
 			return true;
 		}
 		else
@@ -139,6 +141,23 @@ void AShipyard::spawnStartingShips()
 	shipConstructing = startingShipRef;
 	for (int i = 0; i < startingShipCount; i++)
 	{
+		buildShip();
+	}
+}
+
+void AShipyard::buildShipProgress()
+{
+	constructionProgress++;
+	if (playerControlled)
+	{
+		HUD->updateConstructionBar(constructionProgress / curShipConTime);
+		if (constructionProgress != curShipConTime) { return; }
+		buildShip();
+		HUD->updateConstructionBar(0.0f);
+	}
+	else
+	{
+		if (constructionProgress != curShipConTime) { return; }
 		buildShip();
 	}
 }
@@ -226,8 +245,10 @@ bool AShipyard::canUpgradeTechLevel(float upgradeCost, float upgradeTime)
 		if (fundsCheck >= 0)
 		{
 			isUpgradingAlready = true;
+			curTechUpgradeTime = upgradeTime;
+			techUpgradeProgress = 0.0f;
 			gmRef->subtractCost(playerControlled, upgradeCost);
-			GetWorldTimerManager().SetTimer(upgradingTimer, this, &AShipyard::upgradeLevel, upgradeTime, true, upgradeTime);
+			GetWorldTimerManager().SetTimer(upgradingTimer, this, &AShipyard::upgradeLevelProgress, 1.0f, true, 1.0f);
 			UE_LOG(LogTemp, Warning, TEXT("Upgrading Time Again"));
 			return true;
 		}
@@ -244,10 +265,19 @@ bool AShipyard::canUpgradeTechLevel(float upgradeCost, float upgradeTime)
 	}
 }
 
+void AShipyard::upgradeLevelProgress()
+{
+	techUpgradeProgress++;
+	HUD->updateTechBar(techUpgradeProgress / curTechUpgradeTime);
+	if (techUpgradeProgress != curTechUpgradeTime) { return; }
+	upgradeLevel();
+}
+
 void AShipyard::upgradeLevel()
 {
 	isUpgradingAlready = false;
 	GetWorldTimerManager().ClearTimer(upgradingTimer);
+	HUD->updateTechBar(0.0f);
 	HUD->upgradeTechLevel();
 }
 
