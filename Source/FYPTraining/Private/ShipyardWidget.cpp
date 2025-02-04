@@ -86,6 +86,8 @@ void UShipyardWidget::upgradeTechLevel()
 		shipyardRef->managerRef->upgradeTechLevel(currentRow); 	
 	}
 
+	shipyardRef->gmRef->techLevelChanged(currentTechLevel);
+
 	switch (currentTechLevel)
 	{
 	case 1:

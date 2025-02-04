@@ -11,6 +11,7 @@
 #include "ResourceMine.h"
 #include "Components/WidgetComponent.h"
 #include "ShipHealthBar.h"
+#include "Components/ProgressBar.h"
 
 
 // Sets default values
@@ -63,10 +64,12 @@ void ASelectableObject::initaliseSelectableObject(bool player_controlled, float 
 
 	if (!playerControlled) 
 	{ 
+		healthBarRef->HealthBar->SetFillColorAndOpacity(FLinearColor::Red);
 		initialiseAIShips(); 
 	}
 	else
 	{
+		healthBarRef->HealthBar->SetFillColorAndOpacity(FLinearColor::Green);
 		SetMaterials();
 	}
 }

@@ -35,7 +35,7 @@ public:
 	
 	/*void EndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);*/
 
-	void generateIncome(float prevIncomeRate, bool techUpgrade);
+	void generateIncome(float newIncome, bool techUpgrade);
 
 	void buildMine();
 
@@ -80,9 +80,12 @@ public:
 
 	APlayerController* PC;
 
-	FTimerHandle incomeTimer;
+	FTimerHandle delayTimer;
 
 	FTimerHandle captureTimer;
 
 	FTimerHandle captureTriggerTimer;
+
+private:
+	void hardpointCheckDelay();
 };

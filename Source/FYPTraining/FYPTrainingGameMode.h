@@ -126,6 +126,8 @@ public:
 
 	void setMines();
 
+	void techLevelChanged(int passedTechLevel);
+
 	void updatePopCap(bool playerControlled, int popValue);
 
 	void updateMineStatus(AActor* passedMine, bool playerControlled, bool isCaptured);

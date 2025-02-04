@@ -19,7 +19,6 @@ public:
 
 	void updateHealthBar(float passedPercentage);
 
-protected:
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UProgressBar* HealthBar;
 	

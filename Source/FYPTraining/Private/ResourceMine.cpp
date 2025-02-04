@@ -8,6 +8,7 @@
 #include "Components/WidgetComponent.h"
 #include "Hardpoint.h"
 #include "ShipHealthBar.h"
+#include "Components/ProgressBar.h"
 
 
 AResourceMine::AResourceMine()
@@ -28,32 +29,34 @@ void AResourceMine::Init(AFYPTrainingGameMode* gamemodeReference)
 
 	gmRef = gamemodeReference;
 
-	//healthBarRef = Cast<UShipHealthBar>(healthBar->GetUserWidgetObject());
-
 	playerControlled = false;
 
 	GetWorldTimerManager().SetTimer(captureTriggerTimer, this, &AResourceMine::captureMine, 1, true, 1);
 }
 
-void AResourceMine::generateIncome(float prevIncomeRate, bool techUpgrade)
+void AResourceMine::generateIncome(float newIncome, bool techUpgrade)
 {
 	if (techUpgrade)
 	{
-		float incomeToAdd = IncomeRate - prevIncomeRate;
+		float incomeToAdd = newIncome - IncomeRate;
+		UE_LOG(LogTemp, Warning, TEXT("MoneyToAdd: %d"), (int)incomeToAdd);
 		gmRef->increaseIncomePerSecond(playerControlled, incomeToAdd);
+		IncomeRate = newIncome;
 	}
 	else
 	{
+		UE_LOG(LogTemp, Warning, TEXT("InitNewMine"));
 		gmRef->increaseIncomePerSecond(playerControlled, IncomeRate);
 	}
 }
 
 void AResourceMine::setMineLevel(int newMineLevel)
 {
-	if (IncomeRateLevels.IsValidIndex(newMineLevel))
+	int arrayPosition = newMineLevel - 2;
+	if (IncomeRateLevels.IsValidIndex(arrayPosition))
 	{
-		IncomeRate = IncomeRateLevels[newMineLevel];
-		generateIncome(IncomeRateLevels[newMineLevel], true);
+		IncomeRate = IncomeRateLevels[arrayPosition];
+		generateIncome(IncomeRateLevels[arrayPosition], true);
 	}
 }
 
@@ -123,16 +126,8 @@ void AResourceMine::captureMineSequence()
 	if (curCaptureTime != captureTime) { return; }
 
 	isCaptured = true;
-	if (playerControlled)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("PlayerCapturedMine"));
-		gmRef->updateMineStatus(this, playerControlled, isCaptured);
-	}
-	else
-	{
-		UE_LOG(LogTemp, Warning, TEXT("EnemyCapturedMine"));
-		gmRef->updateMineStatus(this, playerControlled, isCaptured);
-	}
+	gmRef->updateMineStatus(this, playerControlled, isCaptured);
+
 	GetWorldTimerManager().ClearTimer(captureTimer);
 	healthBarRef->updateHealthBar(0.0f);
 }
@@ -142,16 +137,22 @@ void AResourceMine::buildMine()
 	UE_LOG(LogTemp, Warning, TEXT("MineBuilt"));
 
 	FActorSpawnParameters spawnParams;
-	AActor* hardpoint = GetWorld()->SpawnActor<AHardpoint>(hardpointSpawnRef, hardpointSpawn->GetRelativeLocation(), GetActorRotation(), spawnParams);
+	AActor* hardpoint = GetWorld()->SpawnActor<AHardpoint>(hardpointSpawnRef, GetActorLocation() + FVector(0.0f, 0.0f, 200.0f), GetActorRotation(), spawnParams);
+	hardpoint->AttachToActor(this, FAttachmentTransformRules::KeepWorldTransform);
 
-	setHardpointsParent();
-
-	if (playerControlled) { MineMesh->SetMaterial(0, playerMaterial); }
-	else { MineMesh->SetMaterial(0, enemyMaterial); }
-
+	if (playerControlled) { MineMesh->SetMaterial(0, playerMaterial); healthBarRef->HealthBar->SetFillColorAndOpacity(FLinearColor::Green); }
+	else { MineMesh->SetMaterial(0, enemyMaterial); healthBarRef->HealthBar->SetFillColorAndOpacity(FLinearColor::Red); }
 
 	generateIncome(0, false);
 	isBuilt = true;
+
+	GetWorldTimerManager().SetTimer(delayTimer, this, &AResourceMine::hardpointCheckDelay, 1.0f, true, 1.0f);
+}
+
+void AResourceMine::hardpointCheckDelay()
+{
+	GetWorldTimerManager().ClearTimer(delayTimer);
+	setHardpointsParent();
 }
 
 void AResourceMine::HealthCalculations()
@@ -184,16 +185,20 @@ void AResourceMine::HealthCalculations()
 
 	if (newTotalHealth <= 0)
 	{
+		isBuilt = false;
+		isCaptured = false;
+
 		if (playerControlled)
 		{
+			UE_LOG(LogTemp, Warning, TEXT("MineBuilt"));
 			gmRef->PlayerResourceMine.RemoveSingle(this);
 		}
 		else
 		{
+			UE_LOG(LogTemp, Warning, TEXT("RemoveMine"));
 			gmRef->AIResourceMine.RemoveSingle(this);
 		}
-		GetWorldTimerManager().ClearTimer(incomeTimer);
-		isBuilt = false;
-		isCaptured = false;
+
+		healthBarRef->HealthBar->SetFillColorAndOpacity(FLinearColor::Yellow);
 	}
 }

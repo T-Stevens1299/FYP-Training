@@ -85,6 +85,25 @@ void AFYPTrainingGameMode::subtractCost(bool playerControlled, float incomeToSub
 	}
 }
 
+void AFYPTrainingGameMode::techLevelChanged(int passedTechLevel)
+{
+	TArray<AActor*> capturedMines;
+	for (AActor* playerMine : PlayerResourceMine) { capturedMines.Add(playerMine); UE_LOG(LogTemp, Warning, TEXT("PlayerMineAdded"));}
+	for (AActor* aiMine : AIResourceMine) { capturedMines.Add(aiMine); UE_LOG(LogTemp, Warning, TEXT("aiMineAdded"));}
+
+	UE_LOG(LogTemp, Warning, TEXT("Mines To Upgrade: %d"), (int)capturedMines.Num());
+	for (int i = 0; i < capturedMines.Num(); i++)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Loop"));
+		if (capturedMines.IsValidIndex(i))
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Valid"));
+			AResourceMine* mineRef = Cast<AResourceMine>(capturedMines[i]);
+			if (mineRef) { mineRef->setMineLevel(passedTechLevel); UE_LOG(LogTemp, Warning, TEXT("MineLevelChanged"));}
+		}
+	}
+}
+
 void AFYPTrainingGameMode::setShipyards()
 {
 	TArray<AActor*> foundActors;
@@ -121,40 +140,17 @@ void AFYPTrainingGameMode::setMines()
 
 void AFYPTrainingGameMode::updateMineStatus(AActor* passedMine, bool playerControlled, bool isCaptured)
 {
-	if (isCaptured)
+	UE_LOG(LogTemp, Warning, TEXT("AddMine"));
+	if (playerControlled)
 	{
-		if (playerControlled)
-		{
-			PlayerResourceMine.Add(passedMine);
-		}
-		else 
-		{
-			AIResourceMine.Add(passedMine);
-			aiManagerRef->resourceManagerRef->triggerMineBuild();
-		}
+		PlayerResourceMine.Add(passedMine);
+		UE_LOG(LogTemp, Warning, TEXT("AddedPlayerMine"));
 	}
 	else 
 	{
-		if (playerControlled)
-		{
-			for (int i = 0; PlayerResourceMine.Num(); i++)
-			{
-				if (passedMine == PlayerResourceMine[i])
-				{
-					PlayerResourceMine.RemoveSingle(AIResourceMine[i]);
-				}
-			}
-		}
-		else
-		{
-			for (int i = 0; AIResourceMine.Num(); i++)
-			{
-				if (passedMine == AIResourceMine[i])
-				{
-					AIResourceMine.RemoveSingle(AIResourceMine[i]);
-				}
-			}
-		}
+		AIResourceMine.Add(passedMine);
+		aiManagerRef->resourceManagerRef->triggerMineBuild();
+		UE_LOG(LogTemp, Warning, TEXT("AddedAImine"));
 	}
 }
 

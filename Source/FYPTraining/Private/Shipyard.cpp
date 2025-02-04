@@ -8,7 +8,9 @@
 #include <Kismet/GameplayStatics.h>
 #include "ResourceMine.h"
 #include "UnitManager.h"
+#include "ShipHealthBar.h"
 #include "Components/WidgetComponent.h"
+#include "Components/ProgressBar.h"
 
 AShipyard::AShipyard()
 {
@@ -63,6 +65,8 @@ void AShipyard::init(AFYPTrainingGameMode* gamemodeReference)
 void AShipyard::healthBarSet()
 {
 	GetWorldTimerManager().ClearTimer(healthBarDelay);
+	if(playerControlled) { healthBarRef->HealthBar->SetFillColorAndOpacity(FLinearColor::Green); }
+	else { healthBarRef->HealthBar->SetFillColorAndOpacity(FLinearColor::Red); }
 	HealthCalculations();
 }
 
