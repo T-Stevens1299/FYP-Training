@@ -61,6 +61,8 @@ public:
 
 	void updateTechBar(float passedPercentage);
 
+	void updateMineCount(bool addingMine);
+
 	//References
 	AShipyard* shipyardRef;
 
@@ -74,6 +76,8 @@ public:
 
 private:
 	bool aiCanUpgrade;
+
+	int currentMineToBuild = 0;
 
 protected:
 	//UI Components
@@ -141,6 +145,10 @@ protected:
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UProgressBar* TechUpgradeBar;
+
+
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	class UTextBlock* MinesToBuild;
 
 	//Bound Functions
 	UFUNCTION()

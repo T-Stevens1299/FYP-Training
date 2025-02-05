@@ -5,6 +5,7 @@
 #include "FYPTrainingCharacter.h"
 #include "PlayerHUD.h"
 #include "Shipyard.h"
+#include "ShipyardWidget.h"
 #include "ResourceMine.h"
 #include "Blueprint/UserWidget.h"
 #include <Kismet/GameplayStatics.h>
@@ -131,6 +132,7 @@ void AFYPTrainingGameMode::setShipyards()
 			if (foundShipyardRef)
 			{
 				foundShipyardRef->init(this);
+				if (foundShipyardRef->playerControlled) { playerShipyardRef = foundShipyardRef; }
 			}
 		}
 	}
@@ -159,6 +161,7 @@ void AFYPTrainingGameMode::updateMineStatus(AActor* passedMine, bool playerContr
 	if (playerControlled)
 	{
 		PlayerResourceMine.Add(passedMine);
+		playerShipyardRef->HUD->updateMineCount(true);
 		UE_LOG(LogTemp, Warning, TEXT("AddedPlayerMine"));
 	}
 	else 

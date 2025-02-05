@@ -213,15 +213,12 @@ void AShipyard::buildMines()
 						{
 							gmRef->subtractCost(playerControlled, mineCost);
 							curMine->buildMine();
+							if (playerControlled) { HUD->updateMineCount(false); }
 						}
 					}
 				}
 			}
 		}
-	}
-	else
-	{
-		UE_LOG(LogTemp, Warning, TEXT("No Active Mines"));
 	}
 }
 

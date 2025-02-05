@@ -20,7 +20,7 @@ void AUnitManager::Init(AFYPTrainingGameMode* gmRef)
 	gamemodeRef = gmRef;
 	currentTechLevel = 1;
 	addNewUnitOptions();
-	GetWorldTimerManager().SetTimer(unitConstructionTimer, this, &AUnitManager::startUnitBuildingOperation, 2, true, 2);
+	//GetWorldTimerManager().SetTimer(unitConstructionTimer, this, &AUnitManager::startUnitBuildingOperation, 2, true, 2);
 }
 
 void AUnitManager::setShipyardPtr(AShipyard* shipyardRef)

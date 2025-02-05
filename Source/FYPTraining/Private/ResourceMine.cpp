@@ -140,6 +140,7 @@ void AResourceMine::buildMine()
 	hardpoint->RegisterComponent();
 	hardpoint->SetChildActorClass(hardpointSpawnRef);
 	hardpoint->CreateChildActor();
+	hardpoint->SetWorldLocation(GetActorLocation() + FVector(0.0f, 0.0f, 200.0f));
 	
 	if (playerControlled) { MineMesh->SetMaterial(0, playerMaterial); healthBarRef->HealthBar->SetFillColorAndOpacity(FLinearColor::Green); }
 	else { MineMesh->SetMaterial(0, enemyMaterial); healthBarRef->HealthBar->SetFillColorAndOpacity(FLinearColor::Red); }

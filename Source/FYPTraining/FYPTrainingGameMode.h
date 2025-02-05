@@ -147,4 +147,6 @@ private:
 	float currentBaseIncomeRate;
 
 	void increaseIncomePerTechLevel(int passTechLevel);
+	
+	AShipyard* playerShipyardRef;
 };

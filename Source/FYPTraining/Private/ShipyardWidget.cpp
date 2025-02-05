@@ -7,6 +7,7 @@
 #include "FYPTraining/FYPTrainingGameMode.h"
 #include "UnitManager.h"
 #include "Components/ProgressBar.h"
+#include "Components/TextBlock.h"
 
 UShipyardWidget::UShipyardWidget(const FObjectInitializer& ObjectInitializer)
 	:Super(ObjectInitializer)
@@ -73,6 +74,14 @@ void UShipyardWidget::triggerMineBuild()
 {
 	UE_LOG(LogTemp, Warning, TEXT("TriggerMineBuild"));
 	shipyardRef->buildMines();
+}
+
+void UShipyardWidget::updateMineCount(bool addingMine)
+{
+	if (addingMine) { currentMineToBuild++; }
+	else { currentMineToBuild--;  }
+
+	MinesToBuild->SetText(FText::FromString(FString::FromInt(currentMineToBuild)));
 }
 
 void UShipyardWidget::upgradeTechLevel()
