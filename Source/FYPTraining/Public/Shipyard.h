@@ -25,8 +25,6 @@ public:
 
 	void init(AFYPTrainingGameMode* gamemodeReference);
 
-	void generateIncome(float prevIncomeRate, bool techUpgrade);
-
 	bool constructShip(TSubclassOf<AActor> shipToSpawn, float shipCost, float buildTime, int popValue);
 
 	void buildMines();

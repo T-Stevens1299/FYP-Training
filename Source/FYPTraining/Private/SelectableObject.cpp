@@ -208,6 +208,7 @@ void ASelectableObject::setHardpointsParent()
 
 	TArray<AActor*> childActors;
 	GetAllChildActors(childActors);
+	UE_LOG(LogTemp, Warning, TEXT("Hardpoints In Array: %d"), (int)childActors.Num());
 
 	for (int LosingMyEdge = 0; LosingMyEdge < childActors.Num(); LosingMyEdge++)
 	{

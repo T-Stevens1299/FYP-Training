@@ -23,8 +23,6 @@ void AShipyard::init(AFYPTrainingGameMode* gamemodeReference)
 
 	gmRef = gamemodeReference;
 
-	generateIncome(0, false);
-
 	//healthBarRef = Cast<UShipHealthBar>(healthBar->GetUserWidgetObject());
 
 	initBlueprintScript();
@@ -68,19 +66,6 @@ void AShipyard::healthBarSet()
 	if(playerControlled) { healthBarRef->HealthBar->SetFillColorAndOpacity(FLinearColor::Green); }
 	else { healthBarRef->HealthBar->SetFillColorAndOpacity(FLinearColor::Red); }
 	HealthCalculations();
-}
-
-void AShipyard::generateIncome(float prevIncomeRate, bool techUpgrade)
-{
-	if (techUpgrade)
-	{
-		float incomeToAdd = IncomeRate - prevIncomeRate;
-		gmRef->increaseIncomePerSecond(playerControlled, incomeToAdd);
-	}
-	else
-	{
-		gmRef->increaseIncomePerSecond(playerControlled, IncomeRate);
-	}
 }
 
 bool AShipyard::constructShip(TSubclassOf<AActor> shipToSpawn, float shipCost, float buildTime, int popValue)

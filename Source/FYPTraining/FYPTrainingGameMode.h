@@ -74,6 +74,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "GameStats")
 	int aiTechLevel;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "GameStats")
+	TArray<float> techLevelIncomeIncreases;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AITweakables")
 	TSubclassOf<AActor> aiManager;
 
@@ -140,4 +143,8 @@ public:
 
 	void calculateLostShips();
 
+private:
+	float currentBaseIncomeRate;
+
+	void increaseIncomePerTechLevel(int passTechLevel);
 };

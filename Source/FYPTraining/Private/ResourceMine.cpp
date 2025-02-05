@@ -55,7 +55,6 @@ void AResourceMine::setMineLevel(int newMineLevel)
 	int arrayPosition = newMineLevel - 2;
 	if (IncomeRateLevels.IsValidIndex(arrayPosition))
 	{
-		IncomeRate = IncomeRateLevels[arrayPosition];
 		generateIncome(IncomeRateLevels[arrayPosition], true);
 	}
 }
@@ -137,22 +136,24 @@ void AResourceMine::buildMine()
 	UE_LOG(LogTemp, Warning, TEXT("MineBuilt"));
 
 	FActorSpawnParameters spawnParams;
-	AActor* hardpoint = GetWorld()->SpawnActor<AHardpoint>(hardpointSpawnRef, GetActorLocation() + FVector(0.0f, 0.0f, 200.0f), GetActorRotation(), spawnParams);
-	hardpoint->AttachToActor(this, FAttachmentTransformRules::KeepWorldTransform);
-
+	UChildActorComponent* hardpoint = NewObject<UChildActorComponent>(this);
+	hardpoint->RegisterComponent();
+	hardpoint->SetChildActorClass(hardpointSpawnRef);
+	hardpoint->CreateChildActor();
+	
 	if (playerControlled) { MineMesh->SetMaterial(0, playerMaterial); healthBarRef->HealthBar->SetFillColorAndOpacity(FLinearColor::Green); }
 	else { MineMesh->SetMaterial(0, enemyMaterial); healthBarRef->HealthBar->SetFillColorAndOpacity(FLinearColor::Red); }
 
 	generateIncome(0, false);
 	isBuilt = true;
 
-	GetWorldTimerManager().SetTimer(delayTimer, this, &AResourceMine::hardpointCheckDelay, 1.0f, true, 1.0f);
+	GetWorldTimerManager().SetTimer(delayTimer, this, &AResourceMine::hardpointCheckDelay, 2.0f, true, 2.0f);
 }
 
 void AResourceMine::hardpointCheckDelay()
 {
-	GetWorldTimerManager().ClearTimer(delayTimer);
 	setHardpointsParent();
+	GetWorldTimerManager().ClearTimer(delayTimer);
 }
 
 void AResourceMine::HealthCalculations()

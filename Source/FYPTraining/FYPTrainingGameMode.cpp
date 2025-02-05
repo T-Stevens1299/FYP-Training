@@ -39,9 +39,10 @@ void AFYPTrainingGameMode::BeginPlay()
 	HUD = CreateWidget<UPlayerHUD>(PC, HUDref);
 	HUD->SetGmPtr(this);
 
+	//Monetary Calculations
 	currentPlayerMoney = startingPlayerFunds;
-
 	currentAIMoney = (startingAiFunds * aiIncomeMultiplier);
+	currentBaseIncomeRate = playerIncomePerSecond;
 
 	HUD->updateFunds(currentPlayerMoney);
 	HUD->AddToViewport();
@@ -87,6 +88,8 @@ void AFYPTrainingGameMode::subtractCost(bool playerControlled, float incomeToSub
 
 void AFYPTrainingGameMode::techLevelChanged(int passedTechLevel)
 {
+	increaseIncomePerTechLevel(passedTechLevel);
+
 	TArray<AActor*> capturedMines;
 	for (AActor* playerMine : PlayerResourceMine) { capturedMines.Add(playerMine); UE_LOG(LogTemp, Warning, TEXT("PlayerMineAdded"));}
 	for (AActor* aiMine : AIResourceMine) { capturedMines.Add(aiMine); UE_LOG(LogTemp, Warning, TEXT("aiMineAdded"));}
@@ -101,6 +104,18 @@ void AFYPTrainingGameMode::techLevelChanged(int passedTechLevel)
 			AResourceMine* mineRef = Cast<AResourceMine>(capturedMines[i]);
 			if (mineRef) { mineRef->setMineLevel(passedTechLevel); UE_LOG(LogTemp, Warning, TEXT("MineLevelChanged"));}
 		}
+	}
+}
+
+void AFYPTrainingGameMode::increaseIncomePerTechLevel(int passTechLevel)
+{
+	int arrayPosition = passTechLevel - 2;
+	if (techLevelIncomeIncreases.IsValidIndex(arrayPosition))
+	{
+		float incomeToAdd = techLevelIncomeIncreases[arrayPosition] - currentBaseIncomeRate;
+		increaseIncomePerSecond(true, incomeToAdd);
+		increaseIncomePerSecond(false, incomeToAdd);
+		currentBaseIncomeRate = techLevelIncomeIncreases[arrayPosition];
 	}
 }
 
@@ -149,8 +164,8 @@ void AFYPTrainingGameMode::updateMineStatus(AActor* passedMine, bool playerContr
 	else 
 	{
 		AIResourceMine.Add(passedMine);
-		aiManagerRef->resourceManagerRef->triggerMineBuild();
 		UE_LOG(LogTemp, Warning, TEXT("AddedAImine"));
+		aiManagerRef->resourceManagerRef->triggerMineBuild();
 	}
 }
 
