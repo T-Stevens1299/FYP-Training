@@ -7,7 +7,7 @@
 #include "GameFramework/Controller.h" 
 #include <Kismet/GameplayStatics.h>
 #include "InputActionValue.h"
-//#include "Components/BoxComponent.h"
+#include "FYPTraining/FYPTrainingGameMode.h"
 
 // Sets default values
 ARTS_Camera::ARTS_Camera()
@@ -37,12 +37,9 @@ void ARTS_Camera::BeginPlay()
 	Super::BeginPlay();
 	PC = UGameplayStatics::GetPlayerController(GetWorld(), 0);
 	PC->bShowMouseCursor = true;
-}
 
-void ARTS_Camera::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-
+	AFYPTrainingGameMode* gamemode = Cast<AFYPTrainingGameMode>(UGameplayStatics::GetGameMode(this));
+	if (gamemode) { gmRef = gamemode; }
 }
 
 void ARTS_Camera::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -63,6 +60,8 @@ void ARTS_Camera::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 		EnhancedInputComponent->BindAction(CameraMove, ETriggerEvent::Triggered, this, &ARTS_Camera::MoveCamera);
 
 		EnhancedInputComponent->BindAction(CameraRotate, ETriggerEvent::Triggered, this, &ARTS_Camera::RotateCamera);
+
+		EnhancedInputComponent->BindAction(ToggleAdminPanel, ETriggerEvent::Triggered, this, &ARTS_Camera::AdminPanelToggle);
 	}
 }
 
@@ -101,4 +100,9 @@ void ARTS_Camera::RotateCamera(const FInputActionValue& Value)
 	{
 		CameraArm->AddRelativeRotation(FRotator(0.0f, AxisValue, 0.0f));
 	}
+}
+
+void ARTS_Camera::AdminPanelToggle(const FInputActionValue& Value)
+{
+	gmRef->ToggleAdminPanel();
 }

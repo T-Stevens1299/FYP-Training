@@ -11,6 +11,7 @@
 
 class UInputAction;
 class UInputMappingContext;
+class AFYPTrainingGameMode;
 struct FInputActionValue;
 
 UCLASS()
@@ -25,8 +26,6 @@ protected:
 	virtual void BeginPlay() override;
 
 public:	
-	virtual void Tick(float DeltaTime) override;
-
 	//Input Bindings
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
@@ -35,6 +34,8 @@ public:
 	void MoveCamera(const FInputActionValue& Value);
 
 	void RotateCamera(const FInputActionValue& Value);
+
+	void AdminPanelToggle(const FInputActionValue& Value);
 
 	//Input Values
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Enhanced Input")
@@ -48,6 +49,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Enhanced Input")
 	UInputAction* CameraRotate;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Enhanced Input")
+	UInputAction* ToggleAdminPanel;
 
 	//Components
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
@@ -73,4 +77,7 @@ public:
 	float ZoomStep = 10.0f;
 
 	APlayerController* PC;
+
+private:
+	AFYPTrainingGameMode* gmRef;
 };

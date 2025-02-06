@@ -3,9 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-
 #include "Engine/DataTable.h"
-
 #include "Blueprint/UserWidget.h"
 #include "ShipyardWidget.generated.h"
 
@@ -62,6 +60,8 @@ public:
 	void updateTechBar(float passedPercentage);
 
 	void updateMineCount(bool addingMine);
+
+	void updatePopCount(int popCap);
 
 	//References
 	AShipyard* shipyardRef;
@@ -149,6 +149,9 @@ protected:
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UTextBlock* MinesToBuild;
+
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	class UTextBlock* PopCapText;
 
 	//Bound Functions
 	UFUNCTION()

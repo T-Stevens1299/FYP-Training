@@ -11,6 +11,7 @@ class UUserWidget;
 class UPlayerHUD;
 class UGameEndScreen;
 class AShipyard;
+class UAdminPanel;
 class AAIMasterControlManager;
 
 //class EFactionTag;
@@ -43,6 +44,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AITweakables")
 	float aiIncomeMultiplier;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AITweakables")
+	float currentaiDifficulty = 0.4;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AITweakables")
 	float startingAiFunds;
@@ -96,6 +100,12 @@ public:
 	UPROPERTY(BlueprintReadOnly, Category = "HUD")
 	UGameEndScreen* GameEnd;
 
+	UPROPERTY(EditDefaultsOnly, Category = "HUD")
+	TSubclassOf<UUserWidget> adminPanelRef;
+
+	UPROPERTY(BlueprintReadOnly, Category = "HUD")
+	UAdminPanel* adminPanel;
+
 	APlayerController* PC;
 
 	FTimerHandle incomeHandle;
@@ -119,6 +129,9 @@ public:
 	TArray<FString> aiShipsLost;
 
 	//Functions
+	UFUNCTION(BlueprintCallable, Category = "Admin")
+	void ToggleAdminPanel();
+
 	void IncreaseIncome();
 
 	void increaseIncomePerSecond(bool playerControlled, float incomeToIncrease);

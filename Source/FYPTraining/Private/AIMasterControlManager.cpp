@@ -64,8 +64,6 @@ void AAIMasterControlManager::dynamicDifficultyScalingCheck()
 
 	float s = (s1 + s2) / 2;
 
-	UE_LOG(LogTemp, Warning, TEXT("Difficulty is: %f"), s);
-
 	if (s >= 1)
 	{
 		s = 1;
@@ -75,9 +73,8 @@ void AAIMasterControlManager::dynamicDifficultyScalingCheck()
 		s = 0;
 	}
 
+	gamemodeRef->currentaiDifficulty = s;
 	gamemodeRef->aiIncomeMultiplier = s * (1.5f - 0.75f) + 0.75f;
-
-	UE_LOG(LogTemp, Warning, TEXT("AI Bonus Multiplier is: %f"), gamemodeRef->aiIncomeMultiplier);
 }
 
 

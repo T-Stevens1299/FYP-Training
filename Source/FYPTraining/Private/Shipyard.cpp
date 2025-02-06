@@ -128,6 +128,7 @@ bool AShipyard::constructShip(TSubclassOf<AActor> shipToSpawn, float shipCost, f
 void AShipyard::spawnStartingShips()
 {
 	shipConstructing = startingShipRef;
+	currentShipPopValue = 10;
 	for (int i = 0; i < startingShipCount; i++)
 	{
 		buildShip();

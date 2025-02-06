@@ -84,6 +84,11 @@ void UShipyardWidget::updateMineCount(bool addingMine)
 	MinesToBuild->SetText(FText::FromString(FString::FromInt(currentMineToBuild)));
 }
 
+void UShipyardWidget::updatePopCount(int popCap)
+{
+	PopCapText->SetText(FText::FromString(FString::FromInt(popCap)));
+}
+
 void UShipyardWidget::upgradeTechLevel()
 {
 	currentTechLevel++;

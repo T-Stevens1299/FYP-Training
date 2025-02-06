@@ -25,7 +25,7 @@ void AHardpoint::BeginPlay()
 {
 	Super::BeginPlay();
 	currentHealth = totalHealth;
-	GetWorldTimerManager().SetTimer(FireHandle, this, &AHardpoint::FireWeapon, fireRate, true, 0.0f);
+	GetWorldTimerManager().SetTimer(FireHandle, this, &AHardpoint::FireWeapon, fireRate, true, fireRate);
 }
 
 

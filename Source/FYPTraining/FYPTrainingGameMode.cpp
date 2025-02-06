@@ -13,6 +13,7 @@
 #include "AIMasterControlManager.h"
 #include "GameEndScreen.h"
 #include "ResourceManager.h"
+#include "AdminPanel.h"
 
 AFYPTrainingGameMode::AFYPTrainingGameMode()
 {
@@ -39,6 +40,10 @@ void AFYPTrainingGameMode::BeginPlay()
 
 	HUD = CreateWidget<UPlayerHUD>(PC, HUDref);
 	HUD->SetGmPtr(this);
+
+	adminPanel = CreateWidget<UAdminPanel>(PC, adminPanelRef);
+	adminPanel->AddToViewport();
+	adminPanel->init(this);
 
 	//Monetary Calculations
 	currentPlayerMoney = startingPlayerFunds;
@@ -131,8 +136,8 @@ void AFYPTrainingGameMode::setShipyards()
 			AShipyard* foundShipyardRef = Cast<AShipyard>(foundActors[i]);
 			if (foundShipyardRef)
 			{
-				foundShipyardRef->init(this);
 				if (foundShipyardRef->playerControlled) { playerShipyardRef = foundShipyardRef; }
+				foundShipyardRef->init(this);
 			}
 		}
 	}
@@ -203,11 +208,18 @@ void AFYPTrainingGameMode::updatePopCap(bool playerControlled, int popValue)
 	if (playerControlled)
 	{
 		currentPlayerPopCap = currentPlayerPopCap + popValue;
+		playerShipyardRef->HUD->updatePopCount(currentPlayerPopCap);
 	}
 	else
 	{
 		currentAiPopCap = currentAiPopCap + popValue;
 	}
+}
+
+void AFYPTrainingGameMode::ToggleAdminPanel()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Pressed"))
+	adminPanel->toggleVisibility();
 }
 
 void AFYPTrainingGameMode::gameEnd(bool playerControlled)
