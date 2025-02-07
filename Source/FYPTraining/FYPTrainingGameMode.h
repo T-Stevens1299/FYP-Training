@@ -160,6 +160,12 @@ private:
 	float currentBaseIncomeRate;
 
 	void increaseIncomePerTechLevel(int passTechLevel);
+
+	void saveData();
 	
 	AShipyard* playerShipyardRef;
+
+	TArray<int> dataToParse;
+
+	TArray<FString> dataToSave;
 };

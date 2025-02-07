@@ -53,7 +53,7 @@ void AAIMasterControlManager::Init(AFYPTrainingGameMode* gmRef, bool useDDS, boo
 	unitManagerRef = Cast<AUnitManager>(spawnedUnitManager);
 	if (unitManagerRef)
 	{
-		unitManagerRef->Init(gamemodeRef);
+		unitManagerRef->Init(gamemodeRef, this);
 	}
 }
 

@@ -67,6 +67,9 @@ public:
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UButton* BackToMenu;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MenuNameRef")
+	FName MainMenu;
+
 	FText pCorvetteLoss;
 	FText aiCorvetteLoss;
 

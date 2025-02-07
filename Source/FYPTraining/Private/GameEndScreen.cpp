@@ -4,6 +4,8 @@
 #include "GameEndScreen.h"
 #include "Components/TextBlock.h"
 #include "Components/Button.h"
+#include <Kismet/KismetSystemLibrary.h>
+#include <Kismet/GameplayStatics.h>
 
 UGameEndScreen::UGameEndScreen(const FObjectInitializer& ObjectInitializer)
 	:Super(ObjectInitializer)
@@ -49,5 +51,5 @@ void UGameEndScreen::SetScreenText(bool victor)
 
 void UGameEndScreen::returnToMenu()
 {
-
+	UGameplayStatics::OpenLevel(this, MainMenu);
 }

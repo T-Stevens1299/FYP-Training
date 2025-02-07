@@ -51,6 +51,8 @@ public:
 
 	bool initStageComplete = false;
 
+	int shipsConstructedThisCycle = 1;
+
 	AFYPTrainingGameMode* gamemodeRef;
 
 	AResourceManager* resourceManRef;

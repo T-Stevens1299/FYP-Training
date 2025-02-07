@@ -118,6 +118,7 @@ void ASelectableObject::checkOrderCode()
 		break;
 
 	case 2:
+		//Only issues order if target is not already in combat
 		if (CurrentTarget == NULL)
 		{
 			if (!hasTarget) 
@@ -208,7 +209,6 @@ void ASelectableObject::setHardpointsParent()
 
 	TArray<AActor*> childActors;
 	GetAllChildActors(childActors);
-	UE_LOG(LogTemp, Warning, TEXT("Hardpoints In Array: %d"), (int)childActors.Num());
 
 	for (int LosingMyEdge = 0; LosingMyEdge < childActors.Num(); LosingMyEdge++)
 	{
@@ -324,7 +324,7 @@ void ASelectableObject::calculateWeaponsRange()
 void ASelectableObject::locateEnemyInRange()
 {
 	//If Ship has the order code of 1, it is retreating and should not be seeking new targets
-	if (orderCode == 1) { return; }
+	if (orderCode < 2) { return; }
 
 	//If the ship has no target, find one om weapons range and set it to current target
 	if (CurrentTarget == NULL)

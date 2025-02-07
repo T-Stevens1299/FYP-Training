@@ -2,10 +2,13 @@
 
 
 #include "UnitManager.h"
+#include "CombatManager.h"
 #include "Shipyard.h"
 #include "Engine/DataTable.h"
 #include "ShipyardWidget.h"
 #include "FYPTraining/FYPTrainingGameMode.h"
+#include "AIMasterControlManager.h"
+#include "ResourceManager.h"
 
 // Sets default values
 AUnitManager::AUnitManager()
@@ -15,12 +18,19 @@ AUnitManager::AUnitManager()
 
 }
 
-void AUnitManager::Init(AFYPTrainingGameMode* gmRef)
+void AUnitManager::Init(AFYPTrainingGameMode* gmRef, AAIMasterControlManager* masterRef)
 {
 	gamemodeRef = gmRef;
+	masterManagerRef = masterRef;
 	currentTechLevel = 1;
 	addNewUnitOptions();
-	GetWorldTimerManager().SetTimer(unitConstructionTimer, this, &AUnitManager::startUnitBuildingOperation, 2, true, 2);
+	//GetWorldTimerManager().SetTimer(unitConstructionTimer, this, &AUnitManager::startUnitBuildingOperation, 2, true, 2);
+	getCombatManagerRef();
+}
+
+void AUnitManager::getCombatManagerRef()
+{
+	combatManagerRef = masterManagerRef->resourceManagerRef->cmRef;
 }
 
 void AUnitManager::setShipyardPtr(AShipyard* shipyardRef)
@@ -90,6 +100,7 @@ void AUnitManager::startUnitBuildingOperation()
 	int popValue = currentRow->populationValue;
 
 	bool ableToBuildUnit = shipYardRef->constructShip(currentRow->shipToSpawn.Get(), shipCost, buildTime, popValue);
+	if (ableToBuildUnit) { combatManagerRef->shipsConstructedThisCycle++; }
 }
 
 //Determines a potential unit to build based on the unit weight

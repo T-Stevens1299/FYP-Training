@@ -9,11 +9,14 @@
 #include "ResourceMine.h"
 #include "Blueprint/UserWidget.h"
 #include <Kismet/GameplayStatics.h>
+#include <Kismet/KismetSystemLibrary.h>
 #include "UObject/ConstructorHelpers.h"
 #include "AIMasterControlManager.h"
 #include "GameEndScreen.h"
 #include "ResourceManager.h"
 #include "AdminPanel.h"
+#include "Misc/FileHelper.h"
+#include "HAL/PlatformFileManager.h"
 
 AFYPTrainingGameMode::AFYPTrainingGameMode()
 {
@@ -272,6 +275,20 @@ void AFYPTrainingGameMode::calculateLostShips()
 	int totalPlayerLoss = pCorvetteLost + pFrigateLost + pDestroyLost + pCruiserLost + pBattleLost;
 	int totalAiLoss = aiCorvetteLost + aiFrigateLost + aiDestroyLost + aiCruiserLost + aiBattleLost;
 
+	dataToParse.Add(pCorvetteLost);
+	dataToParse.Add(pFrigateLost);
+	dataToParse.Add(pDestroyLost);
+	dataToParse.Add(pCruiserLost);
+	dataToParse.Add(pBattleLost);
+	dataToParse.Add(totalPlayerLoss);
+
+	dataToParse.Add(aiCorvetteLost);
+	dataToParse.Add(aiFrigateLost);
+	dataToParse.Add(aiDestroyLost);
+	dataToParse.Add(aiCruiserLost);
+	dataToParse.Add(aiBattleLost);
+	dataToParse.Add(totalAiLoss);
+
 	GameEnd->pCorvetteLoss = FText::FromString(FString::FromInt(pCorvetteLost));
 	GameEnd->aiCorvetteLoss = FText::FromString(FString::FromInt(aiCorvetteLost));
 
@@ -291,4 +308,32 @@ void AFYPTrainingGameMode::calculateLostShips()
 	GameEnd->aiLoss = FText::FromString(FString::FromInt(totalAiLoss));
 
 	GameEnd->matchLength = matchDuration;
+}
+
+//Saves the data from each level as a text directory that I can use to breakdown the stats
+void AFYPTrainingGameMode::saveData()
+{
+	FString StringToSave = "";
+	FString SaveDirectory = UKismetSystemLibrary::GetProjectDirectory();
+
+	for (int i = 0; i < dataToParse.Num(); i++)
+	{
+		dataToSave.Add(FString::FromInt(dataToParse[i]));
+	}
+
+	dataToSave.Add(FString::SanitizeFloat(matchDuration));
+
+	for (int i = 0; i < dataToSave.Num(); i++)
+	{
+		StringToSave += dataToSave[i];
+		StringToSave += ",";
+		StringToSave += LINE_TERMINATOR;
+	}
+
+	SaveDirectory += "\\";
+	SaveDirectory += GetClass()->GetName() + ".csv";
+
+	//https://www.youtube.com/watch?v=uZPzTN5Debc
+
+	FFileHelper::SaveStringToFile(StringToSave, *SaveDirectory);
 }

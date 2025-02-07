@@ -6,9 +6,11 @@
 #include "GameFramework/Actor.h"
 #include "UnitManager.generated.h"
 
-class AShipyard;
 struct FConstructionData;
+class AShipyard;
 class AFYPTrainingGameMode;
+class ACombatManager;
+class AAIMasterControlManager;
 
 UCLASS()
 class FYPTRAINING_API AUnitManager : public AActor
@@ -19,13 +21,17 @@ public:
 	// Sets default values for this actor's properties
 	AUnitManager();
 
-	void Init(AFYPTrainingGameMode* gmRef);
+	void Init(AFYPTrainingGameMode* gmRef, AAIMasterControlManager* masterRef);
 
 	void setShipyardPtr(AShipyard* shipyardRef);
 
 	void upgradeTechLevel(FConstructionData* currentRowRef);
 	
+	ACombatManager* combatManagerRef;
+
 	AShipyard* shipYardRef;
+
+	AAIMasterControlManager* masterManagerRef;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	FDataTableRowHandle dataTableRef;
@@ -44,6 +50,8 @@ public:
 	TArray<int> unitWeights;
 
 private:
+	void getCombatManagerRef();
+
 	void addNewUnitOptions();
 
 	void startUnitBuildingOperation();
