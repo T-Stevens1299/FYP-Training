@@ -275,19 +275,21 @@ void AFYPTrainingGameMode::calculateLostShips()
 	int totalPlayerLoss = pCorvetteLost + pFrigateLost + pDestroyLost + pCruiserLost + pBattleLost;
 	int totalAiLoss = aiCorvetteLost + aiFrigateLost + aiDestroyLost + aiCruiserLost + aiBattleLost;
 
-	dataToParse.Add(pCorvetteLost);
-	dataToParse.Add(pFrigateLost);
-	dataToParse.Add(pDestroyLost);
-	dataToParse.Add(pCruiserLost);
-	dataToParse.Add(pBattleLost);
-	dataToParse.Add(totalPlayerLoss);
+	dataToSave.Add("Player Corvettes Lost: " + FString::FromInt(pCorvetteLost));
+	dataToSave.Add("Player Frigates Lost: " + FString::FromInt(pFrigateLost));
+	dataToSave.Add("Player Destroyers Lost: " + FString::FromInt(pDestroyLost));
+	dataToSave.Add("Player Cruisers Lost: " + FString::FromInt(pCruiserLost));
+	dataToSave.Add("Player Battleships Lost: " + FString::FromInt(pBattleLost));
+	dataToSave.Add("Total Player Ships Lost: " + FString::FromInt(totalPlayerLoss));
 
-	dataToParse.Add(aiCorvetteLost);
-	dataToParse.Add(aiFrigateLost);
-	dataToParse.Add(aiDestroyLost);
-	dataToParse.Add(aiCruiserLost);
-	dataToParse.Add(aiBattleLost);
-	dataToParse.Add(totalAiLoss);
+	dataToSave.Add("AI Corvettes Lost: " + FString::FromInt(aiCorvetteLost));
+	dataToSave.Add("AI Frigates Lost: " + FString::FromInt(aiFrigateLost));
+	dataToSave.Add("AI Destroyers Lost: " + FString::FromInt(aiDestroyLost));
+	dataToSave.Add("AI Cruisers Lost: " + FString::FromInt(aiCruiserLost));
+	dataToSave.Add("AI Battleships Lost: " + FString::FromInt(aiBattleLost));
+	dataToSave.Add("Total AI Ships Lost: " + FString::FromInt(totalAiLoss));
+
+	saveData();
 
 	GameEnd->pCorvetteLoss = FText::FromString(FString::FromInt(pCorvetteLost));
 	GameEnd->aiCorvetteLoss = FText::FromString(FString::FromInt(aiCorvetteLost));
@@ -316,12 +318,7 @@ void AFYPTrainingGameMode::saveData()
 	FString StringToSave = "";
 	FString SaveDirectory = UKismetSystemLibrary::GetProjectDirectory();
 
-	for (int i = 0; i < dataToParse.Num(); i++)
-	{
-		dataToSave.Add(FString::FromInt(dataToParse[i]));
-	}
-
-	dataToSave.Add(FString::SanitizeFloat(matchDuration));
+	dataToSave.Add("Match Duration: " + FString::SanitizeFloat(matchDuration));
 
 	for (int i = 0; i < dataToSave.Num(); i++)
 	{
@@ -332,8 +329,6 @@ void AFYPTrainingGameMode::saveData()
 
 	SaveDirectory += "\\";
 	SaveDirectory += GetClass()->GetName() + ".csv";
-
-	//https://www.youtube.com/watch?v=uZPzTN5Debc
 
 	FFileHelper::SaveStringToFile(StringToSave, *SaveDirectory);
 }

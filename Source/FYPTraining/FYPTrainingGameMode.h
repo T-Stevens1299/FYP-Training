@@ -165,7 +165,5 @@ private:
 	
 	AShipyard* playerShipyardRef;
 
-	TArray<int> dataToParse;
-
 	TArray<FString> dataToSave;
 };
