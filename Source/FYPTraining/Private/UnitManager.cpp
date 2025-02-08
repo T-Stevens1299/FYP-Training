@@ -24,7 +24,7 @@ void AUnitManager::Init(AFYPTrainingGameMode* gmRef, AAIMasterControlManager* ma
 	masterManagerRef = masterRef;
 	currentTechLevel = 1;
 	addNewUnitOptions();
-	GetWorldTimerManager().SetTimer(unitConstructionTimer, this, &AUnitManager::startUnitBuildingOperation, 10, true, 10);
+	GetWorldTimerManager().SetTimer(unitConstructionTimer, this, &AUnitManager::startUnitBuildingOperation, 5, true, 0);
 	getCombatManagerRef();
 }
 
@@ -36,13 +36,11 @@ void AUnitManager::getCombatManagerRef()
 void AUnitManager::setShipyardPtr(AShipyard* shipyardRef)
 {
 	shipYardRef = shipyardRef;
-	UE_LOG(LogTemp, Warning, TEXT("Shipyard Ref Set"));
 }
 
 void AUnitManager::upgradeTechLevel(FConstructionData* currentRowRef)
 { 
 	currentRow = currentRowRef;
-	UE_LOG(LogTemp, Warning, TEXT("TriggerAIUpgrade"));
 	if ((gamemodeRef->currentAIMoney - currentRow->requiredFunds) >= 0)
 	{
 		gamemodeRef->subtractCost(false, currentRow->requiredFunds);

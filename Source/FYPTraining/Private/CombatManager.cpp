@@ -77,7 +77,6 @@ void ACombatManager::selectorCombatPredictionAlgorithm()
 	if (!shouldAttack) { taskOrderUnit(1); }
 	else
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Ships Built So Far: %d"), (int)shipsConstructedThisCycle);
 		//If there are more than 5 ships been built since last cylce, let them attack
 		if (shipsConstructedThisCycle > 4) { taskOrderUnit(2); shipsConstructedThisCycle = 0; }
 		else { taskOrderUnit(0); }

@@ -124,7 +124,7 @@ void ASelectableObject::checkOrderCode()
 		{
 			if (!hasTarget) 
 			{
-				MoveToTarget(attackPointRef->GetActorLocation(), 100);
+				moveToAttackTarget(attackPointRef, 100);
 			}
 		}
 		break;

@@ -60,7 +60,6 @@ void AResourceManager::triggerMineBuild()
 
 void AResourceManager::checkMineStatus()
 {
-	UE_LOG(LogTemp, Warning, TEXT("captureMineFunctionRan"));
 	if (gamemodeRef->AIResourceMine.Num() < gamemodeRef->PlayerResourceMine.Num())
 	{
 		cmRef->taskCaptureMine();
