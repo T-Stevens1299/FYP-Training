@@ -20,12 +20,12 @@
 
 AFYPTrainingGameMode::AFYPTrainingGameMode()
 {
-	// set default pawn class to our Blueprinted character
-	static ConstructorHelpers::FClassFinder<APawn> PlayerPawnBPClass(TEXT("/Game/ThirdPerson/Blueprints/BP_RTS_Camera"));
-	if (PlayerPawnBPClass.Class != NULL)
-	{
-		DefaultPawnClass = PlayerPawnBPClass.Class;
-	}
+	//// set default pawn class to our Blueprinted character
+	//static ConstructorHelpers::FClassFinder<APawn> PlayerPawnBPClass(TEXT("/Game/ThirdPerson/Blueprints/BP_RTS_Camera"));
+	//if (PlayerPawnBPClass.Class != NULL)
+	//{
+	//	DefaultPawnClass = PlayerPawnBPClass.Class;
+	//}
 }
 
 void AFYPTrainingGameMode::BeginPlay()

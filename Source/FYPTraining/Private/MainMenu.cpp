@@ -27,6 +27,12 @@ void UMainMenu::NativeConstruct()
 	returnToMenu();
 }
 
+void UMainMenu::init(APlayerController* pcRef)
+{
+	PC = pcRef;
+	PC->bShowMouseCursor = true;
+}
+
 void UMainMenu::openLevelSelect()
 {
 	MenuScreen->SetVisibility(ESlateVisibility::Hidden);

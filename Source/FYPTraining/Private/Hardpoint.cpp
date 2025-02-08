@@ -141,10 +141,6 @@ bool AHardpoint::CheckTargetRange(TArray<AActor*> ActorsToIgnore)
 		}
 
 	}
-	//else
-	//{
-	//	GetWorldTimerManager().ClearTimer(FireHandle);
-	//}
 
 	return false;
 }

@@ -19,5 +19,6 @@ void AMainMenuSpawner::BeginPlay()
 
 	PC = UGameplayStatics::GetPlayerController(GetWorld(), 0);
 	HUD = CreateWidget<UMainMenu>(PC, HUDref);
+	HUD->init(PC);
 	HUD->AddToViewport();
 }

@@ -44,6 +44,8 @@ public:
 	UFUNCTION()
 	void returnToMenu();
 
+	void init(APlayerController* pcRef);
+
 	//Buttons
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	UButton* LevelSelect;
@@ -91,4 +93,6 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LevelNames")
 	FName HardAiMap;
+private:
+	APlayerController* PC;
 };
