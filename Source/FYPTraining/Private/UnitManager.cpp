@@ -82,8 +82,6 @@ void AUnitManager::addNewUnitOptions()
 	case 4:
 		availableUnitsToBuild.Add("Battleship");
 		unitWeights.Add(findUnitWeightValue("Battleship"));
-		availableUnitsToBuild.Add("AircraftCarrier");
-		unitWeights.Add(findUnitWeightValue("AircraftCarrier"));
 		break;
 
 	default:

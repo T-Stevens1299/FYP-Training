@@ -229,9 +229,10 @@ void AFYPTrainingGameMode::gameEnd(bool playerControlled)
 {
 	HUD->RemoveFromParent();
 	GameEnd = CreateWidget<UGameEndScreen>(PC, gameEndRef);
-	GameEnd->AddToViewport();
 	calculateLostShips();
 	GameEnd->SetScreenText(playerControlled);
+	GameEnd->AddToViewport();
+	UGameplayStatics::SetGamePaused(this, true);
 }
 
 void AFYPTrainingGameMode::calculateLostShips()

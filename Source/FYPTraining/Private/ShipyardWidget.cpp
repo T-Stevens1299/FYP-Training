@@ -32,14 +32,14 @@ void UShipyardWidget::NativeConstruct()
 		BuildDestroyer->OnClicked.AddDynamic(this, &UShipyardWidget::queueDestroyer);
 	}
 
+	if (BuildCruiser)
+	{
+		BuildCruiser->OnClicked.AddDynamic(this, &UShipyardWidget::queueCruiser);
+	}
+
 	if (BuildBattleship)
 	{
 		BuildBattleship->OnClicked.AddDynamic(this, &UShipyardWidget::queueBattleship);
-	}
-
-	if (BuildAircraftCarrier)
-	{
-		BuildAircraftCarrier->OnClicked.AddDynamic(this, &UShipyardWidget::queueAircraftCarrier);
 	}
 
 	if (TechLevel2)

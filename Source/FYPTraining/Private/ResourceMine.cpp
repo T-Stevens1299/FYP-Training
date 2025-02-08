@@ -144,11 +144,14 @@ void AResourceMine::buildMine()
 	
 	if (playerControlled) { MineMesh->SetMaterial(0, playerMaterial); healthBarRef->HealthBar->SetFillColorAndOpacity(FLinearColor::Green); }
 	else { MineMesh->SetMaterial(0, enemyMaterial); healthBarRef->HealthBar->SetFillColorAndOpacity(FLinearColor::Red); }
+	curCaptureTime = 0;
 
 	generateIncome(0, false);
 	isBuilt = true;
 
 	GetWorldTimerManager().SetTimer(delayTimer, this, &AResourceMine::hardpointCheckDelay, 2.0f, true, 2.0f);
+
+	initBlueprintScript();
 }
 
 void AResourceMine::hardpointCheckDelay()
@@ -200,7 +203,13 @@ void AResourceMine::HealthCalculations()
 			UE_LOG(LogTemp, Warning, TEXT("RemoveMine"));
 			gmRef->AIResourceMine.RemoveSingle(this);
 		}
+		gmRef->increaseIncomePerSecond(playerControlled, -IncomeRate);
+		playerControlled = false;
 
+		unbindBlueprintEvents();
+
+		healthBarRef->HealthBar->SetPercent(0.0f);
 		healthBarRef->HealthBar->SetFillColorAndOpacity(FLinearColor::Yellow);
+		MineMesh->SetMaterial(0, mineMaterial);
 	}
 }

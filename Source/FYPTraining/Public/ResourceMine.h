@@ -29,6 +29,9 @@ public:
 	//Functions
 	AResourceMine();
 
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "Setup")
+	void unbindBlueprintEvents();
+
 	void Init(AFYPTrainingGameMode* gamemodeReference);
 
 	void BeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
@@ -61,6 +64,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MineTweakables")
 	TSubclassOf<AActor> hardpointSpawnRef;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UnitTweakables")
+	UMaterial* mineMaterial;
 
 	AHardpoint* hardpointRef;
 

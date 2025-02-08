@@ -180,7 +180,7 @@ void ASelectableObject::selectHardpointToTarget()
 	targetRef = Cast<ASelectableObject>(CurrentTarget);
 
 	if (!targetRef) { return; }
-	CurrentTarget = targetRef->Hardpoints.Last();	
+	if(targetRef->Hardpoints.IsValidIndex(0)) { CurrentTarget = targetRef->Hardpoints[0]; }
 
 	bool temp = true;
 	if (hasTarget)
@@ -339,6 +339,19 @@ bool ASelectableObject::checkCurrentTargetInRange()
 	return false;
 }
 
+//Function stops the ship shooting a newly built credit mine if it was previously targeting the old one
+void ASelectableObject::resetMineTarget()
+{
+	AResourceMine* checkMine = Cast<AResourceMine>(CurrentTarget);
+	if (checkMine)
+	{
+		if (checkMine->isBuilt)
+		{
+			if (playerControlled == checkMine->playerControlled) { CurrentTarget = NULL; CurrentShipTarget = NULL; }
+		}
+	}
+}
+
 void ASelectableObject::locateEnemyInRange()
 {
 	//If the ship has no target, find one om weapons range and set it to current target
@@ -372,5 +385,9 @@ void ASelectableObject::locateEnemyInRange()
 				}
 			}
 		}
+	}
+	else
+	{
+		resetMineTarget();
 	}
 }

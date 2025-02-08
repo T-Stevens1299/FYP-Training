@@ -171,9 +171,9 @@ private:
 
 	bool checkCurrentTargetInRange();
 
+	void resetMineTarget();
+
 	FTimerHandle behaviourTreeTick;
 
 	FTimerHandle enemySensorTimer;
-
-
 };
