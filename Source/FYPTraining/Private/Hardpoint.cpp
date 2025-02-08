@@ -93,9 +93,18 @@ void AHardpoint::FireWeapon()
 {
 	if (CheckTargetRange(ignoreActorsArray))
 	{
-		if (currentHardpointTarget->GetClass()->ImplementsInterface(UInterface_Damage::StaticClass()))
+		if (currentHardpointTarget)
 		{
-			if (currentHardpointTarget) { IInterface_Damage::Execute_DealDamage(currentHardpointTarget, outputDamage); }
+
+			AHardpoint* targetRef = Cast<AHardpoint>(currentHardpointTarget);
+			if (targetRef)
+			{
+				targetRef->DealDamage(outputDamage);
+			}
+			//if (currentHardpointTarget->GetClass()->ImplementsInterface(UInterface_Damage::StaticClass()))
+			//{
+				//IInterface_Damage::Execute_DealDamage(currentHardpointTarget, outputDamage);
+			//}
 		}
 	}
 	else
@@ -123,7 +132,7 @@ bool AHardpoint::CheckTargetRange(TArray<AActor*> ActorsToIgnore)
 
 	if (IsValid(currentHardpointTarget))
 	{
-		SetTargetsParent();
+		//SetTargetsParent();
 
 		if (GetWorld()->LineTraceSingleByChannel(HitResult, startLoc, endLoc, ECollisionChannel::ECC_Visibility, params, FCollisionResponseParams()))
 		{	
@@ -145,11 +154,23 @@ bool AHardpoint::CheckTargetRange(TArray<AActor*> ActorsToIgnore)
 	return false;
 }
 
+
+//FUCK THIS STUPID FUCKING SHITTY FUNCTION WHY DID I MAKE THIS STUPID PIECE OF SHIT
 void AHardpoint::SetTargetsParent()
 {
-	AHardpoint* targetRef = Cast<AHardpoint>(currentHardpointTarget);
-	if (targetRef)
+	if (currentHardpointTarget != NULL)
 	{
-		hardpointParent->CurrentShipTarget = targetRef->hardpointParent;
+		UE_LOG(LogTemp, Warning, TEXT("Passed Check 1"));
+		if (IsValid(currentHardpointTarget))
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Passed Check 2"));
+			AHardpoint* targetRef = Cast<AHardpoint>(currentHardpointTarget);
+			if (targetRef)
+			{
+				UE_LOG(LogTemp, Warning, TEXT("Passed Check 3"));
+				if(IsValid(targetRef->hardpointParent)) { hardpointParent->CurrentShipTarget = targetRef->hardpointParent; }
+				else { hardpointParent->CurrentShipTarget = NULL; }
+			}
+		}
 	}
 }
