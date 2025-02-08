@@ -96,7 +96,6 @@ void AHardpoint::FireWeapon()
 		if (currentHardpointTarget->GetClass()->ImplementsInterface(UInterface_Damage::StaticClass()))
 		{
 			if (currentHardpointTarget) { IInterface_Damage::Execute_DealDamage(currentHardpointTarget, outputDamage); }
-			UE_LOG(LogTemp, Warning, TEXT("Fire"))
 		}
 	}
 	else
@@ -104,7 +103,6 @@ void AHardpoint::FireWeapon()
 		if (hardpointParent) 
 		{
 			IInterface_Targeting::Execute_AttackExistingTarget(hardpointParent);
-
 		}
 	}
 }
@@ -133,20 +131,22 @@ bool AHardpoint::CheckTargetRange(TArray<AActor*> ActorsToIgnore)
 			{
 				canShoot = true;
 				DrawDebugLine(GetWorld(), startLoc, endLoc, HitResult.GetActor() ? usedDamageLine : usedDamageLine, false, 1.0f, 0, 1.0f);
+				return canShoot;
 			}
 			else
 			{
 				canShoot = false;
+				return canShoot;
 			}
 		}
 
 	}
-	else
-	{
-		GetWorldTimerManager().ClearTimer(FireHandle);
-	}
+	//else
+	//{
+	//	GetWorldTimerManager().ClearTimer(FireHandle);
+	//}
 
-	return canShoot;
+	return false;
 }
 
 void AHardpoint::SetTargetsParent()

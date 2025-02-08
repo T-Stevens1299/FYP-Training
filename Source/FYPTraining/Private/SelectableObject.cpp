@@ -114,6 +114,7 @@ void ASelectableObject::checkOrderCode()
 		break;
 
 	case 1:
+		if (GetActorLocation() == retreatPointRef->GetActorLocation()) { return; }
 		moveObject(retreatPointRef->GetActorLocation(), 500.0f);
 		break;
 
@@ -156,10 +157,6 @@ void ASelectableObject::AttackTarget_Implementation(AActor* Target)
 	{
 		selectHardpointToTarget();
 	}
-	else
-	{
-		moveToAttackTarget(CurrentTarget, WeaponsRange);
-	}
 }
 
 void ASelectableObject::AttackExistingTarget_Implementation()
@@ -184,8 +181,17 @@ void ASelectableObject::selectHardpointToTarget()
 
 	if (!targetRef) { return; }
 	CurrentTarget = targetRef->Hardpoints.Last();	
+
+	bool temp = true;
+	if (hasTarget)
+	{
+		temp = checkCurrentTargetInRange();
+	}
+
 	if(!CurrentTarget) { return; }
-	moveToAttackTarget(CurrentTarget, WeaponsRange);
+
+	if (orderCode == 1 || temp == false || hasTarget == true) { setHardpointTarget(); }
+	else { moveToAttackTarget(CurrentTarget, WeaponsRange); }
 }
 
 void ASelectableObject::setHardpointTarget()
@@ -321,12 +327,23 @@ void ASelectableObject::calculateWeaponsRange()
 	enemyShipSensor->SetSphereRadius(WeaponsRange);
 }
 
+bool ASelectableObject::checkCurrentTargetInRange()
+{
+	TArray<AActor*> overlappingActors;
+	enemyShipSensor->GetOverlappingActors(overlappingActors);
+	for (int i = 0; i < overlappingActors.Num(); i++)
+	{
+		if (overlappingActors[i] == CurrentTarget) { return true; }
+	}
+	CurrentTarget = NULL;
+	return false;
+}
+
 void ASelectableObject::locateEnemyInRange()
 {
-	//If Ship has the order code of 1, it is retreating and should not be seeking new targets
-	if (orderCode < 2) { return; }
-
 	//If the ship has no target, find one om weapons range and set it to current target
+	if (hasTarget) { return; }
+
 	if (CurrentTarget == NULL)
 	{
 		TArray<AActor*> overlappingActors;

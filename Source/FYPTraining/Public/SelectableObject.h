@@ -169,6 +169,8 @@ private:
 
 	void SetMaterials();
 
+	bool checkCurrentTargetInRange();
+
 	FTimerHandle behaviourTreeTick;
 
 	FTimerHandle enemySensorTimer;
