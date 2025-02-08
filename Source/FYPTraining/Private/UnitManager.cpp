@@ -24,7 +24,7 @@ void AUnitManager::Init(AFYPTrainingGameMode* gmRef, AAIMasterControlManager* ma
 	masterManagerRef = masterRef;
 	currentTechLevel = 1;
 	addNewUnitOptions();
-	//GetWorldTimerManager().SetTimer(unitConstructionTimer, this, &AUnitManager::startUnitBuildingOperation, 2, true, 2);
+	GetWorldTimerManager().SetTimer(unitConstructionTimer, this, &AUnitManager::startUnitBuildingOperation, 10, true, 10);
 	getCombatManagerRef();
 }
 
