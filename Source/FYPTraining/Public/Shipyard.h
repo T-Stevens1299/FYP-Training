@@ -67,6 +67,22 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ShipyardTweakables")
 	AActor* attackPoint;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ShipsToSpawn")
+	TSubclassOf<AActor> corvetteRef;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ShipsToSpawn")
+	TSubclassOf<AActor> frigateRef;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ShipsToSpawn")
+	TSubclassOf<AActor> destroyerRef;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ShipsToSpawn")
+	TSubclassOf<AActor> cruiserRef;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ShipsToSpawn")
+	TSubclassOf<AActor> battleshipRef;
+
+
 	//References
 	AFYPTrainingGameMode* gmRef;
 	

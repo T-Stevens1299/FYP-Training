@@ -102,8 +102,30 @@ bool AShipyard::constructShip(TSubclassOf<AActor> shipToSpawn, float shipCost, f
 		if (fundCheck >= 0)
 		{
 			currentShipCost = shipCost;
-			shipConstructing = shipToSpawn;
 			currentShipPopValue = popValue;
+
+			switch (currentShipPopValue)
+			{
+			case 10:
+				shipConstructing = corvetteRef;
+				break;
+			case 20:
+				shipConstructing = frigateRef;
+				break;
+			case 25:
+				shipConstructing = destroyerRef;
+				break;
+			case 30:
+				shipConstructing = cruiserRef;
+				break;
+			case 40:
+				shipConstructing = battleshipRef;
+				break;
+			default:
+				shipConstructing = corvetteRef;
+				break;
+			}
+
 			isConstructingAlready = true;
 			curShipConTime = buildTime;
 			constructionProgress = 0.0f;

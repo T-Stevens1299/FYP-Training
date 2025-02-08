@@ -335,7 +335,7 @@ bool ASelectableObject::checkCurrentTargetInRange()
 	{
 		if (overlappingActors[i] == CurrentTarget) { return true; }
 	}
-	CurrentTarget = NULL;
+	/*CurrentTarget = NULL;*/
 	return false;
 }
 
