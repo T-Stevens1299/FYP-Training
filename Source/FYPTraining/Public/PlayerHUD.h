@@ -18,6 +18,8 @@ class FYPTRAINING_API UPlayerHUD : public UUserWidget
 public:
 	UPlayerHUD(const FObjectInitializer& ObjectInitializer);
 
+	virtual void NativeConstruct() override;
+
 public:
 	//Variables
 	class AFYPTrainingGameMode* GMref;
@@ -27,8 +29,14 @@ public:
 
 	void SetGmPtr(AFYPTrainingGameMode* GMptr);
 
+	UFUNCTION()
+	void surrenderTheGame();
+
 protected:
 	//UI components
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UTextBlock* PlayerFunds;
+
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	class UButton* surrender;
 };
