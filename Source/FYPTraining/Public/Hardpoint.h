@@ -60,6 +60,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "HardpointTweakables")
 	float fireRate;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "HardpointTweakables")
+	AHardpoint* targetRef;
+
 	UPROPERTY(BlueprintReadOnly)
 	ASelectableObject* hardpointParent;
 
@@ -72,6 +75,9 @@ public:
 	FColor aiDamageLine = FColor::Red;
 
 	FColor usedDamageLine;
+
+	UFUNCTION(BlueprintNativeEvent)
+	AHardpoint* castToTarget(AActor* curTarget);
 
 	//Functions
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Damage")

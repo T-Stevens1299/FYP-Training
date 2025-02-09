@@ -91,21 +91,14 @@ void AHardpoint::SetHpTarget_Implementation(UPARAM(ref)TArray<AActor*>& actorsTo
 
 void AHardpoint::FireWeapon()
 {
+	if (!currentHardpointTarget) { return; }
+
 	if (CheckTargetRange(ignoreActorsArray))
 	{
-		if (currentHardpointTarget)
-		{
-
-			AHardpoint* targetRef = Cast<AHardpoint>(currentHardpointTarget);
-			if (targetRef)
-			{
-				targetRef->DealDamage(outputDamage);
-			}
-			//if (currentHardpointTarget->GetClass()->ImplementsInterface(UInterface_Damage::StaticClass()))
-			//{
-				//IInterface_Damage::Execute_DealDamage(currentHardpointTarget, outputDamage);
-			//}
-		}
+		targetRef = NULL;
+		if (IsValid(currentHardpointTarget)) { targetRef = castToTarget(currentHardpointTarget); }
+		if (targetRef == NULL) { return; }
+		targetRef->DealDamage(outputDamage);
 	}
 	else
 	{
@@ -114,6 +107,11 @@ void AHardpoint::FireWeapon()
 			IInterface_Targeting::Execute_AttackExistingTarget(hardpointParent);
 		}
 	}
+}
+
+AHardpoint* AHardpoint::castToTarget_Implementation(AActor* curTarget)
+{
+	return NULL;
 }
 
 bool AHardpoint::CheckTargetRange(TArray<AActor*> ActorsToIgnore)
@@ -156,21 +154,21 @@ bool AHardpoint::CheckTargetRange(TArray<AActor*> ActorsToIgnore)
 
 
 //FUCK THIS STUPID FUCKING SHITTY FUNCTION WHY DID I MAKE THIS STUPID PIECE OF SHIT
-void AHardpoint::SetTargetsParent()
-{
-	if (currentHardpointTarget != NULL)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Passed Check 1"));
-		if (IsValid(currentHardpointTarget))
-		{
-			UE_LOG(LogTemp, Warning, TEXT("Passed Check 2"));
-			AHardpoint* targetRef = Cast<AHardpoint>(currentHardpointTarget);
-			if (targetRef)
-			{
-				UE_LOG(LogTemp, Warning, TEXT("Passed Check 3"));
-				if(IsValid(targetRef->hardpointParent)) { hardpointParent->CurrentShipTarget = targetRef->hardpointParent; }
-				else { hardpointParent->CurrentShipTarget = NULL; }
-			}
-		}
-	}
-}
+//void AHardpoint::SetTargetsParent()
+//{
+//	if (currentHardpointTarget != NULL)
+//	{
+//		UE_LOG(LogTemp, Warning, TEXT("Passed Check 1"));
+//		if (IsValid(currentHardpointTarget))
+//		{
+//			UE_LOG(LogTemp, Warning, TEXT("Passed Check 2"));
+//			AHardpoint* targetRef = Cast<AHardpoint>(currentHardpointTarget);
+//			if (targetRef)
+//			{
+//				UE_LOG(LogTemp, Warning, TEXT("Passed Check 3"));
+//				if(IsValid(targetRef->hardpointParent)) { hardpointParent->CurrentShipTarget = targetRef->hardpointParent; }
+//				else { hardpointParent->CurrentShipTarget = NULL; }
+//			}
+//		}
+//	}
+//}

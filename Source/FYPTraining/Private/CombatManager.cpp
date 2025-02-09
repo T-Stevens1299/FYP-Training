@@ -86,6 +86,7 @@ void ACombatManager::selectorCombatPredictionAlgorithm()
 void ACombatManager::taskCaptureMine()
 {
 	//Selects rnadom ship out of AI pool and sends it to destroy/capture a player resource mine.
+	if (gamemodeRef->ActiveAiShips.Num() == 0) { return; }
 	int totalAIShips = gamemodeRef->ActiveAiShips.Num() - 1;
 	int shipToChoose = FMath::RandRange(0, totalAIShips);
 	ASelectableObject* chosenShip = Cast<ASelectableObject>(gamemodeRef->ActiveAiShips[shipToChoose]);

@@ -223,16 +223,16 @@ void AShipyard::buildMines()
 
 	if (!(mineRef.Num() == 0))
 	{
-		if (curMoney >= (mineCost * mineRef.Num()) || !playerControlled)
+		for (int i = 0; i < mineRef.Num(); i++)
 		{
-			for (int i = 0; i < mineRef.Num(); i++)
+			if (mineRef.IsValidIndex(i))
 			{
-				if (mineRef.IsValidIndex(i))
+				curMine = Cast<AResourceMine>(mineRef[i]);
+				if (curMine)
 				{
-					curMine = Cast<AResourceMine>(mineRef[i]);
-					if (curMine)
+					if (!(curMine->isBuilt))
 					{
-						if (!(curMine->isBuilt))
+						if (curMoney >= mineCost) 
 						{
 							if (playerControlled) { HUD->updateMineCount(false); gmRef->subtractCost(playerControlled, mineCost); }
 							UE_LOG(LogTemp, Warning, TEXT("BuildMine"));
