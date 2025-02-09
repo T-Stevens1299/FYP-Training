@@ -202,7 +202,7 @@ void ASelectableObject::setHardpointTarget()
 		{
 			if (Hardpoints[i]->GetClass()->ImplementsInterface(UInterface_Damage::StaticClass()))
 			{
-				IInterface_Damage::Execute_SetHpTarget(Hardpoints[i], Hardpoints, CurrentTarget);
+				if(CurrentTarget != NULL) { IInterface_Damage::Execute_SetHpTarget(Hardpoints[i], Hardpoints, CurrentTarget); }
 			}
 		}
 	}
@@ -376,11 +376,11 @@ void ASelectableObject::locateEnemyInRange()
 					//if the ship is player controlled target non-player controlled ships and vice versa
 					if (!playerControlled)
 					{
-						if (foundShip->playerControlled) { UE_LOG(LogTemp, Warning, TEXT("FoundTarget")); AttackTarget_Implementation(foundShip); break; }
+						if (foundShip->playerControlled) { UE_LOG(LogTemp, Warning, TEXT("AIHasFoundTarget")); AttackTarget_Implementation(foundShip); break; }
 					}
 					else
 					{
-						if (!foundShip->playerControlled) { UE_LOG(LogTemp, Warning, TEXT("FoundTarget")); AttackTarget_Implementation(foundShip); break; }
+						if (!foundShip->playerControlled) { UE_LOG(LogTemp, Warning, TEXT("PlayerHasFoundTarget")); AttackTarget_Implementation(foundShip); break; }
 					}
 				}
 			}
