@@ -20,10 +20,7 @@ AShipyard::AShipyard()
 
 void AShipyard::init(AFYPTrainingGameMode* gamemodeReference)
 {
-
 	gmRef = gamemodeReference;
-
-	//healthBarRef = Cast<UShipHealthBar>(healthBar->GetUserWidgetObject());
 
 	initBlueprintScript();
 
@@ -53,8 +50,6 @@ void AShipyard::init(AFYPTrainingGameMode* gamemodeReference)
 		}
 	}
 
-	setHardpointsParent();
-
 	spawnStartingShips();
 
 	GetWorldTimerManager().SetTimer(healthBarDelay, this, &AShipyard::healthBarSet, 1.0f, true, 1.0f);
@@ -65,7 +60,8 @@ void AShipyard::healthBarSet()
 	GetWorldTimerManager().ClearTimer(healthBarDelay);
 	if(playerControlled) { healthBarRef->HealthBar->SetFillColorAndOpacity(FLinearColor::Green); }
 	else { healthBarRef->HealthBar->SetFillColorAndOpacity(FLinearColor::Red); }
-	HealthCalculations();
+	currentUnitHealth = totalUnitHealth;
+	healthBarRef->updateHealthBar(currentUnitHealth / totalUnitHealth);
 }
 
 bool AShipyard::constructShip(TSubclassOf<AActor> shipToSpawn, float shipCost, float buildTime, int popValue)

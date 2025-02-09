@@ -50,7 +50,7 @@ public:
 
 	void getMineLevel();
 
-	virtual void HealthCalculations() override;
+	virtual void HealthCalculations(float passedDamage) override;
 
 	//Variables
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MineTweakables")
@@ -93,5 +93,5 @@ public:
 	FTimerHandle captureTriggerTimer;
 
 private:
-	void hardpointCheckDelay();
+	void resetMine();
 };

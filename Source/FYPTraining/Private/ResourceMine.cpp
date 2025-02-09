@@ -128,19 +128,14 @@ void AResourceMine::captureMineSequence()
 	gmRef->updateMineStatus(this, playerControlled, isCaptured);
 
 	GetWorldTimerManager().ClearTimer(captureTimer);
-	healthBarRef->updateHealthBar(0.0f);
+	/*healthBarRef->updateHealthBar(0.0f);*/
 }
 
 void AResourceMine::buildMine()
 {
 	UE_LOG(LogTemp, Warning, TEXT("MineBuilt"));
 
-	FActorSpawnParameters spawnParams;
-	UChildActorComponent* hardpoint = NewObject<UChildActorComponent>(this);
-	hardpoint->RegisterComponent();
-	hardpoint->SetChildActorClass(hardpointSpawnRef);
-	hardpoint->CreateChildActor();
-	hardpoint->SetWorldLocation(GetActorLocation() + FVector(0.0f, 0.0f, 200.0f));
+	currentUnitHealth = totalUnitHealth;
 	
 	if (playerControlled) { MineMesh->SetMaterial(0, playerMaterial); healthBarRef->HealthBar->SetFillColorAndOpacity(FLinearColor::Green); }
 	else { MineMesh->SetMaterial(0, enemyMaterial); healthBarRef->HealthBar->SetFillColorAndOpacity(FLinearColor::Red); }
@@ -149,67 +144,49 @@ void AResourceMine::buildMine()
 	generateIncome(0, false);
 	isBuilt = true;
 
-	GetWorldTimerManager().SetTimer(delayTimer, this, &AResourceMine::hardpointCheckDelay, 2.0f, true, 2.0f);
-
 	initBlueprintScript();
 }
 
-void AResourceMine::hardpointCheckDelay()
+void AResourceMine::HealthCalculations(float passedDamage)
 {
-	setHardpointsParent();
-	GetWorldTimerManager().ClearTimer(delayTimer);
+	float percent;
+
+	if ((currentUnitHealth - passedDamage) >= 0)
+	{
+		currentUnitHealth = currentUnitHealth - passedDamage;
+
+		percent = currentUnitHealth / totalUnitHealth;
+
+		if (IsValid(healthBarRef)) { healthBarRef->updateHealthBar(percent); }
+	}
+	else
+	{
+		if (IsValid(healthBarRef)) { healthBarRef->updateHealthBar(0); }
+		resetMine();
+	}
 }
 
-void AResourceMine::HealthCalculations()
+void AResourceMine::resetMine()
 {
-	float newTotalHealth = 0.0f;
-	AHardpoint* curHardpointRef;
+	isBuilt = false;
+	isCaptured = false;
 
-	for (int i = 0; i < Hardpoints.Num(); i++)
+	if (playerControlled)
 	{
-		curHardpointRef = Cast<AHardpoint>(Hardpoints[i]);
-		if (curHardpointRef)
-		{
-			newTotalHealth = newTotalHealth + curHardpointRef->currentHealth;
-		}
+		UE_LOG(LogTemp, Warning, TEXT("MineBuilt"));
+		gmRef->PlayerResourceMine.RemoveSingle(this);
 	}
-
-	if (initHealthCheck)
+	else
 	{
-		totalUnitHealth = newTotalHealth;
-		initHealthCheck = false;
+		UE_LOG(LogTemp, Warning, TEXT("RemoveMine"));
+		gmRef->AIResourceMine.RemoveSingle(this);
 	}
+	gmRef->increaseIncomePerSecond(playerControlled, -IncomeRate);
+	playerControlled = false;
 
-	currentUnitHealth = newTotalHealth;
+	unbindBlueprintEvents();
 
-	float percent = currentUnitHealth / totalUnitHealth;
-
-	if (IsValid(healthBarRef)) { healthBarRef->updateHealthBar(percent); }
-
-	UE_LOG(LogTemp, Warning, TEXT("Overriden The Total unit health is: %d"), (int)newTotalHealth);
-
-	if (newTotalHealth <= 0)
-	{
-		isBuilt = false;
-		isCaptured = false;
-
-		if (playerControlled)
-		{
-			UE_LOG(LogTemp, Warning, TEXT("MineBuilt"));
-			gmRef->PlayerResourceMine.RemoveSingle(this);
-		}
-		else
-		{
-			UE_LOG(LogTemp, Warning, TEXT("RemoveMine"));
-			gmRef->AIResourceMine.RemoveSingle(this);
-		}
-		gmRef->increaseIncomePerSecond(playerControlled, -IncomeRate);
-		playerControlled = false;
-
-		unbindBlueprintEvents();
-
-		healthBarRef->HealthBar->SetPercent(0.0f);
-		healthBarRef->HealthBar->SetFillColorAndOpacity(FLinearColor::Yellow);
-		MineMesh->SetMaterial(0, mineMaterial);
-	}
+	healthBarRef->HealthBar->SetPercent(0.0f);
+	healthBarRef->HealthBar->SetFillColorAndOpacity(FLinearColor::Yellow);
+	MineMesh->SetMaterial(0, mineMaterial);
 }

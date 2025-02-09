@@ -26,82 +26,82 @@ protected:
 
 public:	
 
-	virtual void Tick(float DeltaTime) override;
+	//virtual void Tick(float DeltaTime) override;
 
-	//Components
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "HardpointParts", meta = (AllowPrivateAccess = "true"))
-	UStaticMeshComponent* HardpointMesh;
+	////Components
+	//UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "HardpointParts", meta = (AllowPrivateAccess = "true"))
+	//UStaticMeshComponent* HardpointMesh;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "HardpointParts", meta = (AllowPrivateAccess = "true"))
-	USceneComponent* FirePoint;
+	//UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "HardpointParts", meta = (AllowPrivateAccess = "true"))
+	//USceneComponent* FirePoint;
 
-	//Variables
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "HardpointTweakables")
-	bool playerControlled;
+	////Variables
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "HardpointTweakables")
+	//bool playerControlled;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "HardpointTweakables")
-	bool canFire;
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "HardpointTweakables")
+	//bool canFire;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "HardpointTweakables")
-	bool isWeapon;
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "HardpointTweakables")
+	//bool isWeapon;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "HardpointTweakables")
-	float totalHealth;
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "HardpointTweakables")
+	//float totalHealth;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "HardpointTweakables")
-	float currentHealth;
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "HardpointTweakables")
+	//float currentHealth;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "HardpointTweakables")
-	float outputDamage;
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "HardpointTweakables")
+	//float outputDamage;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "HardpointTweakables")
-	float weaponRange;
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "HardpointTweakables")
+	//float weaponRange;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "HardpointTweakables")
-	float fireRate;
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "HardpointTweakables")
+	//float fireRate;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "HardpointTweakables")
-	AHardpoint* targetRef;
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "HardpointTweakables")
+	//AHardpoint* targetRef;
 
-	UPROPERTY(BlueprintReadOnly)
-	ASelectableObject* hardpointParent;
+	//UPROPERTY(BlueprintReadOnly)
+	//ASelectableObject* hardpointParent;
 
-	AActor* currentHardpointTarget;
+	//AActor* currentHardpointTarget;
 
-	TArray<AActor*> ignoreActorsArray;
+	//TArray<AActor*> ignoreActorsArray;
 
-	FColor playerDamageLine = FColor::Green;
+	//FColor playerDamageLine = FColor::Green;
 
-	FColor aiDamageLine = FColor::Red;
+	//FColor aiDamageLine = FColor::Red;
 
-	FColor usedDamageLine;
+	//FColor usedDamageLine;
 
-	UFUNCTION(BlueprintNativeEvent)
-	AHardpoint* castToTarget(AActor* curTarget);
+	//UFUNCTION(BlueprintNativeEvent)
+	//AHardpoint* castToTarget(AActor* curTarget);
 
-	//Functions
-	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Damage")
-	void TriggerHealthCalculations(); void TriggerHealthCalculations_Implementation() override;
+	////Functions
+	//UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Damage")
+	//void TriggerHealthCalculations(); void TriggerHealthCalculations_Implementation() override;
 
-	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Damage")
-	void DealDamage(float damageDealt); void DealDamage_Implementation(float damageDealt) override;
+	//UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Damage")
+	//void DealDamage(float damageDealt); void DealDamage_Implementation(float damageDealt) override;
 
-	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Damage")
-	void SetHpTarget(UPARAM(ref)TArray<AActor*>& actorsToIgnore, AActor* currentTarget); void SetHpTarget_Implementation(UPARAM(ref)TArray<AActor*>& actorsToIgnore, AActor* currentTarget) override;
+	//UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Damage")
+	//void SetHpTarget(UPARAM(ref)TArray<AActor*>& actorsToIgnore, AActor* currentTarget); void SetHpTarget_Implementation(UPARAM(ref)TArray<AActor*>& actorsToIgnore, AActor* currentTarget) override;
 
-	bool CheckTargetRange(TArray<AActor*> ActorsToIgnore);
+	//bool CheckTargetRange(TArray<AActor*> ActorsToIgnore);
 
-	void FireWeapon();
+	//void FireWeapon();
 
-	void SetTargetsParent();
+	//void SetTargetsParent();
 
-	void destroyHardpoint();
+	//void destroyHardpoint();
 
-	void setHealthAtStart(); //This is a workaround as instansiating hardpoints will destroy the actor you try to spawn one on.
+	//void setHealthAtStart(); //This is a workaround as instansiating hardpoints will destroy the actor you try to spawn one on.
 
-	UFUNCTION(BlueprintImplementableEvent)
-	void init();
+	//UFUNCTION(BlueprintImplementableEvent)
+	//void init();
 
-	FTimerHandle FireHandle;
+	//FTimerHandle FireHandle;
 
 };

@@ -54,17 +54,11 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Targeting")
 	void AttackTarget(AActor* Target); 	void AttackTarget_Implementation(AActor* Target) override;
 
-	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Targeting")
-	void AttackExistingTarget(); 	void AttackExistingTarget_Implementation() override;
+	//UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Targeting")
+	//void AttackExistingTarget(); 	void AttackExistingTarget_Implementation() override;
 
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "Targeting")
 	void moveToAttackTarget(AActor* target, float acceptanceRange);
-
-	UFUNCTION(BlueprintCallable, Category = "Targeting")
-	void setHardpointTarget();
-
-	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Damage")
-	void TriggerHealthCalculations(); void TriggerHealthCalculations_Implementation();
 
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "Setup")
 	void moveObject(FVector Location, float acceptanceRange); 
@@ -72,13 +66,7 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "Setup")
 	void initBlueprintScript();
 
-	void setHardpointsParent();
-
-	virtual void HealthCalculations();
-
-	void calculateWeaponsRange();
-
-	void selectHardpointToTarget();
+	virtual void HealthCalculations(float passedDamage);
 
 	void initaliseSelectableObject(bool player_controlled, float unit_Cost, int pop_Value);
 
@@ -92,8 +80,6 @@ public:
 	float getStrengthValue() { return (unitCost * currentUnitHealth) / totalUnitHealth; }
 
 	//Variables
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UnitTweakables")
-	TArray<AActor*> Hardpoints;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UnitTweakables")
 	bool hasTarget = false;
@@ -106,9 +92,17 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UnitTweakables")
 	bool playerControlled;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UnitTweakables")
 	float totalUnitHealth;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UnitTweakables")
 	float currentUnitHealth;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UnitTweakables")
+	float damageOutput;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UnitTweakables")
+	float fireRate;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UnitTweakables")
 	float unitCost;
@@ -126,11 +120,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UnitTweakables")
 	int orderCode;
 
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UnitTweakables")
-	UBehaviorTree* BT_Asset;
-
-
-	//Weapons Range variable decided by lowest hardpoint weapons range
 	float WeaponsRange;
 
 
@@ -142,10 +133,6 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UnitTweakables")
 	AActor* CurrentTarget;
-
-	AActor* CurrentShipTarget;
-
-	AHardpoint* tempHardpoint;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UnitTweakables")
 	UMaterial* playerMaterial;
@@ -173,7 +160,19 @@ private:
 
 	void resetMineTarget();
 
+	void fireBarrage();
+
+	bool checkTargetRange();
+
 	FTimerHandle behaviourTreeTick;
 
 	FTimerHandle enemySensorTimer;
+
+	FTimerHandle FireHandle;
+
+	FColor playerDamageLine = FColor::Green;
+
+	FColor aiDamageLine = FColor::Red;
+
+	FColor usedDamageLine;
 };

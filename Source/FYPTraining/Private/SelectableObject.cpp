@@ -49,14 +49,21 @@ void ASelectableObject::BeginPlay()
 void ASelectableObject::initaliseSelectableObject(bool player_controlled, float unit_Cost, int pop_Value)
 {
 	//Init Variables
+	currentUnitHealth = totalUnitHealth;
 	playerControlled = player_controlled;
 	unitCost = unit_Cost;
 	PopulationValue = pop_Value;
 	GetCharacterMovement()->MaxWalkSpeed = UnitSpeed;
 
+	if (playerControlled) { usedDamageLine = playerDamageLine; }
+	else { usedDamageLine = aiDamageLine; }
+
 	//Init Functionality
 	initBlueprintScript();
-	setHardpointsParent();
+
+	GetWorldTimerManager().SetTimer(FireHandle, this, &ASelectableObject::fireBarrage, fireRate, true, fireRate);
+
+	enemyShipSensor->SetSphereRadius(WeaponsRange);
 
 
 	//Sets enemy sensor timer up
@@ -72,6 +79,8 @@ void ASelectableObject::initaliseSelectableObject(bool player_controlled, float 
 		healthBarRef->HealthBar->SetFillColorAndOpacity(FLinearColor::Green);
 		SetMaterials();
 	}
+
+	HealthCalculations(0);
 }
 
 void ASelectableObject::initialiseAIShips() //Only initialise on enemy ships - function name should be changed to reflect this
@@ -98,7 +107,6 @@ void ASelectableObject::SetMaterials()
 void ASelectableObject::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
-
 }
 
 void ASelectableObject::ToggleSelect_Implementation(bool ToggleOn)
@@ -153,133 +161,22 @@ void ASelectableObject::AttackTarget_Implementation(AActor* Target)
 {
 	CurrentTarget = Target;
 
-	if (CurrentTarget)
-	{
-		selectHardpointToTarget();
-	}
+	if (CurrentTarget) { moveToAttackTarget(CurrentTarget, WeaponsRange); }
 }
 
-void ASelectableObject::AttackExistingTarget_Implementation()
+void ASelectableObject::HealthCalculations(float passedDamage)
 {
-	if (IsValid(CurrentShipTarget))
+	if ((currentUnitHealth - passedDamage) >= 0)
 	{
-		CurrentTarget = CurrentShipTarget;
-		selectHardpointToTarget();
+		currentUnitHealth = currentUnitHealth - passedDamage;
+		healthBarRef->updateHealthBar(currentUnitHealth / totalUnitHealth);
 	}
 	else
-	{
-		CurrentTarget = NULL;
-		CurrentShipTarget = NULL;
-	}
-}
-
-void ASelectableObject::selectHardpointToTarget()
-{
-	ASelectableObject* targetRef;
-
-	targetRef = Cast<ASelectableObject>(CurrentTarget);
-
-	if (!targetRef) { return; }
-	if(targetRef->Hardpoints.IsValidIndex(0)) { CurrentTarget = targetRef->Hardpoints[0]; }
-
-	bool temp = true;
-	if (hasTarget)
-	{
-		temp = checkCurrentTargetInRange();
-	}
-
-	if(!CurrentTarget) { return; }
-
-	if (orderCode == 1 || temp == false || hasTarget == true) { setHardpointTarget(); }
-	else { moveToAttackTarget(CurrentTarget, WeaponsRange); }
-}
-
-void ASelectableObject::setHardpointTarget()
-{
-	for (int i = 0; i < Hardpoints.Num(); i++)
-	{
-		if (Hardpoints.IsValidIndex(i))
-		{
-			if (Hardpoints[i]->GetClass()->ImplementsInterface(UInterface_Damage::StaticClass()))
-			{
-				if(CurrentTarget != NULL) { IInterface_Damage::Execute_SetHpTarget(Hardpoints[i], Hardpoints, CurrentTarget); }
-			}
-		}
-	}
-}
-
-//Hardpoint and class setup Functions
-
-void ASelectableObject::setHardpointsParent()
-{
-
-	TArray<AActor*> childActors;
-	GetAllChildActors(childActors);
-
-	for (int LosingMyEdge = 0; LosingMyEdge < childActors.Num(); LosingMyEdge++)
-	{
-		AHardpoint* validHardpoint = Cast<AHardpoint>(childActors[LosingMyEdge]);
-		if (validHardpoint)
-		{
-			//Adds prospective hardpoints to the array then initialises it
-			Hardpoints.Add(validHardpoint);
-
-			validHardpoint->hardpointParent = this;
-			validHardpoint->playerControlled = playerControlled;
-			validHardpoint->init();
-			if (playerControlled)
-			{
-				validHardpoint->usedDamageLine = validHardpoint->playerDamageLine;
-			}
-			else
-			{
-				validHardpoint->usedDamageLine = validHardpoint->aiDamageLine;
-			}
-		}
-	}
-
-	calculateWeaponsRange();
-	HealthCalculations();
-}
-
-void ASelectableObject::TriggerHealthCalculations_Implementation()
-{
-	HealthCalculations();
-}
-
-void ASelectableObject::HealthCalculations()
-{
-	float newTotalHealth = 0.0f;
-	AHardpoint* curHardpointRef;
-
-	for (int i = 0; i < Hardpoints.Num(); i++)
-	{
-		curHardpointRef = Cast<AHardpoint>(Hardpoints[i]);
-		if (curHardpointRef)
-		{
-			newTotalHealth = newTotalHealth + curHardpointRef->currentHealth;
-		}
-	}
-
-	if (initHealthCheck)
-	{
-		totalUnitHealth = newTotalHealth;
-		initHealthCheck = false;
-	}
-
-	currentUnitHealth = newTotalHealth;
-	
-	float percent = currentUnitHealth / totalUnitHealth;
-
-	if (IsValid(healthBarRef)) { healthBarRef->updateHealthBar(percent); }
-
-	if (newTotalHealth <= 0)
 	{
 		triggerWinCheck();
 	}
 }
 
-//Function only exists to override in shipyard class
 void ASelectableObject::triggerWinCheck()
 {
 	AFYPTrainingGameMode* gmRef = Cast<AFYPTrainingGameMode>(UGameplayStatics::GetGameMode(this));
@@ -298,35 +195,6 @@ void ASelectableObject::triggerWinCheck()
 	this->Destroy(true);
 }
 
-void ASelectableObject::calculateWeaponsRange()
-{
-	//Calculates the ships weapon range - determined by the lowest weapon range of all hardpoints. This becomes the acceptance radius when attacking a target so all weapons can fire
-	AHardpoint* currentHardpointRef;
-
-	TArray<float> hardpointWeaponRanges;
-
-	for (int i = 0; i < Hardpoints.Num(); i++)
-	{
-		currentHardpointRef = Cast<AHardpoint>(Hardpoints[i]);
-		if (currentHardpointRef)
-		{
-			if (currentHardpointRef->isWeapon)
-			{
-				hardpointWeaponRanges.Add(currentHardpointRef->weaponRange);
-			}
-		}
-	}
-
-	hardpointWeaponRanges.Sort();
-	
-	if (hardpointWeaponRanges.IsValidIndex(0))
-	{
-		WeaponsRange = hardpointWeaponRanges[0];
-	}
-
-	enemyShipSensor->SetSphereRadius(WeaponsRange);
-}
-
 bool ASelectableObject::checkCurrentTargetInRange()
 {
 	TArray<AActor*> overlappingActors;
@@ -335,7 +203,6 @@ bool ASelectableObject::checkCurrentTargetInRange()
 	{
 		if (overlappingActors[i] == CurrentTarget) { return true; }
 	}
-	/*CurrentTarget = NULL;*/
 	return false;
 }
 
@@ -345,17 +212,61 @@ void ASelectableObject::resetMineTarget()
 	AResourceMine* checkMine = Cast<AResourceMine>(CurrentTarget);
 	if (checkMine)
 	{
-		if (checkMine->isBuilt)
+		if (playerControlled == checkMine->playerControlled) { CurrentTarget = NULL; }
+	}
+}
+
+void ASelectableObject::fireBarrage()
+{
+	if (!IsValid(CurrentTarget)) { CurrentTarget = NULL; return; }
+	UE_LOG(LogTemp, Warning, TEXT("PassedCheck1"));
+	if (checkTargetRange())
+	{
+		UE_LOG(LogTemp, Warning, TEXT("InRange"));
+		ASelectableObject* curTarget = Cast<ASelectableObject>(CurrentTarget);
+		if (!curTarget) { return; }
+		curTarget->HealthCalculations(damageOutput);
+	}
+}
+
+bool ASelectableObject::checkTargetRange()
+{
+	if (CurrentTarget == NULL) { return false; }
+
+	FHitResult HitResult;
+	FCollisionQueryParams params;
+
+	FVector startLoc = GetActorLocation();
+	FVector endLoc = CurrentTarget->GetActorLocation();
+
+	params.AddIgnoredActor(this);
+
+	if (!IsValid(CurrentTarget)) { return false; }
+	UE_LOG(LogTemp, Warning, TEXT("PassedCheck2"));
+
+	TArray<AActor*> actorsInRange;
+	enemyShipSensor->GetOverlappingActors(actorsInRange);
+
+	for (int i = 0; i < actorsInRange.Num(); i++)
+	{
+		if (actorsInRange[i] == CurrentTarget)
 		{
-			if (playerControlled == checkMine->playerControlled) { CurrentTarget = NULL; CurrentShipTarget = NULL; }
+			DrawDebugLine(GetWorld(), startLoc, endLoc, HitResult.GetActor() ? usedDamageLine : usedDamageLine, false, 1.0f, 0, 1.0f);
+			return true;
 		}
 	}
+	return false;
 }
 
 void ASelectableObject::locateEnemyInRange()
 {
 	//If the ship has no target, find one om weapons range and set it to current target
-	if (hasTarget) { return; }
+
+	if (hasTarget)
+	{
+		if (!checkCurrentTargetInRange()) { CurrentTarget = NULL; }
+		//return;
+	}
 
 	if (CurrentTarget == NULL)
 	{
