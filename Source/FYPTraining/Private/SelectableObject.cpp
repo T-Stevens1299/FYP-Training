@@ -212,7 +212,11 @@ void ASelectableObject::resetMineTarget()
 	AResourceMine* checkMine = Cast<AResourceMine>(CurrentTarget);
 	if (checkMine)
 	{
-		if (playerControlled == checkMine->playerControlled) { CurrentTarget = NULL; }
+		if (!checkMine->isBuilt)
+		{
+			CurrentTarget = NULL;
+			/*if (playerControlled == checkMine->playerControlled) { CurrentTarget = NULL; }*/
+		}
 	}
 }
 
@@ -265,7 +269,7 @@ void ASelectableObject::locateEnemyInRange()
 	if (hasTarget)
 	{
 		if (!checkCurrentTargetInRange()) { CurrentTarget = NULL; }
-		//return;
+		return;
 	}
 
 	if (CurrentTarget == NULL)
