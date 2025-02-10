@@ -32,6 +32,8 @@ public:
 	UFUNCTION()
 	void surrenderTheGame();
 
+	void unlockSurrender();
+
 protected:
 	//UI components
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))

@@ -58,6 +58,9 @@ void AFYPTrainingGameMode::BeginPlay()
 
 	GetWorldTimerManager().SetTimer(incomeHandle, this, &AFYPTrainingGameMode::IncreaseIncome, 1.0f, true, 1.0f);
 
+	//Makes the give up button enabled after 5 minutes of playtime
+	GetWorldTimerManager().SetTimer(giveUpTimer, this, &AFYPTrainingGameMode::giveUpButton, 300.0f, false, 300.0f);
+
 	setShipyards();
 
 	setMines();
@@ -69,6 +72,11 @@ void AFYPTrainingGameMode::IncreaseIncome()
 	currentAIMoney = currentAIMoney + (aiIncomePerSecond * aiIncomeMultiplier);
 	currentPlayerMoney = currentPlayerMoney + playerIncomePerSecond;
 	HUD->updateFunds(currentPlayerMoney);
+}
+
+void AFYPTrainingGameMode::giveUpButton()
+{
+	HUD->unlockSurrender();
 }
 
 void AFYPTrainingGameMode::increaseIncomePerSecond(bool playerControlled, float incomeToIncrease)

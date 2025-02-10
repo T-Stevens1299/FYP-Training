@@ -24,11 +24,17 @@ void UPlayerHUD::NativeConstruct()
 void UPlayerHUD::SetGmPtr(AFYPTrainingGameMode* GMptr)
 {
 	GMref = GMptr;
+	surrender->SetIsEnabled(false);
 }
 
 void UPlayerHUD::updateFunds(float passedFunds)
 {
 	PlayerFunds->SetText(FText::FromString(FString::SanitizeFloat(passedFunds)));
+}
+
+void UPlayerHUD::unlockSurrender()
+{
+	surrender->SetIsEnabled(true);
 }
 
 void UPlayerHUD::surrenderTheGame()

@@ -162,7 +162,11 @@ private:
 	void increaseIncomePerTechLevel(int passTechLevel);
 
 	void saveData();
+
+	void giveUpButton();
 	
+	FTimerHandle giveUpTimer;
+
 	AShipyard* playerShipyardRef;
 
 	TArray<FString> dataToSave;
