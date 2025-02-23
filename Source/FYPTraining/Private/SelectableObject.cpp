@@ -158,7 +158,6 @@ void ASelectableObject::MoveToTarget_Implementation(FVector TargetLocation, floa
 void ASelectableObject::AttackTarget_Implementation(AActor* Target)
 {
 	CurrentTarget = Target;
-
 	if (CurrentTarget) { moveToAttackTarget(CurrentTarget, WeaponsRange); }
 }
 

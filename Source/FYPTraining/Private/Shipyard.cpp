@@ -231,10 +231,16 @@ void AShipyard::buildMines()
 				{
 					if (!(curMine->isBuilt))
 					{
-						if (curMoney >= mineCost) 
+						if (playerControlled)
 						{
-							if (playerControlled) { HUD->updateMineCount(false); gmRef->subtractCost(playerControlled, mineCost); }
-							UE_LOG(LogTemp, Warning, TEXT("BuildMine"));
+							if (curMoney >= mineCost)
+							{
+								HUD->updateMineCount(false); gmRef->subtractCost(playerControlled, mineCost);
+								curMine->buildMine();
+							}
+						}
+						else
+						{
 							curMine->buildMine();
 						}
 					}

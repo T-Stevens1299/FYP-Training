@@ -128,7 +128,6 @@ void AResourceMine::captureMineSequence()
 	gmRef->updateMineStatus(this, playerControlled, isCaptured);
 
 	GetWorldTimerManager().ClearTimer(captureTimer);
-	/*healthBarRef->updateHealthBar(0.0f);*/
 }
 
 void AResourceMine::buildMine()
@@ -149,6 +148,8 @@ void AResourceMine::buildMine()
 
 void AResourceMine::HealthCalculations(float passedDamage)
 {
+	if (!isBuilt) { return; }
+
 	float percent;
 
 	if ((currentUnitHealth - passedDamage) >= 0)

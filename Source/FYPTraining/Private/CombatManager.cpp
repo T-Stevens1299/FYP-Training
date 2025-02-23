@@ -96,7 +96,12 @@ void ACombatManager::taskCaptureMine()
 	ASelectableObject* chosenShip = Cast<ASelectableObject>(gamemodeRef->ActiveAiShips[shipToChoose]);
 	if (chosenShip)
 	{
-		chosenShip->moveToAttackTarget(gamemodeRef->PlayerResourceMine.Last(), 100);
+		AActor* targetMine = gamemodeRef->PlayerResourceMine.Last();
+		if (targetMine)
+		{
+			chosenShip->CurrentTarget = targetMine;
+			chosenShip->moveToAttackTarget(targetMine, 100);
+		}
 	}
 }
 
