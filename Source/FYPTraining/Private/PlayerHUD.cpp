@@ -1,5 +1,4 @@
-// Copyright Stevens Studios, all rights reserved
-// Written by Thomas Stevens
+// Written by Thomas Stevens, all rights reserved
 
 
 #include "PlayerHUD.h"
@@ -27,16 +26,19 @@ void UPlayerHUD::SetGmPtr(AFYPTrainingGameMode* GMptr)
 	surrender->SetIsEnabled(false);
 }
 
+//Updates the player funds
 void UPlayerHUD::updateFunds(float passedFunds)
 {
 	PlayerFunds->SetText(FText::FromString(FString::SanitizeFloat(passedFunds)));
 }
 
+//Enables the surrender button
 void UPlayerHUD::unlockSurrender()
 {
 	surrender->SetIsEnabled(true);
 }
 
+//Allows the player to surrender which ends the game immediately
 void UPlayerHUD::surrenderTheGame()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Pressed"))

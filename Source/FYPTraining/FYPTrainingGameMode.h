@@ -22,13 +22,9 @@ class AFYPTrainingGameMode : public AGameModeBase
 	GENERATED_BODY()
 
 public:
+	//Constructor
 	AFYPTrainingGameMode();
 
-protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
-
-public:
 	//Variables
 	UPROPERTY(EditAnywhere, Category = "GameStats")
 	float currentPlayerMoney;
@@ -106,14 +102,9 @@ public:
 	UPROPERTY(BlueprintReadOnly, Category = "HUD")
 	UAdminPanel* adminPanel;
 
-	APlayerController* PC;
-
-	FTimerHandle incomeHandle;
-
-	int matchDuration = 0;
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ResourceMines")
 	TArray<AActor*> AIResourceMine;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ResourceMines")
 	TArray<AActor*> PlayerResourceMine;
 
@@ -128,19 +119,15 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ShipArrays")
 	TArray<FString> aiShipsLost;
 
+	APlayerController* PC;
+
 	//Functions
 	UFUNCTION(BlueprintCallable, Category = "Admin")
 	void ToggleAdminPanel();
 
-	void IncreaseIncome();
-
 	void increaseIncomePerSecond(bool playerControlled, float incomeToIncrease);
 
 	void subtractCost(bool playerControlled, float incomeToSubtract);
-
-	void setShipyards();
-
-	void setMines();
 
 	void techLevelChanged(int passedTechLevel);
 
@@ -154,16 +141,29 @@ public:
 
 	void gameEnd(bool playerControlled);
 
-	void calculateLostShips();
+protected:
+	virtual void BeginPlay() override;
 
 private:
+	int matchDuration = 0;
+
 	float currentBaseIncomeRate;
+
+	void IncreaseIncome();
+
+	void setMines();
+
+	void setShipyards();
+
+	void calculateLostShips();
 
 	void increaseIncomePerTechLevel(int passTechLevel);
 
 	void saveData();
 
 	void giveUpButton();
+
+	FTimerHandle incomeHandle;
 	
 	FTimerHandle giveUpTimer;
 

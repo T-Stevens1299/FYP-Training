@@ -1,5 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
+// Written by Thomas Stevens, all rights reserved
 
 #include "Shipyard.h"
 #include "FYPTraining/FYPTrainingGameMode.h"
@@ -55,6 +54,7 @@ void AShipyard::init(AFYPTrainingGameMode* gamemodeReference)
 	GetWorldTimerManager().SetTimer(healthBarDelay, this, &AShipyard::healthBarSet, 1.0f, true, 1.0f);
 }
 
+//Sets shipyard health bar
 void AShipyard::healthBarSet()
 {
 	GetWorldTimerManager().ClearTimer(healthBarDelay);
@@ -100,6 +100,7 @@ bool AShipyard::constructShip(TSubclassOf<AActor> shipToSpawn, float shipCost, f
 			currentShipCost = shipCost;
 			currentShipPopValue = popValue;
 
+			//Sets the ship to spawn depending on pop value from data table - SoftObjPtr reference from dataTable did not always spawn correctly. This always works however
 			switch (currentShipPopValue)
 			{
 			case 10:
@@ -153,6 +154,7 @@ void AShipyard::spawnStartingShips()
 	}
 }
 
+//Updates the ship progress bar every second until the progress is finished.
 void AShipyard::buildShipProgress()
 {
 	constructionProgress++;
@@ -170,6 +172,7 @@ void AShipyard::buildShipProgress()
 	}
 }
 
+//Builds the ship and sets variables after being spawned if an AI ship
 void AShipyard::buildShip()
 {
 	AActor* spawnedShip = spawnShip(shipConstructing);
@@ -241,6 +244,7 @@ void AShipyard::buildMines()
 	}
 }
 
+//Upgrades the tech level if it can be afforded - returns true/false if the tech level can be upgraded
 bool AShipyard::canUpgradeTechLevel(float upgradeCost, float upgradeTime)
 {
 	if (!isUpgradingAlready)
@@ -270,6 +274,7 @@ bool AShipyard::canUpgradeTechLevel(float upgradeCost, float upgradeTime)
 	}
 }
 
+//Updates the tech upgrade bar every second
 void AShipyard::upgradeLevelProgress()
 {
 	techUpgradeProgress++;
@@ -278,6 +283,7 @@ void AShipyard::upgradeLevelProgress()
 	upgradeLevel();
 }
 
+//Upgrade the tech level when the upgrade timer finishes
 void AShipyard::upgradeLevel()
 {
 	isUpgradingAlready = false;
@@ -286,6 +292,7 @@ void AShipyard::upgradeLevel()
 	HUD->upgradeTechLevel();
 }
 
+//Ends game when shipyard destroyed
 void AShipyard::triggerWinCheck()
 {
 	gmRef->gameEnd(playerControlled);

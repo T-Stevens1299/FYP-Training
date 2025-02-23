@@ -1,5 +1,4 @@
-// Copyright Stevens Studios Ltd.
-// Written By Thomas Stevens
+// Written by Thomas Stevens, all rights reserved
 
 #include "RTS_Camera.h"
 #include "EnhancedInputComponent.h"

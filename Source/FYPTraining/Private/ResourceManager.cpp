@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Written by Thomas Stevens, all rights reserved
 
 
 #include "ResourceManager.h"
@@ -53,11 +53,13 @@ void AResourceManager::Init(AFYPTrainingGameMode* gmRef, bool useLanchester)
 	GetWorldTimerManager().SetTimer(mineStatusCheckTimer, this, &AResourceManager::checkMineStatus, 5.0f, true, 5.0f);
 }
 
+//Builds all available mines
 void AResourceManager::triggerMineBuild()
 {
 	shipyardRef->buildMines();
 }
 
+//Checks if the player has more mines than the AI. If true, send a ship to capture a player credit mine
 void AResourceManager::checkMineStatus()
 {
 	if (gamemodeRef->AIResourceMine.Num() < gamemodeRef->PlayerResourceMine.Num())

@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Written by Thomas Stevens, all rights reserved
 
 #pragma once
 
@@ -6,22 +6,41 @@
 #include "Blueprint/UserWidget.h"
 #include "GameEndScreen.generated.h"
 
-/**
- * 
- */
 UCLASS()
 class FYPTRAINING_API UGameEndScreen : public UUserWidget
 {
 	GENERATED_BODY()
 
 public:
-
+	//Functions
 	UGameEndScreen(const FObjectInitializer& ObjectInitializer);
 
 	virtual void NativeConstruct() override;
 
 	void SetScreenText(bool victor);
+	
+	//Variables
+	FText pCorvetteLoss;
+	FText aiCorvetteLoss;
 
+	FText pFrigateLoss;
+	FText aiFrigateLoss;
+
+	FText pDestroyerLoss;
+	FText aiDestroyerLoss;
+
+	FText pCruiserLoss;
+	FText aiCruiserLoss;
+
+	FText pBattleShipLoss;
+	FText aiBattleShipLoss;
+
+	FText pLoss;
+	FText aiLoss;
+
+	int matchLength;
+
+protected:
 	UFUNCTION()
 	void returnToMenu();
 
@@ -69,24 +88,4 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MenuNameRef")
 	FName MainMenu;
-
-	FText pCorvetteLoss;
-	FText aiCorvetteLoss;
-
-	FText pFrigateLoss;
-	FText aiFrigateLoss;
-
-	FText pDestroyerLoss;
-	FText aiDestroyerLoss;
-
-	FText pCruiserLoss;
-	FText aiCruiserLoss;
-
-	FText pBattleShipLoss;
-	FText aiBattleShipLoss;
-
-	FText pLoss;
-	FText aiLoss;
-
-	int matchLength;
 };
