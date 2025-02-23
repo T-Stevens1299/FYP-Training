@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Written by Thomas Stevens, all rights reserved
 
 
 #include "CombatManager.h"
@@ -16,6 +16,22 @@ ACombatManager::ACombatManager()
 
 }
 
+void ACombatManager::Init(AFYPTrainingGameMode* gmRef, AResourceManager* rmRef, AActor* passedMine1, AActor* passedMine2, bool useLanchester)
+{
+
+	gamemodeRef = gmRef;
+
+	resourceManRef = rmRef;
+
+	mineRefArray.Add(passedMine2);
+	mineRefArray.Add(passedMine1);
+
+	usingLanchesterModel = useLanchester;
+
+	GetWorldTimerManager().SetTimer(initDelay, this, &ACombatManager::captureInitialMines, 2, true, 2);
+}
+
+//Sends the two initial AI ships to capture the two closets credit mines
 void ACombatManager::captureInitialMines()
 {
 	GetWorldTimerManager().ClearTimer(initDelay);
@@ -36,21 +52,7 @@ void ACombatManager::captureInitialMines()
 	GetWorldTimerManager().SetTimer(combatLoopTimer, this, &ACombatManager::selectorCaptureMineOrder, 1, true, 1);
 }
 
-void ACombatManager::Init(AFYPTrainingGameMode* gmRef, AResourceManager* rmRef, AActor* passedMine1, AActor* passedMine2, bool useLanchester)
-{
-
-	gamemodeRef = gmRef;
-
-	resourceManRef = rmRef;
-
-	mineRefArray.Add(passedMine2);
-	mineRefArray.Add(passedMine1);
-
-	usingLanchesterModel = useLanchester;
-
-	GetWorldTimerManager().SetTimer(initDelay, this, &ACombatManager::captureInitialMines, 2, true, 2);
-}
-
+//Determines whether or not to capture a mine or run a combat prediction based on the captureMine boolean - this is set by the resource manager.
 void ACombatManager::selectorCaptureMineOrder()
 {
 	if (captureMine)
@@ -63,6 +65,7 @@ void ACombatManager::selectorCaptureMineOrder()
 	}
 }
 
+//Determines what combat prediction algorthim to use depending on a boolean set in the map view
 void ACombatManager::selectorCombatPredictionAlgorithm()
 {
 	if (usingLanchesterModel)
@@ -83,6 +86,7 @@ void ACombatManager::selectorCombatPredictionAlgorithm()
 	}
 }
 
+//Tasks a ship with capturing a player's mine
 void ACombatManager::taskCaptureMine()
 {
 	//Selects rnadom ship out of AI pool and sends it to destroy/capture a player resource mine.
@@ -96,6 +100,7 @@ void ACombatManager::taskCaptureMine()
 	}
 }
 
+//passes order codes to all AI ships on the battlefield
 void ACombatManager::taskOrderUnit(int passedOrderCode)
 {
 	for (int i = 0; i < gamemodeRef->ActiveAiShips.Num(); i++)
@@ -133,6 +138,7 @@ bool ACombatManager::LanchesterModelAlgorithm()
 	}
 }
 
+//Calculates the combined strength of either the player or AI's forces
 float ACombatManager::calculateArmyStrength(bool calculateAIStrength)
 {
 	if (calculateAIStrength)

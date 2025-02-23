@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Written by Thomas Stevens, all rights reserved
 
 #pragma once
 
@@ -34,25 +34,15 @@ public:
 
 	void Init(AFYPTrainingGameMode* gamemodeReference);
 
-	void BeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
-	
-	/*void EndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);*/
-
-	void generateIncome(float newIncome, bool techUpgrade);
-
 	void buildMine();
 
-	void captureMine();
-
-	void captureMineSequence();
-
 	void setMineLevel(int newMineLevel);
-
-	void getMineLevel();
 
 	virtual void HealthCalculations(float passedDamage) override;
 
 	//Variables
+	bool isBuilt = false;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MineTweakables")
 	float IncomeRate;
 
@@ -68,17 +58,16 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UnitTweakables")
 	UMaterial* mineMaterial;
 
-	AHardpoint* hardpointRef;
-
+private:
+	//Variables
 	bool isCaptured = false;
-
-	bool isBuilt = false;
 
 	bool firstCapture = true;
 
 	float curCaptureTime;
 
 	int enemyShipsCapturing;
+
 	int playerShipsCapturing;
 
 	//References
@@ -92,6 +81,12 @@ public:
 
 	FTimerHandle captureTriggerTimer;
 
-private:
+	//Functions
 	void resetMine();
+
+	void captureMine();
+
+	void captureMineSequence();
+
+	void generateIncome(float newIncome, bool techUpgrade);
 };

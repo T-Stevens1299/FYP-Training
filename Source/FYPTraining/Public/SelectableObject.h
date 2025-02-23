@@ -1,5 +1,4 @@
-// Copyright Stevens Studios, all rights reserved
-// Written by Thomas Stevens
+// Written by Thomas Stevens, all rights reserved
 
 #pragma once
 
@@ -21,12 +20,10 @@ class FYPTRAINING_API ASelectableObject : public ACharacter, public IInterface_S
 {
 	GENERATED_BODY()
 
-public:
-	// Sets default values for this character's properties
-	ASelectableObject();
+protected:
+	virtual void BeginPlay() override;
 
 	//Components
-
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "CoreParts", meta = (AllowPrivateAccess = "true"))
 	UStaticMeshComponent* UnitMesh;
 
@@ -41,8 +38,11 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "CoreParts", meta = (AllowPrivateAccess = "true"))
 	UWidgetComponent* healthBar;
-	//Functions
 
+public:
+	ASelectableObject();
+
+	//Functions
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "UnitSelect")
@@ -54,9 +54,6 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Targeting")
 	void AttackTarget(AActor* Target); 	void AttackTarget_Implementation(AActor* Target) override;
 
-	//UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Targeting")
-	//void AttackExistingTarget(); 	void AttackExistingTarget_Implementation() override;
-
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "Targeting")
 	void moveToAttackTarget(AActor* target, float acceptanceRange);
 
@@ -66,25 +63,20 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "Setup")
 	void initBlueprintScript();
 
+	virtual void triggerWinCheck();
+
 	virtual void HealthCalculations(float passedDamage);
 
 	void initaliseSelectableObject(bool player_controlled, float unit_Cost, int pop_Value);
 
-	void initialiseAIShips();
-
-	virtual void triggerWinCheck();
-
-	//Health Percentage getter
+	//Getter Functions
 	float getUnitHealthPercentage() { return (currentUnitHealth / totalUnitHealth); }
 
 	float getStrengthValue() { return (unitCost * currentUnitHealth) / totalUnitHealth; }
 
 	//Variables
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UnitTweakables")
 	bool hasTarget = false;
-
-	bool initHealthCheck = true;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UnitTweakables")
 	bool staticObject;
@@ -107,7 +99,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UnitTweakables")
 	float unitCost;
 	
-	//Editable Variables
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UnitTweakables")
 	float UnitSpeed;
 
@@ -120,10 +111,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UnitTweakables")
 	int orderCode;
 
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UnitTweakables")
 	float WeaponsRange;
-
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UnitTweakables")
 	AActor* retreatPointRef;
@@ -146,9 +135,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UnitTweakables")
 	UShipHealthBar* healthBarRef;
 
-protected:
-	virtual void BeginPlay() override;
-
 private:
 	void checkOrderCode();
 
@@ -164,6 +150,9 @@ private:
 
 	bool checkTargetRange();
 
+	void initialiseAIShips();
+
+	//References
 	FTimerHandle behaviourTreeTick;
 
 	FTimerHandle enemySensorTimer;

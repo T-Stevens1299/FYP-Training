@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Written by Thomas Stevens, all rights reserved
 
 #pragma once
 
@@ -15,11 +15,12 @@ class FYPTRAINING_API AShipyard : public ASelectableObject
 {
 	GENERATED_BODY()
 
-public:
+protected:
 	//Components
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "CoreParts", meta = (AllowPrivateAccess = "true"))
 	USceneComponent* unitSpawner;
 
+public:
 	//Functions
 	AShipyard();
 
@@ -31,23 +32,9 @@ public:
 
 	bool canUpgradeTechLevel(float upgradeCost, float upgradeTime);
 
-
-	void spawnStartingShips();
-
-	AActor* spawnShip(TSubclassOf<AActor> shipToSpawn);
-
 	virtual void triggerWinCheck() override;
 
 	//Variables
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ShipyardTweakables")
-	float IncomeRate;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ShipyardTweakables")
-	float mineCost;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ShipyardTweakables")
-	int startingShipCount;
-
 	float currentShipCost;
 
 	int currentShipPopValue;
@@ -57,6 +44,15 @@ public:
 	bool isUpgradingAlready;
 
 	TSubclassOf<AActor> shipConstructing;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ShipyardTweakables")
+	float IncomeRate;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ShipyardTweakables")
+	float mineCost;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ShipyardTweakables")
+	int startingShipCount;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ShipyardTweakables")
 	TSubclassOf<AActor> startingShipRef;
@@ -82,9 +78,28 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ShipsToSpawn")
 	TSubclassOf<AActor> battleshipRef;
 
+	UPROPERTY(EditDefaultsOnly, Category = "ShipyardTweakables")
+	TSubclassOf<UUserWidget> HUDref;
+
+	UPROPERTY(BlueprintReadOnly, Category = "ShipyardTweakables")
+	class UShipyardWidget* HUD;
 
 	//References
 	AFYPTrainingGameMode* gmRef;
+
+	AUnitManager* managerRef;
+
+private:
+	//Variables
+	float curShipConTime = 0.0f;
+
+	float constructionProgress = 0.0f;
+
+	float curTechUpgradeTime = 0.0f;
+
+	float techUpgradeProgress = 0.0f;
+
+	//References
 	
 	FTimerHandle healthBarDelay;
 
@@ -96,15 +111,7 @@ public:
 
 	APlayerController* PC;
 
-	AUnitManager* managerRef;
-
-	UPROPERTY(EditDefaultsOnly, Category = "ShipyardTweakables")
-	TSubclassOf<UUserWidget> HUDref;
-
-	UPROPERTY(BlueprintReadOnly, Category = "ShipyardTweakables")
-	class UShipyardWidget* HUD;
-
-private:
+	//Functions
 	void buildShip();
 
 	void buildShipProgress();
@@ -115,11 +122,7 @@ private:
 
 	void upgradeLevel();
 
-	float curShipConTime = 0.0f;
+	void spawnStartingShips();
 
-	float constructionProgress = 0.0f;
-
-	float curTechUpgradeTime = 0.0f;
-
-	float techUpgradeProgress = 0.0f;
+	AActor* spawnShip(TSubclassOf<AActor> shipToSpawn);
 };

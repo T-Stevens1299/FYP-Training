@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Written by Thomas Stevens, all rights reserved
 
 
 #include "UnitManager.h"
@@ -28,16 +28,19 @@ void AUnitManager::Init(AFYPTrainingGameMode* gmRef, AAIMasterControlManager* ma
 	getCombatManagerRef();
 }
 
+//Sets the combat manager ref
 void AUnitManager::getCombatManagerRef()
 {
 	combatManagerRef = masterManagerRef->resourceManagerRef->cmRef;
 }
 
+//Sets shipyard pointer
 void AUnitManager::setShipyardPtr(AShipyard* shipyardRef)
 {
 	shipYardRef = shipyardRef;
 }
 
+//Upgrades tech level - called when the player levels up
 void AUnitManager::upgradeTechLevel(FConstructionData* currentRowRef)
 { 
 	currentRow = currentRowRef;
@@ -87,6 +90,7 @@ void AUnitManager::addNewUnitOptions()
 	}
 }
 
+//Builds the determined ship if it is possible to build it
 void AUnitManager::startUnitBuildingOperation()
 {
 	int unitToBuild = determineUnitToBuild();

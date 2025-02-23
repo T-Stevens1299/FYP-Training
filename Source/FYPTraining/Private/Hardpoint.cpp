@@ -1,7 +1,7 @@
-// Copyright Stevens Studios, all rights reserved
-// Written by Thomas Stevens
+// Written by Thomas Stevens, all rights reserved
 
 
+//Class Deprecated due to memory leak crashes
 
 #include "Hardpoint.h"
 #include "SelectableObject.h"
