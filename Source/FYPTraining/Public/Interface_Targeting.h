@@ -1,5 +1,4 @@
-// Copyright Stevens Studios, all rights reserved
-// Written by Thomas Stevens
+// Written by Thomas Stevens, all rights reserved
 
 #pragma once
 
@@ -14,9 +13,6 @@ class UInterface_Targeting : public UInterface
 	GENERATED_BODY()
 };
 
-/**
- * 
- */
 class FYPTRAINING_API IInterface_Targeting
 {
 	GENERATED_BODY()

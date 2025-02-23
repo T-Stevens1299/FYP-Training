@@ -1,6 +1,4 @@
-// Copyright Stevens Studios, all rights reserved
-// Written by Thomas Stevens
-
+// Written by Thomas Stevens, all rights reserved
 
 #include "SelectableObject.h"
 #include "Hardpoint.h"

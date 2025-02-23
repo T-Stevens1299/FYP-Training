@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Written by Thomas Stevens, all rights reserved
 
 #pragma once
 
@@ -8,7 +8,6 @@
 
 class AFYPTrainingGameMode;
 class AResourceManager;
-class AResearchManager;
 class AUnitManager;
 
 UCLASS()
@@ -17,19 +16,12 @@ class FYPTRAINING_API AAIMasterControlManager : public AActor
 	GENERATED_BODY()
 	
 public:	
-	// Sets default values for this actor's properties
+	//Functions
 	AAIMasterControlManager();
 
 	void Init(AFYPTrainingGameMode* gmRef, bool useDDS, bool useLanchester);
 
-
-
-public:	
-	AFYPTrainingGameMode* gamemodeRef;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AIProperties")
-	TSubclassOf<AResourceManager> rmRef;
-
+	//Variables
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AIProperties")
 	bool dynamicDifficultyScalingActive;
 
@@ -42,28 +34,30 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AIProperties")
 	float learningRate = 0.01;
 
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AIProperties")
+	TSubclassOf<AResourceManager> rmRef;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AIManagers")
 	TSubclassOf<AActor> resourceManager;
-
-	AResourceManager* resourceManagerRef;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AIManagers")
-	TSubclassOf<AActor> researchManager;
-
-	AResearchManager* researchManagerRef;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AIManagers")
 	TSubclassOf<AActor> unitManager;
 
-	AUnitManager* unitManagerRef;
+	AResourceManager* resourceManagerRef;
 
 private:
-	FTimerHandle ddsCheckTimer;
-
+	//Functions
 	void dynamicDifficultyScalingCheck();
 
 	float compareEconomy();
 
 	float compareUnitPower();
 
+	//References
+	FTimerHandle ddsCheckTimer;
+
+	AUnitManager* unitManagerRef;
+
+	AFYPTrainingGameMode* gamemodeRef;
 };

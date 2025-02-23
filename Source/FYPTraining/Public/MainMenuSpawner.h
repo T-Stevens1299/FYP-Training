@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Written by Thomas Stevens, all rights reserved
 
 #pragma once
 
@@ -14,18 +14,20 @@ class FYPTRAINING_API AMainMenuSpawner : public AActor
 	GENERATED_BODY()
 	
 public:	
-	// Sets default values for this actor's properties
+	//Functions
 	AMainMenuSpawner();
 
+	//Variables
 	UPROPERTY(EditDefaultsOnly, Category = "HUD")
 	TSubclassOf<UUserWidget> HUDref;
 
 private:
+	//References
 	UMainMenu* HUD;
 
 	APlayerController* PC;
 
 protected:
-	// Called when the game starts or when spawned
+	//Functions
 	virtual void BeginPlay() override;
 };
