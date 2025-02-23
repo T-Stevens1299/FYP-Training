@@ -1,4 +1,4 @@
-// Written by Thomas Stevens, all rights reserved
+// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
@@ -15,15 +15,19 @@ class FYPTRAINING_API ACombatManager : public AActor
 	GENERATED_BODY()
 	
 public:	
-	//Functions
+	// Sets default values for this actor's properties
 	ACombatManager();
 
-	void taskCaptureMine();
+protected:
+
+
+public:	
+
+	void captureInitialMines();
 
 	void Init(AFYPTrainingGameMode* gmRef, AResourceManager* rmRef, AActor* passedMine1, AActor* passedMine2, bool useLanchester);
 
-	//Variables
-	int shipsConstructedThisCycle = 1;
+	void taskCaptureMine();
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ManagerProperties")
 	AActor* retreatLocationActor;
@@ -34,16 +38,32 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ManagerProperties")
 	AActor* passedMine;
 
+	AActor* retreatPoint;
+
+	AActor* attackPoint;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ManagerProperties")
 	bool usingLanchesterModel;
+
+	bool captureMine = false;
+
+	bool shouldAttack;
+
+	bool initStageComplete = false;
+
+	int shipsConstructedThisCycle = 1;
+
+	AFYPTrainingGameMode* gamemodeRef;
+
+	AResourceManager* resourceManRef;
+
+	FTimerHandle combatLoopTimer;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ManagerProperties")
 	TSubclassOf<AActor> corvetteSpawnRef;
 
 private:
-	//Functions
-	void captureInitialMines();
-
+	//Behaviour Tree Tasks
 	void taskOrderUnit(int passedOrderCode);
 
 	void selectorCombatPredictionAlgorithm();
@@ -56,21 +76,7 @@ private:
 
 	float calculateArmyStrength(bool calculateAIStrength);
 
-	//Variables
-	bool captureMine = false;
-
-	bool shouldAttack;
-
-	bool initStageComplete = false;
-
 	TArray<AActor*> mineRefArray;
 
-	//References
 	FTimerHandle initDelay;
-
-	FTimerHandle combatLoopTimer;
-
-	AResourceManager* resourceManRef;
-
-	AFYPTrainingGameMode* gamemodeRef;
 };

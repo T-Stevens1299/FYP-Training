@@ -1,7 +1,6 @@
-// Written by Thomas Stevens, all rights reserved
+// Copyright Stevens Studios, all rights reserved
+// Written by Thomas Stevens
 
-
-//Class Deprecated due to memory leak crashes
 
 #pragma once
 
@@ -24,6 +23,8 @@ public:
 protected:
 
 	virtual void BeginPlay() override;
+
+public:	
 
 	//virtual void Tick(float DeltaTime) override;
 

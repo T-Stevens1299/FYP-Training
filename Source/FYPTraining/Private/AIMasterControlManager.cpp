@@ -1,4 +1,5 @@
-// Written by Thomas Stevens, all rights reserved
+// Fill out your copyright notice in the Description page of Project Settings.
+
 
 #include "AIMasterControlManager.h"
 #include "FYPTraining/FYPTrainingGameMode.h"
@@ -6,6 +7,7 @@
 #include <Kismet/GameplayStatics.h>
 #include "SelectableObject.h"
 #include "ResourceManager.h"
+#include "ResearchManager.h"
 #include "UnitManager.h"
 
 // Sets default values
@@ -19,6 +21,12 @@ AAIMasterControlManager::AAIMasterControlManager()
 void AAIMasterControlManager::Init(AFYPTrainingGameMode* gmRef, bool useDDS, bool useLanchester)
 {
 	gamemodeRef = gmRef;
+
+	//AResourceManager* rm = Cast<AResourceManager>(rmRef);
+	//if (rm)
+	//{
+	//	rm->Init(gamemodeRef);
+	//}
 	
 	dynamicDifficultyScalingActive = useDDS;
 
@@ -34,6 +42,13 @@ void AAIMasterControlManager::Init(AFYPTrainingGameMode* gmRef, bool useDDS, boo
 		resourceManagerRef->Init(gamemodeRef, useLanchester);
 	}
 
+	AActor* spawnedResearchManager = GetWorld()->SpawnActor(researchManager);
+	researchManagerRef = Cast<AResearchManager>(spawnedResearchManager);
+	if (researchManagerRef)
+	{
+		researchManagerRef;
+	}
+
 	AActor* spawnedUnitManager = GetWorld()->SpawnActor(unitManager);
 	unitManagerRef = Cast<AUnitManager>(spawnedUnitManager);
 	if (unitManagerRef)
@@ -42,7 +57,6 @@ void AAIMasterControlManager::Init(AFYPTrainingGameMode* gmRef, bool useDDS, boo
 	}
 }
 
-//Runs the dynamic difficulty scaling equation
 void AAIMasterControlManager::dynamicDifficultyScalingCheck()
 {
 	float s1 = compareUnitPower();
@@ -63,7 +77,7 @@ void AAIMasterControlManager::dynamicDifficultyScalingCheck()
 	gamemodeRef->aiIncomeMultiplier = s * (1.5f - 0.75f) + 0.75f;
 }
 
-//Returns the s score depending on the weight of both faction's economy
+
 float AAIMasterControlManager::compareEconomy()
 {
 	float AIEconWeight = gamemodeRef->aiIncomePerSecond / 195.0f;
@@ -74,7 +88,6 @@ float AAIMasterControlManager::compareEconomy()
 	return baseSRate + learningRate * econScore;
 }
 
-//Returns the s score depending on the unit power of both factions
 float AAIMasterControlManager::compareUnitPower()
 {
 	float score = 0;

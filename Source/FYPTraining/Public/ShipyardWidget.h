@@ -1,4 +1,4 @@
-// Written by Thomas Stevens, all rights reserved
+// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
@@ -51,6 +51,8 @@ public:
 
 	void init(AShipyard* shipyardPtr);
 
+	void triggerTechLevelCheck(FString techLevelRowName);
+
 	void upgradeTechLevel();
 
 	void updateConstructionBar(float passedPercentage);
@@ -64,21 +66,18 @@ public:
 	//References
 	AShipyard* shipyardRef;
 
-	FConstructionData* currentRow;
-
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	FDataTableRowHandle dataTableRef;
 
-private:
+	FConstructionData* currentRow;
+
 	//Variables
 	int currentTechLevel;
 
+private:
 	bool aiCanUpgrade;
 
 	int currentMineToBuild = 0;
-
-	//Functions
-	void triggerTechLevelCheck(FString techLevelRowName);
 
 protected:
 	//UI Components
@@ -125,7 +124,6 @@ protected:
 	class UButton* HealthUpgrade4;
 
 
-
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UButton* DamageUpgrade1;
 
@@ -142,13 +140,11 @@ protected:
 	class UButton* BuildMines;
 
 
-
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UProgressBar* ConstructionProgressBar;
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UProgressBar* TechUpgradeBar;
-
 
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))

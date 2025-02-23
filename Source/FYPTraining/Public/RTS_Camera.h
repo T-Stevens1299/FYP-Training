@@ -1,4 +1,5 @@
-// Written by Thomas Stevens, all rights reserved
+// Copyright Stevens Studios Ltd.
+// Written By Thomas Stevens
 
 #pragma once
 
@@ -18,10 +19,14 @@ class FYPTRAINING_API ARTS_Camera : public APawn
 {
 	GENERATED_BODY()
 
-public:	
-	//Functions
+public:
 	ARTS_Camera();
 
+protected:
+	virtual void BeginPlay() override;
+
+public:	
+	//Input Bindings
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	void ZoomCamera(const FInputActionValue& Value);
@@ -71,11 +76,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera")
 	float ZoomStep = 10.0f;
 
-protected:
-	virtual void BeginPlay() override;
-
-private:
 	APlayerController* PC;
 
+private:
 	AFYPTrainingGameMode* gmRef;
 };

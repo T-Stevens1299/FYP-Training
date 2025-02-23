@@ -1,4 +1,4 @@
-// Written by Thomas Stevens, all rights reserved
+// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
@@ -18,7 +18,7 @@ class FYPTRAINING_API AUnitManager : public AActor
 	GENERATED_BODY()
 	
 public:	
-	//Functions
+	// Sets default values for this actor's properties
 	AUnitManager();
 
 	void Init(AFYPTrainingGameMode* gmRef, AAIMasterControlManager* masterRef);
@@ -26,22 +26,23 @@ public:
 	void setShipyardPtr(AShipyard* shipyardRef);
 
 	void upgradeTechLevel(FConstructionData* currentRowRef);
-
-	//References
+	
 	ACombatManager* combatManagerRef;
 
 	AShipyard* shipYardRef;
 
 	AAIMasterControlManager* masterManagerRef;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	FDataTableRowHandle dataTableRef;
+
 	FConstructionData* currentRow;
 
 	AFYPTrainingGameMode* gamemodeRef;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	FDataTableRowHandle dataTableRef;
-
 	//Variables
+	int currentTechLevel;
+
 	UPROPERTY(EditAnywhere, Category = "ArrayValues")
 	TArray<FString> availableUnitsToBuild;
 
@@ -49,10 +50,6 @@ public:
 	TArray<int> unitWeights;
 
 private:
-	//Variables
-	int currentTechLevel;
-
-	//Functions
 	void getCombatManagerRef();
 
 	void addNewUnitOptions();

@@ -1,4 +1,4 @@
-// Written by Thomas Stevens, all rights reserved
+// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "AdminPanel.h"
@@ -24,7 +24,6 @@ void UAdminPanel::toggleVisibility()
 	else { this->SetVisibility(ESlateVisibility::Hidden); isHidden = true; UE_LOG(LogTemp, Warning, TEXT("Hidden")); }
 }
 
-//Gets the AI stats from the gamemode
 void UAdminPanel::grabAiStats()
 {
 	aiFunds = gmRef->currentAIMoney;
@@ -36,7 +35,6 @@ void UAdminPanel::grabAiStats()
 	setAiStats();
 }
 
-//Sets the gotten stats
 void UAdminPanel::setAiStats()
 {
 	Funds->SetText(FText::FromString(FString::FromInt(aiFunds)));

@@ -1,4 +1,5 @@
-// Written by Thomas Stevens, all rights reserved
+// Fill out your copyright notice in the Description page of Project Settings.
+
 
 #include "MainMenuSpawner.h"
 #include "MainMenu.h"

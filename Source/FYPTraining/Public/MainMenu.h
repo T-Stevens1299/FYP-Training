@@ -1,4 +1,4 @@
-// Written by Thomas Stevens, all rights reserved
+// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
@@ -19,9 +19,6 @@ public:
 
 	virtual void NativeConstruct() override;
 
-	void init(APlayerController* pcRef);
-
-protected:
 	//Button Functions
 	UFUNCTION()
 	void openLevelSelect();
@@ -47,6 +44,7 @@ protected:
 	UFUNCTION()
 	void returnToMenu();
 
+	void init(APlayerController* pcRef);
 
 	//Buttons
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))

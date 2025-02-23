@@ -1,4 +1,5 @@
-// Written by Thomas Stevens, all rights reserved
+// Copyright Stevens Studios, all rights reserved
+// Written by Thomas Stevens
 
 #pragma once
 
@@ -6,8 +7,9 @@
 #include "Blueprint/UserWidget.h"
 #include "PlayerHUD.generated.h"
 
-class AFYPTrainingGameMode;
-
+/**
+ * 
+ */
 UCLASS()
 class FYPTRAINING_API UPlayerHUD : public UUserWidget
 {
@@ -18,8 +20,9 @@ public:
 
 	virtual void NativeConstruct() override;
 
-	//References
-	AFYPTrainingGameMode* GMref;
+public:
+	//Variables
+	class AFYPTrainingGameMode* GMref;
 
 	//Functions
 	void updateFunds(float passedFunds);

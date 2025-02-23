@@ -1,4 +1,5 @@
-// Written by Thomas Stevens, all rights reserved
+// Copyright Stevens Studios, all rights reserved
+// Written by Thomas Stevens
 
 #pragma once
 
@@ -30,4 +31,5 @@ public:
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Damage")
 	void SetHpTarget(UPARAM(ref)TArray<AActor*>& actorsToIgnore, AActor* currentTarget);
+
 };

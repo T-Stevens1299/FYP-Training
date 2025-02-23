@@ -1,4 +1,5 @@
-// Written by Thomas Stevens, all rights reserved
+// Copyright Stevens Studios, all rights reserved
+// Written by Thomas Stevens
 
 #pragma once
 
@@ -13,9 +14,13 @@ class UInterface_Selectable : public UInterface
 	GENERATED_BODY()
 };
 
+/**
+ * 
+ */
 class FYPTRAINING_API IInterface_Selectable
 {
 	GENERATED_BODY()
+
 
 public:
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "UnitSelect")
