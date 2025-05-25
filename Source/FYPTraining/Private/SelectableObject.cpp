@@ -86,6 +86,10 @@ void ASelectableObject::initialiseAIShips() //Only initialise on enemy ships - f
 	GetWorldTimerManager().SetTimer(behaviourTreeTick, this, &ASelectableObject::checkOrderCode, 2, true, 2);
 }
 
+void ASelectableObject::toggleUI(bool showUI)
+{
+}
+
 //Only player ships require material changes, the blueprint defaults to having the AI colours
 void ASelectableObject::SetMaterials()
 {
@@ -112,6 +116,7 @@ void ASelectableObject::ToggleSelect_Implementation(bool ToggleOn)
 	isSelected = ToggleOn;
 	SelectorMesh->SetVisibility(ToggleOn);
 	toggleHealthBarVisibility(ToggleOn);
+	toggleUI(ToggleOn);
 }
 
 void ASelectableObject::checkOrderCode()

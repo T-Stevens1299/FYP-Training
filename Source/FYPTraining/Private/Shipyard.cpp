@@ -154,6 +154,12 @@ void AShipyard::spawnStartingShips()
 	}
 }
 
+void AShipyard::toggleUI(bool showUI)
+{
+	if (showUI) { HUD->SetVisibility(ESlateVisibility::Visible); }
+	else { HUD->SetVisibility(ESlateVisibility::Hidden); }
+}
+
 //Updates the ship progress bar every second until the progress is finished.
 void AShipyard::buildShipProgress()
 {

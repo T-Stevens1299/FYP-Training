@@ -158,6 +158,8 @@ private:
 
 	void initialiseAIShips();
 
+	virtual void toggleUI(bool showUI);
+
 	//References
 	FTimerHandle behaviourTreeTick;
 

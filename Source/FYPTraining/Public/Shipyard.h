@@ -124,5 +124,7 @@ private:
 
 	void spawnStartingShips();
 
+	virtual void toggleUI(bool showUI) override;
+
 	AActor* spawnShip(TSubclassOf<AActor> shipToSpawn);
 };
