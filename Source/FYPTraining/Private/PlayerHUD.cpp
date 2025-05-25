@@ -26,6 +26,11 @@ void UPlayerHUD::SetGmPtr(AFYPTrainingGameMode* GMptr)
 	surrender->SetIsEnabled(false);
 }
 
+void UPlayerHUD::updatePopCap(int curPopCapValue)
+{
+	PopCap->SetText(FText::FromString(FString::FromInt(curPopCapValue)));
+}
+
 //Updates the player funds
 void UPlayerHUD::updateFunds(float passedFunds)
 {

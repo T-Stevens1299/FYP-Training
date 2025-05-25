@@ -214,7 +214,8 @@ void AFYPTrainingGameMode::updatePopCap(bool playerControlled, int popValue)
 	if (playerControlled)
 	{
 		currentPlayerPopCap = currentPlayerPopCap + popValue;
-		playerShipyardRef->HUD->updatePopCount(currentPlayerPopCap);
+		HUD->updatePopCap(currentPlayerPopCap);
+		//playerShipyardRef->HUD->updatePopCount(currentPlayerPopCap);
 	}
 	else
 	{

@@ -26,6 +26,8 @@ public:
 
 	void SetGmPtr(AFYPTrainingGameMode* GMptr);
 
+	void updatePopCap(int curPopCapValue);
+
 	UFUNCTION()
 	void surrenderTheGame();
 
@@ -35,6 +37,9 @@ protected:
 	//UI components
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UTextBlock* PlayerFunds;
+
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	class UTextBlock* PopCap;
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UButton* surrender;

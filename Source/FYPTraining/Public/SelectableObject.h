@@ -63,6 +63,9 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "Setup")
 	void initBlueprintScript();
 
+	UFUNCTION(BlueprintCallable, Category = "Setup")
+	void toggleHealthBarVisibility(bool makeVisible);
+
 	virtual void triggerWinCheck();
 
 	virtual void HealthCalculations(float passedDamage);
@@ -80,6 +83,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UnitTweakables")
 	bool staticObject;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UnitTweakables")
+	bool isSelected;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UnitTweakables")
 	bool playerControlled;

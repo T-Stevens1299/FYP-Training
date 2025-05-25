@@ -109,7 +109,9 @@ void ASelectableObject::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 
 void ASelectableObject::ToggleSelect_Implementation(bool ToggleOn)
 {
+	isSelected = ToggleOn;
 	SelectorMesh->SetVisibility(ToggleOn);
+	toggleHealthBarVisibility(ToggleOn);
 }
 
 void ASelectableObject::checkOrderCode()
@@ -172,6 +174,11 @@ void ASelectableObject::HealthCalculations(float passedDamage)
 	{
 		triggerWinCheck();
 	}
+}
+
+void ASelectableObject::toggleHealthBarVisibility(bool makeVisible)
+{
+	healthBar->SetVisibility(makeVisible, false);
 }
 
 void ASelectableObject::triggerWinCheck()
