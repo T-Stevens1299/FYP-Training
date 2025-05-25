@@ -225,7 +225,6 @@ void AFYPTrainingGameMode::updatePopCap(bool playerControlled, int popValue)
 
 void AFYPTrainingGameMode::ToggleAdminPanel()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Pressed"))
 	adminPanel->toggleVisibility();
 }
 
@@ -237,6 +236,11 @@ void AFYPTrainingGameMode::gameEnd(bool playerControlled)
 	GameEnd->SetScreenText(playerControlled);
 	GameEnd->AddToViewport();
 	UGameplayStatics::SetGamePaused(this, true);
+}
+
+void AFYPTrainingGameMode::togglePauseGame(bool shouldPause)
+{
+	UGameplayStatics::SetGamePaused(this, shouldPause);
 }
 
 void AFYPTrainingGameMode::calculateLostShips()

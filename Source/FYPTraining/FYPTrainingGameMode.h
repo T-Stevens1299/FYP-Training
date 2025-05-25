@@ -141,6 +141,8 @@ public:
 
 	void gameEnd(bool playerControlled);
 
+	void togglePauseGame(bool shouldPause);
+
 protected:
 	virtual void BeginPlay() override;
 

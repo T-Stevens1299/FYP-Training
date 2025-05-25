@@ -6,6 +6,8 @@
 #include "GameFramework/Controller.h" 
 #include <Kismet/GameplayStatics.h>
 #include "InputActionValue.h"
+#include "Blueprint/UserWidget.h"
+#include "PauseMenu.h"
 #include "FYPTraining/FYPTrainingGameMode.h"
 
 // Sets default values
@@ -39,6 +41,12 @@ void ARTS_Camera::BeginPlay()
 
 	AFYPTrainingGameMode* gamemode = Cast<AFYPTrainingGameMode>(UGameplayStatics::GetGameMode(this));
 	if (gamemode) { gmRef = gamemode; }
+
+	//Creates Pause Menu
+	pauseMenu = CreateWidget<UPauseMenu>(PC, pauseMenuRef);
+	pauseMenu->gmRef = gmRef;
+	pauseMenu->AddToViewport();
+	pauseMenu->toggleVisibility(false);
 }
 
 void ARTS_Camera::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -59,6 +67,8 @@ void ARTS_Camera::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 		EnhancedInputComponent->BindAction(CameraMove, ETriggerEvent::Triggered, this, &ARTS_Camera::MoveCamera);
 
 		EnhancedInputComponent->BindAction(CameraRotate, ETriggerEvent::Triggered, this, &ARTS_Camera::RotateCamera);
+
+		EnhancedInputComponent->BindAction(pauseGame, ETriggerEvent::Triggered, this, &ARTS_Camera::openPauseMenu);
 
 		EnhancedInputComponent->BindAction(ToggleAdminPanel, ETriggerEvent::Triggered, this, &ARTS_Camera::AdminPanelToggle);
 	}
@@ -104,4 +114,11 @@ void ARTS_Camera::RotateCamera(const FInputActionValue& Value)
 void ARTS_Camera::AdminPanelToggle(const FInputActionValue& Value)
 {
 	gmRef->ToggleAdminPanel();
+}
+
+void ARTS_Camera::openPauseMenu(const FInputActionValue& Value)
+{
+	UE_LOG(LogTemp, Warning, TEXT("Pause"))
+	gmRef->togglePauseGame(true);
+	pauseMenu->toggleVisibility(true);
 }

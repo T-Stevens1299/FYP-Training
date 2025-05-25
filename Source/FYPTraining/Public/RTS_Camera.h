@@ -32,6 +32,8 @@ public:
 
 	void AdminPanelToggle(const FInputActionValue& Value);
 
+	void openPauseMenu(const FInputActionValue& Value);
+
 	//Input Values
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Enhanced Input")
 	UInputMappingContext* CameraControlsMappingContext;
@@ -48,6 +50,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Enhanced Input")
 	UInputAction* ToggleAdminPanel;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Enhanced Input")
+	UInputAction* pauseGame;
+
 	//Components
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	USpringArmComponent* CameraArm;
@@ -57,6 +62,13 @@ public:
 
 	UPROPERTY(EditAnywhere)
 	UCameraComponent* Camera;
+
+	/** HUD Widget */
+	UPROPERTY(EditDefaultsOnly, Category = "HUD")
+	TSubclassOf<UUserWidget> pauseMenuRef;
+
+	UPROPERTY(BlueprintReadOnly, Category = "HUD")
+	class UPauseMenu* pauseMenu;
 
 	/** Camera Zoom Properties */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera")
