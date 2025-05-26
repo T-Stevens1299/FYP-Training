@@ -89,6 +89,7 @@ void UShipyardWidget::updatePopCount(int popCap)
 	PopCapText->SetText(FText::FromString(FString::FromInt(popCap)));
 }
 
+
 void UShipyardWidget::upgradeTechLevel()
 {
 	currentTechLevel++;
@@ -224,8 +225,35 @@ void UShipyardWidget::queueTechLevel4()
 
 void UShipyardWidget::addShipToQueue(FString RelatedRowName)
 {
+	//Finds the ship to queue based on data table string
 	FName rowToFind = FName(*RelatedRowName);
 	currentRow = dataTableRef.DataTable->FindRow<FConstructionData>(rowToFind, "");
 
-	shipyardRef->constructShip(currentRow->shipToSpawn.Get(), currentRow->requiredFunds, currentRow->constructionTime, currentRow->populationValue);
+	//Checks the ship can be queued, if so add it to the queue
+	if (shipyardRef->canQueueShip(currentRow->requiredFunds, currentRow->constructionTime, currentRow->populationValue))
+	{
+		shipQueue.Add(RelatedRowName);
+	}
+
+	//If the queue is empty - build the queued ship immediately
+	if (shipQueue.Num() < 2)
+	{
+		shipyardRef->constructCurrentQueuedShip(currentRow->requiredFunds, currentRow->constructionTime, currentRow->populationValue);
+	}
+}
+
+void UShipyardWidget::buildNextShipInQueue()
+{
+	//Removes just built ship from the queue
+	shipQueue.RemoveAt(0, 1, true);
+
+	//If the queue is now empty do nothing
+	if (shipQueue.Num() < 1) { UE_LOG(LogTemp, Warning, TEXT("QueueEmpty")); return; }
+	else
+	{
+		//Build the ship at the front of the queue
+		FName rowToFind = FName(*shipQueue[0]);
+		currentRow = dataTableRef.DataTable->FindRow<FConstructionData>(rowToFind, "");
+		shipyardRef->constructCurrentQueuedShip(currentRow->requiredFunds, currentRow->constructionTime, currentRow->populationValue);
+	}
 }

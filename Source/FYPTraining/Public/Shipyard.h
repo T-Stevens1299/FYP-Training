@@ -28,6 +28,10 @@ public:
 
 	bool constructShip(TSubclassOf<AActor> shipToSpawn, float shipCost, float buildTime, int popValue);
 
+	bool canQueueShip(float shipCost, float buildTime, int popValue);
+
+	void constructCurrentQueuedShip(float shipCost, float buildTime, int popValue);
+
 	void buildMines();
 
 	bool canUpgradeTechLevel(float upgradeCost, float upgradeTime);

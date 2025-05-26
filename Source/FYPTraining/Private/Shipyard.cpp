@@ -64,6 +64,7 @@ void AShipyard::healthBarSet()
 	healthBarRef->updateHealthBar(currentUnitHealth / totalUnitHealth);
 }
 
+//Only used by the AI
 bool AShipyard::constructShip(TSubclassOf<AActor> shipToSpawn, float shipCost, float buildTime, int popValue)
 {
 	//Checks if there is already something constructing
@@ -72,19 +73,19 @@ bool AShipyard::constructShip(TSubclassOf<AActor> shipToSpawn, float shipCost, f
 		//Detemines if the unit can be built
 		int fundCheck;
 
-		if (playerControlled)
-		{ 
-			if (gmRef->currentPlayerPopCap + popValue <= gmRef->playerPopCap)
-			{
-				fundCheck = (gmRef->currentPlayerMoney - shipCost); 
-			}
-			else
-			{
-				fundCheck = -1;
-			}
-		}
-		else
-		{
+		//if (playerControlled)
+		//{ 
+		//	if (gmRef->currentPlayerPopCap + popValue <= gmRef->playerPopCap)
+		//	{
+		//		fundCheck = (gmRef->currentPlayerMoney - shipCost); 
+		//	}
+		//	else
+		//	{
+		//		fundCheck = -1;
+		//	}
+		//}
+		//else
+		//{
 			if (gmRef->currentAiPopCap + popValue <= gmRef->aiPopCap)
 			{
 				fundCheck = (gmRef->currentAIMoney - shipCost);
@@ -93,7 +94,7 @@ bool AShipyard::constructShip(TSubclassOf<AActor> shipToSpawn, float shipCost, f
 			{
 				fundCheck = -1;
 			}
-		}
+		//}
 
 		if (fundCheck >= 0)
 		{
@@ -144,6 +145,70 @@ bool AShipyard::constructShip(TSubclassOf<AActor> shipToSpawn, float shipCost, f
 	}
 }
 
+bool AShipyard::canQueueShip(float shipCost, float buildTime, int popValue)
+{
+	//Detemines if the unit can be built
+	int fundCheck;
+
+	if (gmRef->currentPlayerPopCap + popValue <= gmRef->playerPopCap)
+	{
+		fundCheck = (gmRef->currentPlayerMoney - shipCost);
+	}
+	else
+	{
+		fundCheck = -1;
+	}
+
+	if (fundCheck >= 0)
+	{
+		//Updates the pop cap and cost when added to the queue
+		gmRef->updatePopCap(playerControlled, popValue);
+		gmRef->subtractCost(playerControlled, shipCost);
+
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+void AShipyard::constructCurrentQueuedShip(float shipCost, float buildTime, int popValue)
+{
+	//Builds the current queue ship - player shipyard only
+	currentShipCost = shipCost;
+	currentShipPopValue = popValue;
+
+	//Sets the ship to spawn depending on pop value from data table - SoftObjPtr reference from dataTable did not always spawn correctly. This always works however
+	switch (currentShipPopValue)
+	{
+	case 10:
+		shipConstructing = corvetteRef;
+		break;
+	case 20:
+		shipConstructing = frigateRef;
+		break;
+	case 25:
+		shipConstructing = destroyerRef;
+		break;
+	case 30:
+		shipConstructing = cruiserRef;
+		break;
+	case 40:
+		shipConstructing = battleshipRef;
+		break;
+	default:
+		shipConstructing = corvetteRef;
+		break;
+	}
+
+	isConstructingAlready = true;
+	curShipConTime = buildTime;
+	constructionProgress = 0.0f;
+	UE_LOG(LogTemp, Warning, TEXT("Construction Time Again"));
+	GetWorldTimerManager().SetTimer(constructionTime, this, &AShipyard::buildShipProgress, 1.0f, true, 1.0f);
+}
+
 void AShipyard::spawnStartingShips()
 {
 	shipConstructing = startingShipRef;
@@ -170,6 +235,7 @@ void AShipyard::buildShipProgress()
 		if (constructionProgress != curShipConTime) { return; }
 		buildShip();
 		HUD->updateConstructionBar(0.0f);
+		HUD->buildNextShipInQueue();	
 	}
 	else
 	{
@@ -187,7 +253,6 @@ void AShipyard::buildShip()
 	if (classRef)
 	{
 		gmRef->addShipsToArray(spawnedShip, playerControlled);
-		gmRef->updatePopCap(playerControlled, currentShipPopValue);
 
 		classRef->initaliseSelectableObject(playerControlled, currentShipCost, currentShipPopValue);
 
@@ -195,6 +260,7 @@ void AShipyard::buildShip()
 		{
 			classRef->retreatPointRef = retreatPoint;
 			classRef->attackPointRef = attackPoint;
+			gmRef->updatePopCap(playerControlled, currentShipPopValue);
 		}
 	}
 

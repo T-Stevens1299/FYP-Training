@@ -49,6 +49,8 @@ public:
 
 	void addShipToQueue(FString RelatedRowName);
 
+	void buildNextShipInQueue();
+
 	void init(AShipyard* shipyardPtr);
 
 	void upgradeTechLevel();
@@ -60,6 +62,8 @@ public:
 	void updateMineCount(bool addingMine);
 
 	void updatePopCount(int popCap);
+
+	TArray<FString> shipQueue;
 
 	//References
 	AShipyard* shipyardRef;
