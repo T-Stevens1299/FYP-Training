@@ -129,7 +129,7 @@ bool AShipyard::constructShip(TSubclassOf<AActor> shipToSpawn, float shipCost, f
 			constructionProgress = 0.0f;
 			gmRef->subtractCost(playerControlled, shipCost);
 			UE_LOG(LogTemp, Warning, TEXT("Construction Time Again"));
-			GetWorldTimerManager().SetTimer(constructionTime, this, &AShipyard::buildShipProgress, 1.0f, true, 1.0f);
+			GetWorldTimerManager().SetTimer(constructionTime, this, &AShipyard::buildShipProgress, .1f, true, .1f);
 			return true;
 		}
 		else
@@ -206,7 +206,7 @@ void AShipyard::constructCurrentQueuedShip(float shipCost, float buildTime, int 
 	curShipConTime = buildTime;
 	constructionProgress = 0.0f;
 	UE_LOG(LogTemp, Warning, TEXT("Construction Time Again"));
-	GetWorldTimerManager().SetTimer(constructionTime, this, &AShipyard::buildShipProgress, 1.0f, true, 1.0f);
+	GetWorldTimerManager().SetTimer(constructionTime, this, &AShipyard::buildShipProgress, .1f, true, .1f);
 }
 
 void AShipyard::spawnStartingShips()
@@ -228,18 +228,18 @@ void AShipyard::toggleUI(bool showUI)
 //Updates the ship progress bar every second until the progress is finished.
 void AShipyard::buildShipProgress()
 {
-	constructionProgress++;
+	constructionProgress += .1f;
 	if (playerControlled)
 	{
 		HUD->updateConstructionBar(constructionProgress / curShipConTime);
-		if (constructionProgress != curShipConTime) { return; }
+		if (constructionProgress < curShipConTime) { return; }
 		buildShip();
 		HUD->updateConstructionBar(0.0f);
 		HUD->buildNextShipInQueue();	
 	}
 	else
 	{
-		if (constructionProgress != curShipConTime) { return; }
+		if (constructionProgress < curShipConTime) { return; }
 		buildShip();
 	}
 }
@@ -253,6 +253,7 @@ void AShipyard::buildShip()
 	if (classRef)
 	{
 		gmRef->addShipsToArray(spawnedShip, playerControlled);
+		gmRef->updatePopCap(playerControlled, currentShipPopValue);
 
 		classRef->initaliseSelectableObject(playerControlled, currentShipCost, currentShipPopValue);
 
@@ -260,7 +261,6 @@ void AShipyard::buildShip()
 		{
 			classRef->retreatPointRef = retreatPoint;
 			classRef->attackPointRef = attackPoint;
-			gmRef->updatePopCap(playerControlled, currentShipPopValue);
 		}
 	}
 
@@ -335,7 +335,7 @@ bool AShipyard::canUpgradeTechLevel(float upgradeCost, float upgradeTime)
 			curTechUpgradeTime = upgradeTime;
 			techUpgradeProgress = 0.0f;
 			gmRef->subtractCost(playerControlled, upgradeCost);
-			GetWorldTimerManager().SetTimer(upgradingTimer, this, &AShipyard::upgradeLevelProgress, 1.0f, true, 1.0f);
+			GetWorldTimerManager().SetTimer(upgradingTimer, this, &AShipyard::upgradeLevelProgress, .1f, true, .1f);
 			UE_LOG(LogTemp, Warning, TEXT("Upgrading Time Again"));
 			return true;
 		}
@@ -355,9 +355,9 @@ bool AShipyard::canUpgradeTechLevel(float upgradeCost, float upgradeTime)
 //Updates the tech upgrade bar every second
 void AShipyard::upgradeLevelProgress()
 {
-	techUpgradeProgress++;
+	techUpgradeProgress += 0.1f;
 	HUD->updateTechBar(techUpgradeProgress / curTechUpgradeTime);
-	if (techUpgradeProgress != curTechUpgradeTime) { return; }
+	if (techUpgradeProgress < curTechUpgradeTime) { return; }
 	upgradeLevel();
 }
 

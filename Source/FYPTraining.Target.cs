@@ -11,5 +11,6 @@ public class FYPTrainingTarget : TargetRules
 		DefaultBuildSettings = BuildSettingsVersion.V5;
 		IncludeOrderVersion = EngineIncludeOrderVersion.Unreal5_4;
 		ExtraModuleNames.Add("FYPTraining");
+		ExtraModuleNames.Add("AdvancedWidgets");
 	}
 }

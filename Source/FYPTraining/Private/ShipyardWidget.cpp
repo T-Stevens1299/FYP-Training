@@ -7,6 +7,7 @@
 #include "FYPTraining/FYPTrainingGameMode.h"
 #include "UnitManager.h"
 #include "Components/ProgressBar.h"
+#include "Components/RadialSlider.h"
 #include "Components/TextBlock.h"
 
 UShipyardWidget::UShipyardWidget(const FObjectInitializer& ObjectInitializer)
@@ -170,12 +171,12 @@ void UShipyardWidget::triggerTechLevelCheck(FString techLevelRowName)
 
 void UShipyardWidget::updateConstructionBar(float passedPercentage)
 {
-	ConstructionProgressBar->SetPercent(passedPercentage);
+	ShipConstructionCircle->SetValue(passedPercentage);
 }
 
 void UShipyardWidget::updateTechBar(float passedPercentage)
 {
-	TechUpgradeBar->SetPercent(passedPercentage);
+	TechUpgradeCircle->SetValue(passedPercentage);
 }
 
 void UShipyardWidget::queueCorvette()

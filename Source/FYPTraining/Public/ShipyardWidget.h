@@ -147,11 +147,17 @@ protected:
 
 
 
-	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UProgressBar* ConstructionProgressBar;
+	//UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	//class UProgressBar* ConstructionProgressBar;
+
+	//UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	//class UProgressBar* TechUpgradeBar;
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UProgressBar* TechUpgradeBar;
+	class URadialSlider* ShipConstructionCircle;
+
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	class URadialSlider* TechUpgradeCircle;
 
 
 
