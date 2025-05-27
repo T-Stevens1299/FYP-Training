@@ -115,6 +115,29 @@ void UShipyardWidget::triggerMineBuild()
 
 void UShipyardWidget::stopTechUpgrade()
 {
+	FConstructionData* techLevelToCancel;
+
+	//Determines the current tech upgrade to cancel based on the current tech level
+	switch (currentTechLevel)
+	{
+	case 1:
+		techLevelToCancel = getRow("TechLevel2");
+		break;
+	case 2:
+		techLevelToCancel = getRow("TechLevel3");
+		break;
+	case 3:
+		techLevelToCancel = getRow("TechLevel4");
+		break;
+	default:
+		techLevelToCancel = getRow("TechLevel2");
+		break;
+	}
+
+	//Stops the tech level, hides the button and resets progress value
+	TechUpgradeCircle->SetValue(0.f);
+	shipyardRef->stopTechLevelUpgrade(techLevelToCancel->requiredFunds); 
+	TechButton->SetVisibility(ESlateVisibility::Hidden);
 }
 
 void UShipyardWidget::stopCurrentShipConstruction()
@@ -232,6 +255,11 @@ void UShipyardWidget::triggerTechLevelCheck(FString techLevelRowName)
 	currentRow = getRow(techLevelRowName);
 	//Triggers the can upgrade tech function. If true is returned the upgrade process starts and boolean variable set for later to upgrade the AI
 	aiCanUpgrade = shipyardRef->canUpgradeTechLevel(currentRow->requiredFunds, currentRow->constructionTime);
+
+	TechButton->SetVisibility(ESlateVisibility::Visible);
+	TechButton->WidgetStyle.Normal.SetResourceObject(techLevelIcons[techLevelRowName]);
+	TechButton->WidgetStyle.Hovered.SetResourceObject(techLevelIcons[techLevelRowName]);
+	TechButton->WidgetStyle.Pressed.SetResourceObject(techLevelIcons[techLevelRowName]);
 }
 
 void UShipyardWidget::clearQueuedItem(UButton* buttonRef, int queueIndex)

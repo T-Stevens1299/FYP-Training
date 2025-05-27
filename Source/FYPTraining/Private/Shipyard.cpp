@@ -329,6 +329,13 @@ void AShipyard::stopCurShipConstruction(float shipCost, int popValue)
 	HUD->buildNextShipInQueue();
 }
 
+void AShipyard::stopTechLevelUpgrade(float techCost)
+{
+	GetWorldTimerManager().ClearTimer(upgradingTimer);
+	gmRef->subtractCost(playerControlled, -techCost);
+	isUpgradingAlready = false;
+}
+
 void AShipyard::refundQueuedShip(float shipCost, int popValue)
 {
 	gmRef->subtractCost(playerControlled, -shipCost);

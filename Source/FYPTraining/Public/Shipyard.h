@@ -36,6 +36,8 @@ public:
 
 	void stopCurShipConstruction(float shipCost, int popValue);
 
+	void stopTechLevelUpgrade(float techCost);
+
 	void refundQueuedShip(float shipCost, int popValue);
 
 	bool canUpgradeTechLevel(float upgradeCost, float upgradeTime);

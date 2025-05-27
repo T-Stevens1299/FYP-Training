@@ -79,6 +79,9 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	TMap<FString, UObject*> shipIcons;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	TMap<FString, UObject*> techLevelIcons;
+
 private:
 	//Variables
 	int currentTechLevel;
