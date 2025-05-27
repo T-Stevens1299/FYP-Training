@@ -322,6 +322,19 @@ void AShipyard::buildMines()
 	}
 }
 
+void AShipyard::stopCurShipConstruction(float shipCost, int popValue)
+{
+	GetWorldTimerManager().ClearTimer(constructionTime);
+	refundQueuedShip(shipCost, popValue);
+	HUD->buildNextShipInQueue();
+}
+
+void AShipyard::refundQueuedShip(float shipCost, int popValue)
+{
+	gmRef->subtractCost(playerControlled, -shipCost);
+	gmRef->updatePopCap(playerControlled, -popValue);
+}
+
 //Upgrades the tech level if it can be afforded - returns true/false if the tech level can be upgraded
 bool AShipyard::canUpgradeTechLevel(float upgradeCost, float upgradeTime)
 {

@@ -62,6 +62,36 @@ void UShipyardWidget::NativeConstruct()
 	{
 		BuildMines->OnClicked.AddDynamic(this, &UShipyardWidget::triggerMineBuild);
 	}
+
+	if (TechButton)
+	{
+		TechButton->OnClicked.AddDynamic(this, &UShipyardWidget::stopTechUpgrade);
+	}
+
+	if (QueueButton1)
+	{
+		QueueButton1->OnClicked.AddDynamic(this, &UShipyardWidget::stopCurrentShipConstruction);
+	}
+
+	if (QueueButton2)
+	{
+		QueueButton2->OnClicked.AddDynamic(this, &UShipyardWidget::clearQueueSlot1);
+	}
+
+	if (QueueButton3)
+	{
+		QueueButton3->OnClicked.AddDynamic(this, &UShipyardWidget::clearQueueSlot2);
+	}
+
+	if (QueueButton4)
+	{
+		QueueButton4->OnClicked.AddDynamic(this, &UShipyardWidget::clearQueueSlot3);
+	}
+
+	if (QueueButton5)
+	{
+		QueueButton5->OnClicked.AddDynamic(this, &UShipyardWidget::clearQueueSlot4);
+	}
 }
 
 void UShipyardWidget::init(AShipyard* shipyardPtr)
@@ -69,12 +99,48 @@ void UShipyardWidget::init(AShipyard* shipyardPtr)
 	shipyardRef = shipyardPtr;
 	currentTechLevel = 0;
 	upgradeTechLevel();
+
+	queueButtons.Add(QueueButton1);
+	queueButtons.Add(QueueButton2);
+	queueButtons.Add(QueueButton3);
+	queueButtons.Add(QueueButton4);
+	queueButtons.Add(QueueButton5);
 }
 
 void UShipyardWidget::triggerMineBuild()
 {
 	UE_LOG(LogTemp, Warning, TEXT("TriggerMineBuild"));
 	shipyardRef->buildMines();
+}
+
+void UShipyardWidget::stopTechUpgrade()
+{
+}
+
+void UShipyardWidget::stopCurrentShipConstruction()
+{
+	FConstructionData* rowToCancel = getRow(*shipQueue[0]);
+	shipyardRef->stopCurShipConstruction(rowToCancel->requiredFunds, rowToCancel->populationValue);
+}
+
+void UShipyardWidget::clearQueueSlot1()
+{
+	clearQueuedItem(QueueButton2, 1);
+}
+
+void UShipyardWidget::clearQueueSlot2()
+{
+	clearQueuedItem(QueueButton3, 2);
+}
+
+void UShipyardWidget::clearQueueSlot3()
+{
+	clearQueuedItem(QueueButton4, 3);
+}
+
+void UShipyardWidget::clearQueueSlot4()
+{
+	clearQueuedItem(QueueButton5, 4);
 }
 
 void UShipyardWidget::updateMineCount(bool addingMine)
@@ -163,10 +229,55 @@ void UShipyardWidget::upgradeTechLevel()
 
 void UShipyardWidget::triggerTechLevelCheck(FString techLevelRowName)
 {
-	FName rowToFind = FName(*techLevelRowName);
-	currentRow = dataTableRef.DataTable->FindRow<FConstructionData>(rowToFind, "");
+	currentRow = getRow(techLevelRowName);
 	//Triggers the can upgrade tech function. If true is returned the upgrade process starts and boolean variable set for later to upgrade the AI
 	aiCanUpgrade = shipyardRef->canUpgradeTechLevel(currentRow->requiredFunds, currentRow->constructionTime);
+}
+
+void UShipyardWidget::clearQueuedItem(UButton* buttonRef, int queueIndex)
+{
+	//Hides cancelled button
+	buttonRef->SetVisibility(ESlateVisibility::Hidden);
+
+	//Gets the cost and pop value of the current queued ship and refunds it
+	FConstructionData* rowToRefund = getRow(shipQueue[queueIndex]);
+	shipyardRef->refundQueuedShip(rowToRefund->requiredFunds, rowToRefund->populationValue);
+	
+	//Removes it from the queue and re-adjusts the queue order
+	shipQueue.RemoveAt(queueIndex, 1, true);
+	alterQueueOrder();
+}
+
+void UShipyardWidget::setButtonIcon(UButton* buttonRef, FString RowKey)
+{
+	buttonRef->SetVisibility(ESlateVisibility::Visible);
+	buttonRef->WidgetStyle.Normal.SetResourceObject(shipIcons[RowKey]);
+	buttonRef->WidgetStyle.Hovered.SetResourceObject(shipIcons[RowKey]);
+	buttonRef->WidgetStyle.Pressed.SetResourceObject(shipIcons[RowKey]);
+}
+
+void UShipyardWidget::alterQueueOrder()
+{
+	int buttonsToHide = 0;
+
+	//Resets the icons of all the buttons after an element from the queue was removed
+	for (int i = 0; i < shipQueue.Num(); i++)
+	{
+		buttonsToHide++;
+		setButtonIcon(queueButtons[i], shipQueue[i]);
+	}
+
+	//Hides buttons that should not be showing queued items
+	for (int i = buttonsToHide; i < 5; i++)
+	{
+		queueButtons[i]->SetVisibility(ESlateVisibility::Hidden);
+	}
+}
+
+FConstructionData* UShipyardWidget::getRow(FString RelatedRowName)
+{
+	FName rowToFind = FName(*RelatedRowName);
+	return dataTableRef.DataTable->FindRow<FConstructionData>(rowToFind, "");
 }
 
 void UShipyardWidget::updateConstructionBar(float passedPercentage)
@@ -227,13 +338,33 @@ void UShipyardWidget::queueTechLevel4()
 void UShipyardWidget::addShipToQueue(FString RelatedRowName)
 {
 	//Finds the ship to queue based on data table string
-	FName rowToFind = FName(*RelatedRowName);
-	currentRow = dataTableRef.DataTable->FindRow<FConstructionData>(rowToFind, "");
+	currentRow = getRow(RelatedRowName);
 
 	//Checks the ship can be queued, if so add it to the queue
 	if (shipyardRef->canQueueShip(currentRow->requiredFunds, currentRow->constructionTime, currentRow->populationValue))
 	{
-		shipQueue.Add(RelatedRowName);
+		int indexInQueue = shipQueue.Add(RelatedRowName);
+		switch (indexInQueue)
+		{
+		case 0:
+			setButtonIcon(QueueButton1, RelatedRowName);
+			break;
+		case 1:
+			setButtonIcon(QueueButton2, RelatedRowName);
+			break;
+		case 2:
+			setButtonIcon(QueueButton3, RelatedRowName);
+			break;
+		case 3:
+			setButtonIcon(QueueButton4, RelatedRowName);
+			break;
+		case 4:
+			setButtonIcon(QueueButton5, RelatedRowName);
+			break;
+
+		default:
+			break;
+		}
 	}
 
 	//If the queue is empty - build the queued ship immediately
@@ -248,13 +379,18 @@ void UShipyardWidget::buildNextShipInQueue()
 	//Removes just built ship from the queue
 	shipQueue.RemoveAt(0, 1, true);
 
+	//Re-orders the queue buttons
+	alterQueueOrder();
+
+	//Resets progress bar
+	ShipConstructionCircle->SetValue(0.f);
+
 	//If the queue is now empty do nothing
-	if (shipQueue.Num() < 1) { UE_LOG(LogTemp, Warning, TEXT("QueueEmpty")); return; }
+	if (shipQueue.Num() < 1) { QueueButton1->SetVisibility(ESlateVisibility::Hidden); return; }
 	else
 	{
 		//Build the ship at the front of the queue
-		FName rowToFind = FName(*shipQueue[0]);
-		currentRow = dataTableRef.DataTable->FindRow<FConstructionData>(rowToFind, "");
+		currentRow = getRow(*shipQueue[0]);
 		shipyardRef->constructCurrentQueuedShip(currentRow->requiredFunds, currentRow->constructionTime, currentRow->populationValue);
 	}
 }

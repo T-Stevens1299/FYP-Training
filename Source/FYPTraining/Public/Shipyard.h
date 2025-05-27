@@ -34,6 +34,10 @@ public:
 
 	void buildMines();
 
+	void stopCurShipConstruction(float shipCost, int popValue);
+
+	void refundQueuedShip(float shipCost, int popValue);
+
 	bool canUpgradeTechLevel(float upgradeCost, float upgradeTime);
 
 	virtual void triggerWinCheck() override;

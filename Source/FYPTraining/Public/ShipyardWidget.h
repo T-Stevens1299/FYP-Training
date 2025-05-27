@@ -9,6 +9,7 @@
 
 class AShipyard;
 class ASelectableObject;
+class UButton;
 
 
 USTRUCT(BlueprintType)
@@ -51,6 +52,8 @@ public:
 
 	void buildNextShipInQueue();
 
+	void alterQueueOrder();
+
 	void init(AShipyard* shipyardPtr);
 
 	void upgradeTechLevel();
@@ -73,86 +76,109 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	FDataTableRowHandle dataTableRef;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	TMap<FString, UObject*> shipIcons;
+
 private:
 	//Variables
 	int currentTechLevel;
 
-	bool aiCanUpgrade;
-
 	int currentMineToBuild = 0;
+
+	bool aiCanUpgrade;
 
 	//Functions
 	void triggerTechLevelCheck(FString techLevelRowName);
 
+	void clearQueuedItem(UButton* buttonRef, int queueIndex);
+
+	void setButtonIcon(UButton* buttonRef, FString RowKey);
+
+	FConstructionData* getRow(FString RelatedRowName);
+
+	TArray<UButton*> queueButtons;
+
 protected:
 	//UI Components
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UButton* BuildCorvette;
+	UButton* BuildCorvette;
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UButton* BuildFrigate;
+	UButton* BuildFrigate;
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UButton* BuildDestroyer;
+	UButton* BuildDestroyer;
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UButton* BuildCruiser;
+	UButton* BuildCruiser;
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UButton* BuildBattleship;
+	UButton* BuildBattleship;
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UButton* BuildAircraftCarrier;
-
-
-
-	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UButton* TechLevel2;
-
-	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UButton* TechLevel3;
-
-	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UButton* TechLevel4;
+	UButton* BuildAircraftCarrier;
 
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UButton* HealthUpgrade1;
+	UButton* TechLevel2;
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UButton* HealthUpgrade2;
+	UButton* TechLevel3;
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UButton* HealthUpgrade3;
-
-	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UButton* HealthUpgrade4;
-
+	UButton* TechLevel4;
 
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UButton* DamageUpgrade1;
+	UButton* HealthUpgrade1;
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UButton* DamageUpgrade2;
+	UButton* HealthUpgrade2;
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UButton* DamageUpgrade3;
+	UButton* HealthUpgrade3;
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UButton* DamageUpgrade4;
+	UButton* HealthUpgrade4;
+
+
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UButton* BuildMines;
+	UButton* DamageUpgrade1;
+
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	UButton* DamageUpgrade2;
+
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	UButton* DamageUpgrade3;
+
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	UButton* DamageUpgrade4;
+
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	UButton* BuildMines;
+
+	//Queue Buttons
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	UButton* TechButton;
+
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	UButton* QueueButton1;
+
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	UButton* QueueButton2;
+
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	UButton* QueueButton3;
+
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	UButton* QueueButton4;
+
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	UButton* QueueButton5;
 
 
-
-	//UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	//class UProgressBar* ConstructionProgressBar;
-
-	//UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	//class UProgressBar* TechUpgradeBar;
-
+	//Progress Sliders
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class URadialSlider* ShipConstructionCircle;
 
@@ -197,4 +223,22 @@ protected:
 
 	UFUNCTION()
 	void triggerMineBuild();
+
+	UFUNCTION()
+	void stopTechUpgrade();
+
+	UFUNCTION()
+	void stopCurrentShipConstruction();
+
+	UFUNCTION()
+	void clearQueueSlot1();
+
+	UFUNCTION()
+	void clearQueueSlot2();
+
+	UFUNCTION()
+	void clearQueueSlot3();
+
+	UFUNCTION()
+	void clearQueueSlot4();
 };
