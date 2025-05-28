@@ -253,7 +253,6 @@ void AShipyard::buildShip(FString shipName)
 	if (classRef)
 	{
 		gmRef->addShipsToArray(spawnedShip, playerControlled);
-		gmRef->updatePopCap(playerControlled, currentShipPopValue);
 
 		classRef->initaliseSelectableObject(playerControlled, currentShipCost, currentShipPopValue);
 		classRef->shipTypeName = shipName;
@@ -262,6 +261,9 @@ void AShipyard::buildShip(FString shipName)
 		{
 			classRef->retreatPointRef = retreatPoint;
 			classRef->attackPointRef = attackPoint;
+
+			//Since the queue reserves pop cap space, only update the pop cap on the AI
+			gmRef->updatePopCap(playerControlled, currentShipPopValue);
 		}
 	}
 
