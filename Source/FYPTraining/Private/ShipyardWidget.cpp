@@ -372,6 +372,9 @@ void UShipyardWidget::addShipToQueue(FString RelatedRowName)
 	//Finds the ship to queue based on data table string
 	currentRow = getRow(RelatedRowName);
 
+	//If the queue is full nothing can be queued
+	if (shipQueue.Num() >= 5) { return; }
+
 	//Checks the ship can be queued, if so add it to the queue
 	if (shipyardRef->canQueueShip(currentRow->requiredFunds, currentRow->constructionTime, currentRow->populationValue))
 	{

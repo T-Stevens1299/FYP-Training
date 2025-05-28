@@ -38,6 +38,12 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MineProperties")
 	FVector mine2SpawnLoc;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MineProperties")
+	FRotator mine1SpawnRot;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MineProperties")
+	FRotator mine2SpawnRot;
+
 private:
 	//References
 	AActor* mine1Spawned;

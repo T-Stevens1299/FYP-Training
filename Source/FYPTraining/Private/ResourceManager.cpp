@@ -22,8 +22,8 @@ void AResourceManager::Init(AFYPTrainingGameMode* gmRef, bool useLanchester)
 	FActorSpawnParameters SpawnParams;
 	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 
-	mine1Spawned = GetWorld()->SpawnActor<AActor>(mineClass, mine1SpawnLoc, GetActorRotation(), SpawnParams);
-	mine2Spawned = GetWorld()->SpawnActor<AActor>(mineClass, mine2SpawnLoc, GetActorRotation(), SpawnParams);
+	mine1Spawned = GetWorld()->SpawnActor<AActor>(mineClass, mine1SpawnLoc, mine1SpawnRot, SpawnParams);
+	mine2Spawned = GetWorld()->SpawnActor<AActor>(mineClass, mine2SpawnLoc, mine2SpawnRot, SpawnParams);
 
 	TArray<AActor*> foundActors;
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AShipyard::StaticClass(), foundActors);
