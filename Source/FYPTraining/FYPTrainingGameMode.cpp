@@ -13,6 +13,7 @@
 #include "UObject/ConstructorHelpers.h"
 #include "AIMasterControlManager.h"
 #include "GameEndScreen.h"
+#include "SelectedShipsTab.h"
 #include "ResourceManager.h"
 #include "AdminPanel.h"
 #include "Misc/FileHelper.h"
@@ -38,6 +39,10 @@ void AFYPTrainingGameMode::BeginPlay()
 
 	HUD = CreateWidget<UPlayerHUD>(PC, HUDref);
 	HUD->SetGmPtr(this);
+
+	selectedShipUI = CreateWidget<USelectedShipsTab>(PC, selectedShipRef);
+	selectedShipUI->init(this);
+	selectedShipUI->AddToViewport();
 
 	adminPanel = CreateWidget<UAdminPanel>(PC, adminPanelRef);
 	adminPanel->AddToViewport();
@@ -72,6 +77,11 @@ void AFYPTrainingGameMode::IncreaseIncome()
 void AFYPTrainingGameMode::giveUpButton()
 {
 	HUD->unlockSurrender();
+}
+
+void AFYPTrainingGameMode::updateIconUI()
+{
+	selectedShipUI->populateIcons();
 }
 
 void AFYPTrainingGameMode::increaseIncomePerSecond(bool playerControlled, float incomeToIncrease)

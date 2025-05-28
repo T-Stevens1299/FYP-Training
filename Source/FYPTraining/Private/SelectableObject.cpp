@@ -40,6 +40,7 @@ void ASelectableObject::BeginPlay()
 {
 	Super::BeginPlay();
 	healthBarRef = Cast<UShipHealthBar>(healthBar->GetUserWidgetObject());
+	gmRef = Cast<AFYPTrainingGameMode>(UGameplayStatics::GetGameMode(this));
 }
 
 //Function only used on ship classes. Resource mine and shipyards
@@ -84,6 +85,17 @@ void ASelectableObject::initaliseSelectableObject(bool player_controlled, float 
 void ASelectableObject::initialiseAIShips() //Only initialise on enemy ships - function name should be changed to reflect this
 {
 	GetWorldTimerManager().SetTimer(behaviourTreeTick, this, &ASelectableObject::checkOrderCode, 2, true, 2);
+}
+
+void ASelectableObject::updateSelectedUI()
+{
+	for (int i = 0; i < gmRef->SelectedShips.Num(); i++)
+	{
+		if (gmRef->SelectedShips[i] == this)
+		{
+			//Update Health UI
+		}
+	}
 }
 
 void ASelectableObject::toggleUI(bool showUI)
@@ -174,6 +186,9 @@ void ASelectableObject::HealthCalculations(float passedDamage)
 	{
 		currentUnitHealth = currentUnitHealth - passedDamage;
 		healthBarRef->updateHealthBar(currentUnitHealth / totalUnitHealth);
+
+		//Updates ship selected UI if the ship is selected
+		if (isSelected) { updateSelectedUI(); }
 	}
 	else
 	{
@@ -188,7 +203,6 @@ void ASelectableObject::toggleHealthBarVisibility(bool makeVisible)
 
 void ASelectableObject::triggerWinCheck()
 {
-	AFYPTrainingGameMode* gmRef = Cast<AFYPTrainingGameMode>(UGameplayStatics::GetGameMode(this));
 	if (gmRef)
 	{
 		gmRef->updatePopCap(playerControlled, -PopulationValue);

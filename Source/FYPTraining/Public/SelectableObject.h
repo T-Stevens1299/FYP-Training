@@ -72,6 +72,8 @@ public:
 
 	void initaliseSelectableObject(bool player_controlled, float unit_Cost, int pop_Value);
 
+	void updateSelectedUI();
+
 	//Getter Functions
 	float getUnitHealthPercentage() { return (currentUnitHealth / totalUnitHealth); }
 
@@ -161,6 +163,8 @@ private:
 	virtual void toggleUI(bool showUI);
 
 	//References
+	class AFYPTrainingGameMode* gmRef;
+
 	FTimerHandle behaviourTreeTick;
 
 	FTimerHandle enemySensorTimer;

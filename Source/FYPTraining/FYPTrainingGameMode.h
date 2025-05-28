@@ -9,6 +9,7 @@
 
 class UUserWidget;
 class UPlayerHUD;
+class USelectedShipsTab;
 class UGameEndScreen;
 class AShipyard;
 class UAdminPanel;
@@ -91,6 +92,12 @@ public:
 	UPlayerHUD* HUD;
 
 	UPROPERTY(EditDefaultsOnly, Category = "HUD")
+	TSubclassOf<UUserWidget> selectedShipRef;
+
+	UPROPERTY(BlueprintReadOnly, Category = "HUD")
+	USelectedShipsTab* selectedShipUI;
+
+	UPROPERTY(EditDefaultsOnly, Category = "HUD")
 	TSubclassOf<UUserWidget> gameEndRef;
 
 	UPROPERTY(BlueprintReadOnly, Category = "HUD")
@@ -107,6 +114,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ResourceMines")
 	TArray<AActor*> PlayerResourceMine;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ShipArrays")
+	TArray<AActor*> SelectedShips;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ShipArrays")
 	TArray<AActor*> ActiveAiShips;
@@ -143,6 +153,13 @@ public:
 
 	void togglePauseGame(bool shouldPause);
 
+	//Ship selection functions
+	UFUNCTION(BlueprintCallable)
+	void addSelectedShip(AActor* shipToAdd) { SelectedShips.Add(shipToAdd); updateIconUI(); };
+
+	UFUNCTION(BlueprintCallable)
+	void clearSelectedShips() { SelectedShips.Empty(); updateIconUI(); };
+
 protected:
 	virtual void BeginPlay() override;
 
@@ -164,6 +181,8 @@ private:
 	void saveData();
 
 	void giveUpButton();
+
+	void updateIconUI();
 
 	FTimerHandle incomeHandle;
 	
