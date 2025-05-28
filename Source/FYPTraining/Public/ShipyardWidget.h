@@ -64,8 +64,6 @@ public:
 
 	void updateMineCount(bool addingMine);
 
-	void updatePopCount(int popCap);
-
 	void toggleConstructionOptions(bool showUI);
 
 	TArray<FString> shipQueue;
