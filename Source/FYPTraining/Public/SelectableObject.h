@@ -123,6 +123,9 @@ public:
 	float WeaponsRange;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UnitTweakables")
+	FString shipTypeName;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UnitTweakables")
 	AActor* retreatPointRef;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UnitTweakables")

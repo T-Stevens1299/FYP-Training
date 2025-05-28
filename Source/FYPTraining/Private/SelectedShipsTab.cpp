@@ -3,9 +3,11 @@
 
 #include "SelectedShipsTab.h"
 #include "FYPTraining/FYPTrainingGameMode.h"
+#include "SelectableObject.h"
 #include "SelectedShipIcon.h"
 #include "Components/WrapBox.h"
 #include "Components/PanelWidget.h"
+#include "SelectableObject.h"
 
 USelectedShipsTab::USelectedShipsTab(const FObjectInitializer& ObjectInitializer)
 	:Super(ObjectInitializer)
@@ -33,7 +35,8 @@ void USelectedShipsTab::populateIcons()
 	for (int i = 0; i < gmRef->SelectedShips.Num(); i++)
 	{
 		USelectedShipIcon* newIcon = CreateWidget<USelectedShipIcon>(gmRef->PC, iconUiRef);
-		newIcon->init("", 1);
+		float percent = gmRef->SelectedShips[i]->currentUnitHealth / gmRef->SelectedShips[i]->totalUnitHealth;
+		newIcon->init(gmRef->SelectedShips[i]->shipTypeName, percent);
 		shipIcons.Add(newIcon);
 		IconContainer->AddChild(newIcon);
 	}

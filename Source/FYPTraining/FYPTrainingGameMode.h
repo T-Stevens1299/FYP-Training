@@ -14,6 +14,7 @@ class UGameEndScreen;
 class AShipyard;
 class UAdminPanel;
 class AAIMasterControlManager;
+class ASelectableObject;
 
 //class EFactionTag;
 
@@ -116,7 +117,7 @@ public:
 	TArray<AActor*> PlayerResourceMine;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ShipArrays")
-	TArray<AActor*> SelectedShips;
+	TArray<ASelectableObject*> SelectedShips;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ShipArrays")
 	TArray<AActor*> ActiveAiShips;
@@ -155,10 +156,14 @@ public:
 
 	//Ship selection functions
 	UFUNCTION(BlueprintCallable)
-	void addSelectedShip(AActor* shipToAdd) { SelectedShips.Add(shipToAdd); updateIconUI(); };
+	void addSelectedShip(ASelectableObject* shipToAdd) { SelectedShips.Add(shipToAdd); updateIconUI(); };
 
 	UFUNCTION(BlueprintCallable)
 	void clearSelectedShips() { SelectedShips.Empty(); updateIconUI(); };
+
+	void updateShipHealthIcon(int iconArrayIndex, float newHealthPercent);
+
+	void removeShip() { updateIconUI(); }
 
 protected:
 	virtual void BeginPlay() override;

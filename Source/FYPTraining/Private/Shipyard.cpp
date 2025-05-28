@@ -8,6 +8,7 @@
 #include "ResourceMine.h"
 #include "UnitManager.h"
 #include "ShipHealthBar.h"
+#include "SelectedShipsTab.h"
 #include "Components/WidgetComponent.h"
 #include "Components/ProgressBar.h"
 
@@ -215,14 +216,13 @@ void AShipyard::spawnStartingShips()
 	currentShipPopValue = 10;
 	for (int i = 0; i < startingShipCount; i++)
 	{
-		buildShip();
+		buildShip("Corvette");
 	}
 }
 
 void AShipyard::toggleUI(bool showUI)
 {
-	if (showUI) { HUD->SetVisibility(ESlateVisibility::Visible); }
-	else { HUD->SetVisibility(ESlateVisibility::Hidden); }
+	HUD->toggleConstructionOptions(showUI);
 }
 
 //Updates the ship progress bar every second until the progress is finished.
@@ -233,19 +233,19 @@ void AShipyard::buildShipProgress()
 	{
 		HUD->updateConstructionBar(constructionProgress / curShipConTime);
 		if (constructionProgress < curShipConTime) { return; }
-		buildShip();
+		buildShip(HUD->shipQueue[0]);
 		HUD->updateConstructionBar(0.0f);
 		HUD->buildNextShipInQueue();	
 	}
 	else
 	{
 		if (constructionProgress < curShipConTime) { return; }
-		buildShip();
+		buildShip("");
 	}
 }
 
 //Builds the ship and sets variables after being spawned if an AI ship
-void AShipyard::buildShip()
+void AShipyard::buildShip(FString shipName)
 {
 	AActor* spawnedShip = spawnShip(shipConstructing);
 	//Sets the faction of the spawned ship
@@ -256,6 +256,7 @@ void AShipyard::buildShip()
 		gmRef->updatePopCap(playerControlled, currentShipPopValue);
 
 		classRef->initaliseSelectableObject(playerControlled, currentShipCost, currentShipPopValue);
+		classRef->shipTypeName = shipName;
 
 		if (!playerControlled)
 		{

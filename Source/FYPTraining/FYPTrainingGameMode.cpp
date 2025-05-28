@@ -350,3 +350,8 @@ void AFYPTrainingGameMode::saveData()
 
 	FFileHelper::SaveStringToFile(StringToSave, *SaveDirectory);
 }
+
+void AFYPTrainingGameMode::updateShipHealthIcon(int iconArrayIndex, float newHealthPercent)
+{
+	selectedShipUI->updateHealthBar(iconArrayIndex, newHealthPercent);
+}

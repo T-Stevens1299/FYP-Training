@@ -9,6 +9,7 @@
 #include "Components/ProgressBar.h"
 #include "Components/RadialSlider.h"
 #include "Components/TextBlock.h"
+#include "Components/CanvasPanel.h"
 
 UShipyardWidget::UShipyardWidget(const FObjectInitializer& ObjectInitializer)
 	:Super(ObjectInitializer)
@@ -179,6 +180,12 @@ void UShipyardWidget::updatePopCount(int popCap)
 	PopCapText->SetText(FText::FromString(FString::FromInt(popCap)));
 }
 
+void UShipyardWidget::toggleConstructionOptions(bool showUI)
+{
+	if (showUI) { ConstructionUI->SetVisibility(ESlateVisibility::Visible); }
+	else { ConstructionUI->SetVisibility(ESlateVisibility::Hidden); }
+}
+
 
 void UShipyardWidget::upgradeTechLevel()
 {
@@ -186,6 +193,8 @@ void UShipyardWidget::upgradeTechLevel()
 
 	//Sets tech level on player and AI side
 	shipyardRef->gmRef->playerTechLevel = currentTechLevel;
+	TechButton->SetVisibility(ESlateVisibility::Hidden);
+
 	if (aiCanUpgrade) 
 	{ 
 		shipyardRef->managerRef->upgradeTechLevel(currentRow); 	

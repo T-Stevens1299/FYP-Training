@@ -93,7 +93,7 @@ void ASelectableObject::updateSelectedUI()
 	{
 		if (gmRef->SelectedShips[i] == this)
 		{
-			//Update Health UI
+			gmRef->updateShipHealthIcon(i, (currentUnitHealth / totalUnitHealth));
 		}
 	}
 }
@@ -209,6 +209,15 @@ void ASelectableObject::triggerWinCheck()
 		if (playerControlled)
 		{
 			gmRef->removeShipsFromArray(this, GetClass()->GetName(), playerControlled);
+
+			//Remove ship from UI Icon Array if it is selected
+			if(isSelected) 
+			{
+				for (int i = 0; i < gmRef->SelectedShips.Num(); i++)
+				{
+					if (gmRef->SelectedShips[i] == this) { gmRef->SelectedShips.Remove(this); gmRef->removeShip(); }
+				}
+			}
 		}
 		else
 		{

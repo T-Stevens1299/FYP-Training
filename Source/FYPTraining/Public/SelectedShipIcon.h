@@ -22,6 +22,9 @@ public:
 
 	void changeHealth(float percent);
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	TMap<FString, UTexture2D*> shipIcons;
+
 protected:
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UProgressBar* shipHealth;

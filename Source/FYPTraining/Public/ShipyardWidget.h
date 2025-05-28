@@ -66,6 +66,8 @@ public:
 
 	void updatePopCount(int popCap);
 
+	void toggleConstructionOptions(bool showUI);
+
 	TArray<FString> shipQueue;
 
 	//References
@@ -103,6 +105,9 @@ private:
 
 protected:
 	//UI Components
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	class UCanvasPanel* ConstructionUI;
+
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	UButton* BuildCorvette;
 

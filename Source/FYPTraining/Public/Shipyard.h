@@ -122,7 +122,7 @@ private:
 	APlayerController* PC;
 
 	//Functions
-	void buildShip();
+	void buildShip(FString shipName);
 
 	void buildShipProgress();
 
