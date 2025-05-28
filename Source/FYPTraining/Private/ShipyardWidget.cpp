@@ -177,7 +177,7 @@ void UShipyardWidget::updateMineCount(bool addingMine)
 
 void UShipyardWidget::updatePopCount(int popCap)
 {
-	PopCapText->SetText(FText::FromString(FString::FromInt(popCap)));
+
 }
 
 void UShipyardWidget::toggleConstructionOptions(bool showUI)

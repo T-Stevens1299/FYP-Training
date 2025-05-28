@@ -193,13 +193,9 @@ protected:
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class URadialSlider* TechUpgradeCircle;
 
-
-
+	//Mine Data
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UTextBlock* MinesToBuild;
-
-	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UTextBlock* PopCapText;
 
 	//Bound Functions
 	UFUNCTION()

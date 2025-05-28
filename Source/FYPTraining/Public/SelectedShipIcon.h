@@ -6,9 +6,8 @@
 #include "Blueprint/UserWidget.h"
 #include "SelectedShipIcon.generated.h"
 
-/**
- * 
- */
+class ASelectableObject;
+
 UCLASS()
 class FYPTRAINING_API USelectedShipIcon : public UUserWidget
 {
@@ -18,12 +17,12 @@ public:
 
 	virtual void NativeConstruct() override;
 
-	void init(FString iconId, float percent);
+	void init(ASelectableObject* shipRef, FString iconId, float percent);
 
 	void changeHealth(float percent);
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	TMap<FString, UTexture2D*> shipIcons;
+	TMap<FString, UObject*> shipIcons;
 
 protected:
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
@@ -31,4 +30,13 @@ protected:
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UImage* ShipIcon;
+
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	class UButton* ShipButton;
+
+	UFUNCTION()
+	void selectShipInIcon();
+
+private:
+	ASelectableObject* selectedShipRef;
 };

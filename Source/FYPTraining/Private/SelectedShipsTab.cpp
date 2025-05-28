@@ -36,7 +36,7 @@ void USelectedShipsTab::populateIcons()
 	{
 		USelectedShipIcon* newIcon = CreateWidget<USelectedShipIcon>(gmRef->PC, iconUiRef);
 		float percent = gmRef->SelectedShips[i]->currentUnitHealth / gmRef->SelectedShips[i]->totalUnitHealth;
-		newIcon->init(gmRef->SelectedShips[i]->shipTypeName, percent);
+		newIcon->init(gmRef->SelectedShips[i], gmRef->SelectedShips[i]->shipTypeName, percent);
 		shipIcons.Add(newIcon);
 		IconContainer->AddChild(newIcon);
 	}
