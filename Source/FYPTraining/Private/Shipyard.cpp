@@ -216,6 +216,8 @@ void AShipyard::spawnStartingShips()
 	currentShipPopValue = 10;
 	for (int i = 0; i < startingShipCount; i++)
 	{
+		//Hack to add pop cap to player start ships since pop cap for player is now sorted by queue system
+		if(playerControlled) { gmRef->updatePopCap(playerControlled, 10); }
 		buildShip("Corvette");
 	}
 }
