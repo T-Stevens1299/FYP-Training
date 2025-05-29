@@ -34,12 +34,14 @@ void USelectedShipsTab::populateIcons()
 	//Repopulates
 	for (int i = 0; i < gmRef->SelectedShips.Num(); i++)
 	{
-		if (gmRef->SelectedShips[i]->groupNumber != 0)
+		if (gmRef->SelectedShips[i] != nullptr)
 		{
 			USelectedShipIcon* newIcon = CreateWidget<USelectedShipIcon>(gmRef->PC, iconUiRef);
 			float percent = gmRef->SelectedShips[i]->currentUnitHealth / gmRef->SelectedShips[i]->totalUnitHealth;
+
 			newIcon->init(gmRef->SelectedShips[i], gmRef->SelectedShips[i]->shipTypeName, percent, gmRef->SelectedShips[i]->groupNumber);
 			shipIcons.Add(newIcon);
+
 			IconContainer->AddChild(newIcon);
 		}
 	}

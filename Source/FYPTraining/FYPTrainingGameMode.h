@@ -157,6 +157,8 @@ public:
 
 	void togglePauseGame(bool shouldPause);
 
+	int selectedGroup;
+
 	//Ship selection functions
 	UFUNCTION(BlueprintCallable)
 	void addSelectedShip(ASelectableObject* shipToAdd) { SelectedShips.Add(shipToAdd); updateIconUI(); };
