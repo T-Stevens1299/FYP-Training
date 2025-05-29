@@ -119,6 +119,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ShipArrays")
 	TArray<ASelectableObject*> SelectedShips;
 
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ShipArrays")
+	TArray<TArray<ASelectableObject*>> ShipGroups;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ShipArrays")
 	TArray<AActor*> ActiveAiShips;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ShipArrays")
@@ -161,6 +164,12 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void clearSelectedShips() { SelectedShips.Empty(); updateIconUI(); };
 
+	UFUNCTION(BlueprintCallable)
+	void registerGroup(int groupIndex);
+
+	UFUNCTION(BlueprintCallable)
+	void selectGroup(int groupIndex);
+
 	void updateShipHealthIcon(int iconArrayIndex, float newHealthPercent);
 
 	void removeShip() { updateIconUI(); }
@@ -188,6 +197,8 @@ private:
 	void giveUpButton();
 
 	void updateIconUI();
+
+	void clearShipsFromGroup();
 
 	FTimerHandle incomeHandle;
 	

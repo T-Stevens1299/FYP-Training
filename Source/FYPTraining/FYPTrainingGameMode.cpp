@@ -28,6 +28,9 @@ void AFYPTrainingGameMode::BeginPlay()
 {
 	Super::BeginPlay();
 
+	//Sets the number of possible ship groups
+	ShipGroups.SetNum(5);
+
 	PC = UGameplayStatics::GetPlayerController(GetWorld(), 0);
 
 	AActor* spawnedAiManager = GetWorld()->SpawnActor(aiManager);
@@ -82,6 +85,56 @@ void AFYPTrainingGameMode::giveUpButton()
 void AFYPTrainingGameMode::updateIconUI()
 {
 	selectedShipUI->populateIcons();
+}
+
+void AFYPTrainingGameMode::clearShipsFromGroup()
+{
+	for (int i = 0; i < SelectedShips.Num(); i++)
+	{
+		SelectedShips[i]->groupNumber = 0;
+	}
+}
+
+void AFYPTrainingGameMode::registerGroup(int groupIndex)
+{
+	//if 5 is passed clear the selectd ships from their groups
+	if (groupIndex == 5) { clearShipsFromGroup(); }
+	else
+	{
+		//Sets the currently selected ships to the group number of the index passed through
+		ShipGroups[groupIndex-1] = SelectedShips;
+
+		//Sets the group number of the ship - used for UI purposes
+		for (int i = 0; i < SelectedShips.Num(); i++) 
+		{ 
+			SelectedShips[i]->groupNumber = groupIndex;
+		}
+	}
+
+	//Updates UI to show the group numbers straight away
+	updateIconUI();
+}
+
+void AFYPTrainingGameMode::selectGroup(int groupIndex)
+{
+	//Un selects the currently selected ships
+	for (int i = 0; i < SelectedShips.Num(); i++) { if (SelectedShips[i]) { SelectedShips[i]->ToggleSelect(false); } }
+
+	//Sets the selected ships to the selected group index
+	SelectedShips = ShipGroups[groupIndex-1];
+
+	//Selects the new group of selected ships
+	for (int i = 0; i < SelectedShips.Num(); i++) 
+	{ 
+		if (SelectedShips[i]) 
+		{ 
+			if(SelectedShips[i]->groupNumber == groupIndex) { SelectedShips[i]->ToggleSelect(true); }
+			else { SelectedShips.RemoveAt(i, 1, true); }
+		} 
+	}
+
+	//Updates the UI
+	updateIconUI();
 }
 
 void AFYPTrainingGameMode::increaseIncomePerSecond(bool playerControlled, float incomeToIncrease)

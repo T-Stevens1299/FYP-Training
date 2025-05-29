@@ -17,7 +17,7 @@ public:
 
 	virtual void NativeConstruct() override;
 
-	void init(ASelectableObject* shipRef, FString iconId, float percent);
+	void init(ASelectableObject* shipRef, FString iconId, float percent, int groupNum);
 
 	void changeHealth(float percent);
 
@@ -33,6 +33,9 @@ protected:
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UButton* ShipButton;
+
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	class UTextBlock* GroupNumber;
 
 	UFUNCTION()
 	void selectShipInIcon();

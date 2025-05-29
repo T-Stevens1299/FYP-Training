@@ -80,6 +80,9 @@ public:
 	float getStrengthValue() { return (unitCost * currentUnitHealth) / totalUnitHealth; }
 
 	//Variables
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "GroupingNumber")
+	int groupNumber = 0;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UnitTweakables")
 	bool hasTarget = false;
 
