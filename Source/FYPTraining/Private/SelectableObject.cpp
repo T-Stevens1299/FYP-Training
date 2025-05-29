@@ -215,9 +215,24 @@ void ASelectableObject::triggerWinCheck()
 			{
 				for (int i = 0; i < gmRef->SelectedShips.Num(); i++)
 				{
-					if (gmRef->SelectedShips[i] == this) { gmRef->SelectedShips.Remove(this); gmRef->removeShip(); }
+					if (gmRef->SelectedShips[i] == this) 
+					{ 
+						//Removes ship from selected ships UI if selected
+						gmRef->SelectedShips[i] = nullptr; 
+					}
 				}
 			}
+
+			//Removes ship from it's group when dead
+			if (groupNumber != 0)
+			{
+				for (int j = 0; j < gmRef->ShipGroups[groupNumber - 1].Num(); j++)
+				{
+					if (gmRef->ShipGroups[groupNumber - 1][j] == this) { gmRef->ShipGroups[groupNumber - 1][j] = nullptr; }
+				}
+			}
+
+			gmRef->removeShip();
 		}
 		else
 		{

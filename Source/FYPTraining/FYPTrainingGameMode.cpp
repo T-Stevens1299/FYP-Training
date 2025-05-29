@@ -130,8 +130,11 @@ void AFYPTrainingGameMode::selectGroup(int groupIndex)
 	{ 
 		if (SelectedShips.IsValidIndex(i)) 
 		{ 
-			if (SelectedShips[i]->groupNumber != groupIndex) { SelectedShips[i] = nullptr; }
-			else { SelectedShips[i]->ToggleSelect(true); }
+			if (SelectedShips[i])
+			{
+				if (SelectedShips[i]->groupNumber != groupIndex) { SelectedShips[i] = nullptr; }
+				else { SelectedShips[i]->ToggleSelect(true); }
+			}
 		} 
 	}
 
