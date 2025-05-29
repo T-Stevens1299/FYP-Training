@@ -52,5 +52,8 @@ void USelectedShipsTab::populateIcons()
 
 void USelectedShipsTab::updateHealthBar(int iconArrayIndex, float newHealthPercent)
 {
-	shipIcons[iconArrayIndex]->changeHealth(newHealthPercent);
+	if (shipIcons.IsValidIndex(iconArrayIndex))
+	{
+		shipIcons[iconArrayIndex]->changeHealth(newHealthPercent);
+	}
 }
