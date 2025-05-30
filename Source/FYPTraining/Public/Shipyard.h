@@ -20,6 +20,18 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "CoreParts", meta = (AllowPrivateAccess = "true"))
 	USceneComponent* unitSpawner;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "CoreParts", meta = (AllowPrivateAccess = "true"))
+	USceneComponent* unitSpawner2;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "CoreParts", meta = (AllowPrivateAccess = "true"))
+	USceneComponent* unitSpawner3;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "CoreParts", meta = (AllowPrivateAccess = "true"))
+	USceneComponent* unitSpawner4;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "CoreParts", meta = (AllowPrivateAccess = "true"))
+	USceneComponent* unitSpawner5;
+
 public:
 	//Functions
 	AShipyard();
@@ -108,6 +120,8 @@ private:
 	float curTechUpgradeTime = 0.0f;
 
 	float techUpgradeProgress = 0.0f;
+
+	int spawnCounter = 0;
 
 	//References
 	

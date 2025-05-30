@@ -18,6 +18,18 @@ AShipyard::AShipyard()
 {
 	unitSpawner = CreateDefaultSubobject<USceneComponent>(TEXT("UnitSpawnPosition"));
 	unitSpawner->SetupAttachment(RootComponent);
+
+	unitSpawner2 = CreateDefaultSubobject<USceneComponent>(TEXT("UnitSpawnPosition2"));
+	unitSpawner2->SetupAttachment(RootComponent);
+
+	unitSpawner3 = CreateDefaultSubobject<USceneComponent>(TEXT("UnitSpawnPosition3"));
+	unitSpawner3->SetupAttachment(RootComponent);
+
+	unitSpawner4 = CreateDefaultSubobject<USceneComponent>(TEXT("UnitSpawnPosition4"));
+	unitSpawner4->SetupAttachment(RootComponent);
+
+	unitSpawner5 = CreateDefaultSubobject<USceneComponent>(TEXT("UnitSpawnPosition5"));
+	unitSpawner5->SetupAttachment(RootComponent);
 }
 
 void AShipyard::init(AFYPTrainingGameMode* gamemodeReference)
@@ -280,11 +292,38 @@ AActor* AShipyard::spawnShip(TSubclassOf<AActor> shipToSpawn)
 {
 	//Set Spawn params
 	FActorSpawnParameters spawnParams;
-
 	spawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
 
-	FVector spawnLoc = unitSpawner->GetComponentLocation();
-	FRotator spawnRot = unitSpawner->GetComponentRotation();
+	//Selects the spawner to spawn the ship at
+	if (spawnCounter >= 5) { spawnCounter = 0; }
+	USceneComponent* spawner;
+	switch (spawnCounter)
+	{
+	case 0:
+		spawner = unitSpawner;
+		break;
+	case 1:
+		spawner = unitSpawner2;
+		break;
+	case 2:
+		spawner = unitSpawner3;
+		break;
+	case 3:
+		spawner = unitSpawner4;
+		break;
+	case 4:
+		spawner = unitSpawner5;
+		break;
+
+	default:
+		spawner = unitSpawner;
+		break;
+	}
+
+	FVector spawnLoc = spawner->GetComponentLocation();
+	FRotator spawnRot = spawner->GetComponentRotation();
+
+	spawnCounter++;
 
 	return GetWorld()->SpawnActor<AActor>(shipToSpawn, spawnLoc, spawnRot, spawnParams);
 }
