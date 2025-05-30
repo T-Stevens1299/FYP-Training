@@ -130,8 +130,8 @@ bool ACombatManager::LanchesterModelAlgorithm()
 	float aiArmySize = gamemodeRef->ActiveAiShips.Num();
 	float playerArmySize = gamemodeRef->ActivePlayerShips.Num();
 
-	float aiOutcome = aiArmyStrength * (aiArmySize * aiArmySize);
-	float playerOutcome = playerArmyStremgth * (playerArmySize * playerArmySize);
+	float aiOutcome = aiArmyStrength / (aiArmySize);
+	float playerOutcome = playerArmyStremgth / (playerArmySize);
 
 	if (aiOutcome >= playerOutcome)
 	{
@@ -150,6 +150,7 @@ float ACombatManager::calculateArmyStrength(bool calculateAIStrength)
 	{
 		float AIArmyStrength = 0;
 
+		//Loops through units to calculate overall army strength
 		for (int i = 0; i < gamemodeRef->ActiveAiShips.Num(); i++)
 		{
 			if (gamemodeRef->ActiveAiShips.IsValidIndex(i))
