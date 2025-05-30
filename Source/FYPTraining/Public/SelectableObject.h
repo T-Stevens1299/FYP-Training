@@ -14,6 +14,7 @@ class AHardpoint;
 class UBehaviorTree;
 class UShipHealthBar;
 class UWidgetComponent;
+class UNiagaraSystem;
 
 UCLASS()
 class FYPTRAINING_API ASelectableObject : public ACharacter, public IInterface_Selectable, public IInterface_Targeting, public IInterface_Damage
@@ -39,6 +40,9 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "CoreParts", meta = (AllowPrivateAccess = "true"))
 	UWidgetComponent* healthBar;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "CoreParts", meta = (AllowPrivateAccess = "true"))
+	USceneComponent* firePoint;
+	
 public:
 	ASelectableObject();
 
@@ -148,6 +152,15 @@ public:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UnitTweakables")
 	UShipHealthBar* healthBarRef;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "VFX")
+	UNiagaraSystem* explosionEffect;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "VFX")
+	UNiagaraSystem* shootEffect;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "VFX")
+	UNiagaraSystem* hitEffect;
 
 private:
 	void checkOrderCode();

@@ -10,7 +10,8 @@
 #include "Components/WidgetComponent.h"
 #include "ShipHealthBar.h"
 #include "Components/ProgressBar.h"
-
+#include "NiagaraFunctionLibrary.h"
+#include "NiagaraComponent.h"
 
 // Sets default values
 ASelectableObject::ASelectableObject()
@@ -32,6 +33,9 @@ ASelectableObject::ASelectableObject()
 
 	healthBar = CreateDefaultSubobject<UWidgetComponent>(TEXT("ShipHealthBarComponent"));
 	healthBar->SetupAttachment(RootComponent);
+
+	firePoint = CreateDefaultSubobject<USceneComponent>(TEXT("FireComponent"));
+	firePoint->SetupAttachment(RootComponent);
 
 	GetCharacterMovement()->RotationRate = FRotator(0.0f, 0.0f, UnitRotationSpeed);
 }
@@ -182,13 +186,22 @@ void ASelectableObject::AttackTarget_Implementation(AActor* Target)
 
 void ASelectableObject::HealthCalculations(float passedDamage)
 {
-	if ((currentUnitHealth - passedDamage) >= 0)
+	float damage = passedDamage;
+	if ((currentUnitHealth - damage) >= 0)
 	{
-		currentUnitHealth = currentUnitHealth - passedDamage;
-		healthBarRef->updateHealthBar(currentUnitHealth / totalUnitHealth);
+		currentUnitHealth = currentUnitHealth - damage;
 
-		//Updates ship selected UI if the ship is selected
-		if (isSelected) { updateSelectedUI(); }
+		//Explosion VFX Delayed
+		FTimerHandle delayHandle;
+		GetWorldTimerManager().SetTimer(delayHandle, [&]()
+		{
+			UNiagaraComponent* NiagaraComp = UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, hitEffect, GetActorLocation(), GetActorRotation());
+
+			healthBarRef->updateHealthBar(currentUnitHealth / totalUnitHealth);
+			//Updates ship selected UI if the ship is selected
+			if (isSelected) { updateSelectedUI(); }
+
+		}, .5f, false);
 	}
 	else
 	{
@@ -239,6 +252,9 @@ void ASelectableObject::triggerWinCheck()
 			gmRef->removeShipsFromArray(this, GetClass()->GetName(), playerControlled);
 		}
 	}
+
+	//Explosion VFX and destroy the ship
+	UNiagaraComponent* NiagaraComp = UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, explosionEffect, GetActorLocation());
 	this->Destroy(true);
 }
 
@@ -276,6 +292,8 @@ void ASelectableObject::fireBarrage()
 		UE_LOG(LogTemp, Warning, TEXT("InRange"));
 		ASelectableObject* curTarget = Cast<ASelectableObject>(CurrentTarget);
 		if (!curTarget) { return; }
+
+		UNiagaraComponent* NiagaraComp = UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, shootEffect, firePoint->GetComponentTransform().GetLocation());
 		curTarget->HealthCalculations(damageOutput);
 	}
 }
@@ -302,7 +320,7 @@ bool ASelectableObject::checkTargetRange()
 	{
 		if (actorsInRange[i] == CurrentTarget)
 		{
-			DrawDebugLine(GetWorld(), startLoc, endLoc, HitResult.GetActor() ? usedDamageLine : usedDamageLine, false, 1.0f, 0, 1.0f);
+			//DrawDebugLine(GetWorld(), startLoc, endLoc, HitResult.GetActor() ? usedDamageLine : usedDamageLine, false, 1.0f, 0, 1.0f);
 			return true;
 		}
 	}

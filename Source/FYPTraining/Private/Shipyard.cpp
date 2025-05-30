@@ -11,6 +11,8 @@
 #include "SelectedShipsTab.h"
 #include "Components/WidgetComponent.h"
 #include "Components/ProgressBar.h"
+#include "NiagaraFunctionLibrary.h"
+#include "NiagaraComponent.h"
 
 AShipyard::AShipyard()
 {
@@ -398,6 +400,8 @@ void AShipyard::upgradeLevel()
 //Ends game when shipyard destroyed
 void AShipyard::triggerWinCheck()
 {
+	//Explosion VFX and destroy the ship
+	UNiagaraComponent* NiagaraComp = UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, explosionEffect, GetActorLocation());
 	gmRef->gameEnd(playerControlled);
 	this->Destroy(true);
 }
