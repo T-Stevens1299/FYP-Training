@@ -439,8 +439,16 @@ void AShipyard::upgradeLevel()
 //Ends game when shipyard destroyed
 void AShipyard::triggerWinCheck()
 {
-	//Explosion VFX and destroy the ship
-	UNiagaraComponent* NiagaraComp = UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, explosionEffect, GetActorLocation());
-	gmRef->gameEnd(playerControlled);
-	this->Destroy(true);
+	if (shipyardDead) { return; }
+	shipyardDead = true;
+
+	//Explosion
+	UNiagaraComponent* NiagaraComp = UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, explosionEffect, GetActorLocation(), GetActorRotation());
+
+	FTimerHandle delayHandle;
+	GetWorldTimerManager().SetTimer(delayHandle, [&]()
+	{
+		gmRef->gameEnd(playerControlled);
+		this->Destroy(true);
+	}, 1.5f, false);
 }

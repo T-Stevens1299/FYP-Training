@@ -190,7 +190,6 @@ void ASelectableObject::HealthCalculations(float passedDamage)
 	if ((currentUnitHealth - damage) >= 0)
 	{
 		currentUnitHealth = currentUnitHealth - damage;
-
 		if (firstCalculation)
 		{
 			healthBarRef->updateHealthBar(currentUnitHealth / totalUnitHealth);

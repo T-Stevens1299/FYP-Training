@@ -91,7 +91,7 @@ void AFYPTrainingGameMode::clearShipsFromGroup()
 {
 	for (int i = 0; i < SelectedShips.Num(); i++)
 	{
-		SelectedShips[i]->groupNumber = 0;
+		if (SelectedShips[i]) { SelectedShips[i]->groupNumber = 0; }
 	}
 }
 
@@ -107,7 +107,7 @@ void AFYPTrainingGameMode::registerGroup(int groupIndex)
 		//Sets the group number of the ship - used for UI purposes
 		for (int i = 0; i < SelectedShips.Num(); i++) 
 		{ 
-			SelectedShips[i]->groupNumber = groupIndex;
+			if (SelectedShips[i]) { SelectedShips[i]->groupNumber = groupIndex; }
 		}
 	}
 
@@ -300,7 +300,7 @@ void AFYPTrainingGameMode::gameEnd(bool playerControlled)
 	HUD->RemoveFromParent();
 	GameEnd = CreateWidget<UGameEndScreen>(PC, gameEndRef);
 	calculateLostShips();
-	GameEnd->SetScreenText(playerControlled);
+	GameEnd->SetScreenText(true);
 	GameEnd->AddToViewport();
 	UGameplayStatics::SetGamePaused(this, true);
 }

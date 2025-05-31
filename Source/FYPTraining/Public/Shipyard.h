@@ -123,6 +123,8 @@ private:
 
 	int spawnCounter = 0;
 
+	bool shipyardDead = false;
+
 	//References
 	
 	FTimerHandle healthBarDelay;
