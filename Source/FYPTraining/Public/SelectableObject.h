@@ -181,6 +181,8 @@ private:
 
 	virtual void toggleUI(bool showUI);
 
+	bool firstCalculation = true;
+
 	//References
 	class AFYPTrainingGameMode* gmRef;
 

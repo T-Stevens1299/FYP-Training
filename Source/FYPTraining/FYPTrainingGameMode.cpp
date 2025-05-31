@@ -367,23 +367,23 @@ void AFYPTrainingGameMode::calculateLostShips()
 
 	saveData();
 
-	GameEnd->pCorvetteLoss = FText::FromString(FString::FromInt(pCorvetteLost));
-	GameEnd->aiCorvetteLoss = FText::FromString(FString::FromInt(aiCorvetteLost));
+	GameEnd->pCorvetteLoss = FText::FromString("x" + FString::FromInt(pCorvetteLost));
+	GameEnd->aiCorvetteLoss = FText::FromString("x" + FString::FromInt(aiCorvetteLost));
 
-	GameEnd->pFrigateLoss = FText::FromString(FString::FromInt(pFrigateLost));
-	GameEnd->aiFrigateLoss = FText::FromString(FString::FromInt(aiFrigateLost));
+	GameEnd->pFrigateLoss = FText::FromString("x" + FString::FromInt(pFrigateLost));
+	GameEnd->aiFrigateLoss = FText::FromString("x" + FString::FromInt(aiFrigateLost));
 
-	GameEnd->pDestroyerLoss = FText::FromString(FString::FromInt(pDestroyLost));
-	GameEnd->aiDestroyerLoss = FText::FromString(FString::FromInt(aiDestroyLost));
+	GameEnd->pDestroyerLoss = FText::FromString("x" + FString::FromInt(pDestroyLost));
+	GameEnd->aiDestroyerLoss = FText::FromString("x" + FString::FromInt(aiDestroyLost));
 
-	GameEnd->pCruiserLoss = FText::FromString(FString::FromInt(pCruiserLost));
-	GameEnd->aiCruiserLoss = FText::FromString(FString::FromInt(aiCruiserLost));
+	GameEnd->pCruiserLoss = FText::FromString("x" + FString::FromInt(pCruiserLost));
+	GameEnd->aiCruiserLoss = FText::FromString("x" + FString::FromInt(aiCruiserLost));
 
-	GameEnd->pBattleShipLoss = FText::FromString(FString::FromInt(pBattleLost));
-	GameEnd->aiBattleShipLoss = FText::FromString(FString::FromInt(aiBattleLost));
+	GameEnd->pBattleShipLoss = FText::FromString("x" + FString::FromInt(pBattleLost));
+	GameEnd->aiBattleShipLoss = FText::FromString("x" + FString::FromInt(aiBattleLost));
 
-	GameEnd->pLoss = FText::FromString(FString::FromInt(totalPlayerLoss));
-	GameEnd->aiLoss = FText::FromString(FString::FromInt(totalAiLoss));
+	GameEnd->pLoss = FText::FromString("x" + FString::FromInt(totalPlayerLoss));
+	GameEnd->aiLoss = FText::FromString("x" + FString::FromInt(totalAiLoss));
 
 	GameEnd->matchLength = matchDuration;
 }

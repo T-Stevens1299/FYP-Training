@@ -191,17 +191,26 @@ void ASelectableObject::HealthCalculations(float passedDamage)
 	{
 		currentUnitHealth = currentUnitHealth - damage;
 
-		//Explosion VFX Delayed
-		FTimerHandle delayHandle;
-		GetWorldTimerManager().SetTimer(delayHandle, [&]()
+		if (firstCalculation)
 		{
-			UNiagaraComponent* NiagaraComp = UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, hitEffect, GetActorLocation(), GetActorRotation());
-
 			healthBarRef->updateHealthBar(currentUnitHealth / totalUnitHealth);
-			//Updates ship selected UI if the ship is selected
 			if (isSelected) { updateSelectedUI(); }
+			firstCalculation = false;
+		}
+		else
+		{
+			//Explosion VFX Delayed
+			FTimerHandle delayHandle;
+			GetWorldTimerManager().SetTimer(delayHandle, [&]()
+			{
+				UNiagaraComponent* NiagaraComp = UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, hitEffect, GetActorLocation(), GetActorRotation());
 
-		}, .5f, false);
+				healthBarRef->updateHealthBar(currentUnitHealth / totalUnitHealth);
+				//Updates ship selected UI if the ship is selected
+				if (isSelected) { updateSelectedUI(); }
+
+			}, .5f, false);
+		}
 	}
 	else
 	{

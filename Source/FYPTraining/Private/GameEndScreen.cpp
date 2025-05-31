@@ -47,6 +47,9 @@ void UGameEndScreen::SetScreenText(bool victor)
 	FString matchLengthString = FString::FromInt(matchMinutes) + ":" + FString::FromInt(matchSeconds);
 
 	GameDuration->SetText(FText::FromString(matchLengthString));
+
+	if (victor) { WinningText->SetText(FText::FromString("You have won the battle!")); }
+	else { WinningText->SetText(FText::FromString("You have lost the battle!")); }
 }
 
 void UGameEndScreen::returnToMenu()

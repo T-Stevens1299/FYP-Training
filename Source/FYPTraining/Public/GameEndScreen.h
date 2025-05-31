@@ -84,6 +84,9 @@ protected:
 	class UTextBlock* GameDuration;
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	class UTextBlock* WinningText;
+
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UButton* BackToMenu;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MenuNameRef")
