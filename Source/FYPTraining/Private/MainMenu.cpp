@@ -62,7 +62,6 @@ void UMainMenu::playLanchesterAI()
 void UMainMenu::playDdsAI()
 {
 	UGameplayStatics::OpenLevel(this, DdsAiMap);
-
 }
 
 void UMainMenu::playHardestAI()
