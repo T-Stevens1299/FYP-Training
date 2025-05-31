@@ -10,6 +10,8 @@
 #include "Components/RadialSlider.h"
 #include "Components/TextBlock.h"
 #include "Components/CanvasPanel.h"
+#include "Components/CanvasPanelSlot.h"
+#include "Blueprint/WidgetLayoutLibrary.h"
 
 UShipyardWidget::UShipyardWidget(const FObjectInitializer& ObjectInitializer)
 	:Super(ObjectInitializer)
@@ -186,6 +188,9 @@ void UShipyardWidget::upgradeTechLevel()
 {
 	currentTechLevel++;
 
+	UCanvasPanelSlot* mineButton = UWidgetLayoutLibrary::SlotAsCanvasSlot(BuildMines);
+	UCanvasPanelSlot* mineText = UWidgetLayoutLibrary::SlotAsCanvasSlot(MinesToBuild);
+
 	//Sets tech level on player and AI side
 	shipyardRef->gmRef->playerTechLevel = currentTechLevel;
 	TechButton->SetVisibility(ESlateVisibility::Hidden);
@@ -226,6 +231,10 @@ void UShipyardWidget::upgradeTechLevel()
 		TechLevel2->SetVisibility(ESlateVisibility::Hidden);
 		TechLevel2->SetIsEnabled(false);
 
+		//Moves the mine build button
+		mineButton->SetPosition(FVector2D(300.f, -5.f));
+		mineText->SetPosition(FVector2D(251.f, -100.f));
+
 		break;
 	case 3:
 		//Buttons to show
@@ -238,6 +247,10 @@ void UShipyardWidget::upgradeTechLevel()
 		//Buttons to hide
 		TechLevel3->SetVisibility(ESlateVisibility::Hidden);
 		TechLevel3->SetIsEnabled(false);
+
+		//Moves the mine build button
+		mineButton->SetPosition(FVector2D(465.f, -5.f));
+		mineText->SetPosition(FVector2D(416.f, -100.f));
 
 		break;
 	case 4:
