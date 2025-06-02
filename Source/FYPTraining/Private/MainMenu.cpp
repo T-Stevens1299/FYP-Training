@@ -23,8 +23,8 @@ void UMainMenu::NativeConstruct()
 	if (DDSAI) { DDSAI->OnClicked.AddDynamic(this, &UMainMenu::playDdsAI); }
 	if (HardestAI) { HardestAI->OnClicked.AddDynamic(this, &UMainMenu::playHardestAI); }
 	if (BackToMenu) { BackToMenu->OnClicked.AddDynamic(this, &UMainMenu::returnToMenu); }
-
-	returnToMenu();
+	if (Credits) { Credits->OnClicked.AddDynamic(this, &UMainMenu::showCredits); }
+	if (Guide) { Guide->OnClicked.AddDynamic(this, &UMainMenu::showGuide); }
 }
 
 void UMainMenu::init(APlayerController* pcRef)
@@ -72,5 +72,20 @@ void UMainMenu::playHardestAI()
 void UMainMenu::returnToMenu()
 {
 	MenuScreen->SetVisibility(ESlateVisibility::Visible);
+
 	LevelSelectScreen->SetVisibility(ESlateVisibility::Hidden);
+	HowToPlayScreen->SetVisibility(ESlateVisibility::Hidden);
+	CreditScreen->SetVisibility(ESlateVisibility::Hidden);
+}
+
+void UMainMenu::showCredits()
+{
+	MenuScreen->SetVisibility(ESlateVisibility::Hidden);
+	CreditScreen->SetVisibility(ESlateVisibility::Visible);
+}
+
+void UMainMenu::showGuide()
+{
+	MenuScreen->SetVisibility(ESlateVisibility::Hidden);
+	HowToPlayScreen->SetVisibility(ESlateVisibility::Visible);
 }

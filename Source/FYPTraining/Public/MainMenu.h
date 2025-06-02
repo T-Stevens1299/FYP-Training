@@ -44,8 +44,14 @@ protected:
 	UFUNCTION()
 	void playHardestAI();
 
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable)
 	void returnToMenu();
+
+	UFUNCTION()
+	void showCredits();
+
+	UFUNCTION()
+	void showGuide();
 
 
 	//Buttons
@@ -73,12 +79,24 @@ protected:
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	UButton* BackToMenu;
 
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	UButton* Guide;
+
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	UButton* Credits;
+
 	//Canvas Panels
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	UCanvasPanel* MenuScreen;
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	UCanvasPanel* LevelSelectScreen;
+	
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	UCanvasPanel* CreditScreen;
+
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	UCanvasPanel* HowToPlayScreen;
 
 	//Level Names
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LevelNames")
