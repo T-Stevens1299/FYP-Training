@@ -54,5 +54,5 @@ void UGameEndScreen::SetScreenText(bool victor)
 
 void UGameEndScreen::returnToMenu()
 {
-	UGameplayStatics::OpenLevel(this, MainMenu);
+	UGameplayStatics::OpenLevel(this, MainMenu, true);
 }
