@@ -41,5 +41,5 @@ void UPauseMenu::returnToMenu()
 {
 	//Quits the game early and pops up the results panel
 	UE_LOG(LogTemp, Warning, TEXT("EndGame"))
-	gmRef->gameEnd(false);
+	gmRef->gameEnd(true);
 }

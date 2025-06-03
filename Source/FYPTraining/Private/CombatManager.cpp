@@ -49,7 +49,7 @@ void ACombatManager::captureInitialMines()
 
 	initStageComplete = true;
 
-	GetWorldTimerManager().SetTimer(combatLoopTimer, this, &ACombatManager::selectorCaptureMineOrder, 1, true, 1);
+	GetWorldTimerManager().SetTimer(combatLoopTimer, this, &ACombatManager::selectorCaptureMineOrder, 2, true, 2);
 }
 
 //Determines whether or not to capture a mine or run a combat prediction based on the captureMine boolean - this is set by the resource manager.
@@ -130,8 +130,8 @@ bool ACombatManager::LanchesterModelAlgorithm()
 	float aiArmySize = gamemodeRef->ActiveAiShips.Num();
 	float playerArmySize = gamemodeRef->ActivePlayerShips.Num();
 
-	float aiOutcome = aiArmyStrength / (aiArmySize);
-	float playerOutcome = playerArmyStremgth / (playerArmySize);
+	float aiOutcome = aiArmyStrength * (aiArmySize * aiArmySize);
+	float playerOutcome = playerArmyStremgth * (playerArmySize * playerArmySize);
 
 	if (aiOutcome >= playerOutcome)
 	{

@@ -88,7 +88,7 @@ void ASelectableObject::initaliseSelectableObject(bool player_controlled, float 
 
 void ASelectableObject::initialiseAIShips() //Only initialise on enemy ships - function name should be changed to reflect this
 {
-	GetWorldTimerManager().SetTimer(behaviourTreeTick, this, &ASelectableObject::checkOrderCode, 2, true, 2);
+	GetWorldTimerManager().SetTimer(behaviourTreeTick, this, &ASelectableObject::checkOrderCode, .5f, true, .5f);
 }
 
 void ASelectableObject::updateSelectedUI()
@@ -97,6 +97,7 @@ void ASelectableObject::updateSelectedUI()
 	{
 		if (gmRef->SelectedShips[i] == this)
 		{
+			if (!gmRef->SelectedShips[i]) { return; }
 			gmRef->updateShipHealthIcon(i, (currentUnitHealth / totalUnitHealth));
 		}
 	}

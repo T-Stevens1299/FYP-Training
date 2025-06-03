@@ -273,10 +273,13 @@ void UShipyardWidget::triggerTechLevelCheck(FString techLevelRowName)
 	//Triggers the can upgrade tech function. If true is returned the upgrade process starts and boolean variable set for later to upgrade the AI
 	aiCanUpgrade = shipyardRef->canUpgradeTechLevel(currentRow->requiredFunds, currentRow->constructionTime);
 
-	TechButton->SetVisibility(ESlateVisibility::Visible);
-	TechButton->WidgetStyle.Normal.SetResourceObject(techLevelIcons[techLevelRowName]);
-	TechButton->WidgetStyle.Hovered.SetResourceObject(techLevelIcons[techLevelRowName]);
-	TechButton->WidgetStyle.Pressed.SetResourceObject(techLevelIcons[techLevelRowName]);
+	if (aiCanUpgrade)
+	{
+		TechButton->WidgetStyle.Normal.SetResourceObject(techLevelIcons[techLevelRowName]);
+		TechButton->WidgetStyle.Hovered.SetResourceObject(techLevelIcons[techLevelRowName]);
+		TechButton->WidgetStyle.Pressed.SetResourceObject(techLevelIcons[techLevelRowName]);
+		TechButton->SetVisibility(ESlateVisibility::Visible);
+	}
 }
 
 void UShipyardWidget::clearQueuedItem(UButton* buttonRef, int queueIndex)
@@ -384,6 +387,8 @@ void UShipyardWidget::addShipToQueue(FString RelatedRowName)
 {
 	//Finds the ship to queue based on data table string
 	currentRow = getRow(RelatedRowName);
+
+	if (RelatedRowName == "") { return; }
 
 	//If the queue is full nothing can be queued
 	if (shipQueue.Num() >= 5) { return; }
