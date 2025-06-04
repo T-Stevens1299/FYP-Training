@@ -183,6 +183,10 @@ void UShipyardWidget::toggleConstructionOptions(bool showUI)
 	else { ConstructionUI->SetVisibility(ESlateVisibility::Hidden); }
 }
 
+void UShipyardWidget::hideButton()
+{
+	ShipConstructionCircle->SetVisibility(ESlateVisibility::Hidden);
+}
 
 void UShipyardWidget::upgradeTechLevel()
 {
@@ -396,6 +400,7 @@ void UShipyardWidget::addShipToQueue(FString RelatedRowName)
 	//Checks the ship can be queued, if so add it to the queue
 	if (shipyardRef->canQueueShip(currentRow->requiredFunds, currentRow->constructionTime, currentRow->populationValue))
 	{
+		ShipConstructionCircle->SetVisibility(ESlateVisibility::Visible);
 		int indexInQueue = shipQueue.Add(RelatedRowName);
 		switch (indexInQueue)
 		{

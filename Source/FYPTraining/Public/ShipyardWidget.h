@@ -66,6 +66,8 @@ public:
 
 	void toggleConstructionOptions(bool showUI);
 
+	void hideButton();
+
 	TArray<FString> shipQueue;
 
 	//References

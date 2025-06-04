@@ -57,8 +57,10 @@ public:
 	virtual void triggerWinCheck() override;
 
 	//Variables
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "CurrentConstruction")
 	float currentShipCost;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "CurrentConstruction")
 	int currentShipPopValue;
 
 	bool isConstructingAlready;

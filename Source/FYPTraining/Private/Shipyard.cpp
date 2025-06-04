@@ -213,7 +213,7 @@ void AShipyard::constructCurrentQueuedShip(float shipCost, float buildTime, int 
 		shipConstructing = battleshipRef;
 		break;
 	default:
-		shipConstructing = corvetteRef;
+		return;
 		break;
 	}
 
@@ -247,6 +247,10 @@ void AShipyard::buildShipProgress()
 	constructionProgress += .1f;
 	if (playerControlled)
 	{
+		//Fix the empty queue bug
+		if (!(HUD->shipQueue.IsValidIndex(0))) { GetWorldTimerManager().ClearTimer(constructionTime); HUD->updateConstructionBar(0.0f); HUD->hideButton(); UE_LOG(LogTemp, Warning, TEXT("Bug patch")); }
+
+
 		HUD->updateConstructionBar(constructionProgress / curShipConTime);
 		if (constructionProgress < curShipConTime) { return; }
 		buildShip(HUD->shipQueue[0]);
