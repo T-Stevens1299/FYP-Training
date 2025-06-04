@@ -203,12 +203,14 @@ void ASelectableObject::HealthCalculations(float passedDamage)
 			FTimerHandle delayHandle;
 			GetWorldTimerManager().SetTimer(delayHandle, [&]()
 			{
-				UNiagaraComponent* NiagaraComp = UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, hitEffect, GetActorLocation(), GetActorRotation());
+				if (!(currentUnitHealth <= 0))
+				{
+					UNiagaraComponent* NiagaraComp = UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, hitEffect, GetActorLocation(), GetActorRotation());
 
-				healthBarRef->updateHealthBar(currentUnitHealth / totalUnitHealth);
-				//Updates ship selected UI if the ship is selected
-				if (isSelected) { updateSelectedUI(); }
-
+					healthBarRef->updateHealthBar(currentUnitHealth / totalUnitHealth);
+					//Updates ship selected UI if the ship is selected
+					if (isSelected) { updateSelectedUI(); }
+				}
 			}, .5f, false);
 		}
 	}

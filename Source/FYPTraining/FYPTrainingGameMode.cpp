@@ -302,7 +302,14 @@ void AFYPTrainingGameMode::gameEnd(bool playerControlled)
 	calculateLostShips();
 	GameEnd->SetScreenText(playerControlled);
 	GameEnd->AddToViewport();
-	UGameplayStatics::SetGamePaused(this, true);
+	
+	TArray<AActor*> allEntities;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ASelectableObject::StaticClass(), allEntities);
+	for (int i = 0; i < allEntities.Num(); i++)
+	{
+		allEntities[i]->Destroy();
+	}
+
 }
 
 void AFYPTrainingGameMode::togglePauseGame(bool shouldPause)

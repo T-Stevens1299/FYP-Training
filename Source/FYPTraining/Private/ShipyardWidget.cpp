@@ -416,6 +416,8 @@ void UShipyardWidget::addShipToQueue(FString RelatedRowName)
 			break;
 
 		default:
+			//This should never happen so if it does cancel everything
+			stopCurrentShipConstruction();
 			break;
 		}
 	}
